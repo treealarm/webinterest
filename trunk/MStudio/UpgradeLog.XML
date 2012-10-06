@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="MStudio">
+</Property><Property Name="Solution File" Value="E:\WorkSpace\Stanok\MStudio\MStudio.sln">
+</Property><Property Name="Date" Value="9 июня 2009 г.">
+</Property><Property Name="Time" Value="21:43">
+</Property></Properties><Event ErrorLevel="0" Project="MStudio" Source="MStudio.vcproj" Description="Web deployment to the local IIS server is no longer supported. The Web Deployment build tool has been removed from your project settings.">
+</Event><Event ErrorLevel="1" Project="MStudio" Source="MStudio.vcproj" Description="This application has been updated to include settings related to the User Account Control (UAC) feature of Windows Vista. By default, when run on Windows Vista with UAC enabled, this application is marked to run with the same privileges as the process that launched it. This marking also disables the application from running with virtualization. You can change UAC related settings from the Property Pages of the project.">
+</Event><Event ErrorLevel="0" Project="MStudio" Source="MStudio.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="MStudio" Source="MStudio.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Tikurila" Source="..\Tikurila\Tikurila.vcproj" Description="Web deployment to the local IIS server is no longer supported. The Web Deployment build tool has been removed from your project settings.">
+</Event><Event ErrorLevel="1" Project="Tikurila" Source="..\Tikurila\Tikurila.vcproj" Description="This application has been updated to include settings related to the User Account Control (UAC) feature of Windows Vista. By default, when run on Windows Vista with UAC enabled, this application is marked to run with the same privileges as the process that launched it. This marking also disables the application from running with virtualization. You can change UAC related settings from the Property Pages of the project.">
+</Event><Event ErrorLevel="0" Project="Tikurila" Source="..\Tikurila\Tikurila.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="Tikurila" Source="..\Tikurila\Tikurila.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="PureCPP" Source="..\PureCPP\PureCPP.vcproj" Description="Web deployment to the local IIS server is no longer supported. The Web Deployment build tool has been removed from your project settings.">
+</Event><Event ErrorLevel="1" Project="PureCPP" Source="..\PureCPP\PureCPP.vcproj" Description="This application has been updated to include settings related to the User Account Control (UAC) feature of Windows Vista. By default, when run on Windows Vista with UAC enabled, this application is marked to run with the same privileges as the process that launched it. This marking also disables the application from running with virtualization. You can change UAC related settings from the Property Pages of the project.">
+</Event><Event ErrorLevel="0" Project="PureCPP" Source="..\PureCPP\PureCPP.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="PureCPP" Source="..\PureCPP\PureCPP.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="MStudio.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="MStudio.sln" Description="Converted">
+</Event></UpgradeLog>
