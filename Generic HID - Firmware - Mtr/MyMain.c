@@ -223,7 +223,10 @@ void MyProcessIO(void)
 	case 0x81:  //Get push button state (available state)
 		ToSendDataBuffer[0] = 0x81;				//Echo back to the host PC the command we are fulfilling in the first byte.  In this case, the Get Pushbutton State command.
 	    
-		if(m_do_cur_steps.m_uSteps[0]!=0 || m_do_cur_steps.m_uSteps[1]!=0 || m_do_cur_steps.m_uSteps[2]!=0 || m_do_cur_steps.m_uSteps[3]!=0)
+		if(m_do_cur_steps.m_uSteps[0]!=0 || 
+			m_do_cur_steps.m_uSteps[1]!=0 || 
+			m_do_cur_steps.m_uSteps[2]!=0 || 
+			m_do_cur_steps.m_uSteps[3]!=0)
 		{
 			ToSendDataBuffer[1] = 0x00;
 		}
@@ -236,19 +239,10 @@ void MyProcessIO(void)
 			ToSendDataBuffer[1] = 0x01;
 	//We are paused, so we can setup anything we need, actually Pause is for settings
 		}
-		/*memcpy(
+		memcpy(
 		(void*)(&ToSendDataBuffer[2]),
-		(void*)(&test_step),
-		sizeof(test_step) );*/
-		ToSendDataBuffer[3] = step_0;
-		ToSendDataBuffer[4] = step_1;
-		ToSendDataBuffer[5] = step_2;
-		ToSendDataBuffer[6] = step_3;
-
-		ToSendDataBuffer[7] = home_0;
-		ToSendDataBuffer[8] = home_1;
-		ToSendDataBuffer[9] = home_2;
-		ToSendDataBuffer[10] = home_3;
+		(void*)(&m_do_cur_steps),
+		sizeof(m_do_cur_steps) );
 
 		if(!HIDTxHandleBusy(USBInHandle))
 		{
