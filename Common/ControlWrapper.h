@@ -43,7 +43,7 @@ protected:
 	void AddCommand(BYTE* OutputPacketBuffer);
 	do_steps_multiplier m_step_mult;
 public:
-	INT32 m_steps0;
+	do_steps m_cur_steps;
 	ControlWrapper(void);
 	virtual ~ControlWrapper(void);
 	BOOL SetTimer(do_timer_set& timer_set);
