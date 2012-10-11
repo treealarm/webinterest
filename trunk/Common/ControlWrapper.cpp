@@ -46,7 +46,7 @@ BOOL ControlWrapper::SetControlSignals(do_control_signals& control_signals)
 {
 	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-	OutputPacketBuffer[1] = 0x84;			//0x82 is the "Send Command" command in the firmware
+	OutputPacketBuffer[1] = 0x84;			
 	CopyMemory(&OutputPacketBuffer[2],&control_signals,sizeof(control_signals));
 	AddCommand(OutputPacketBuffer);
 	return TRUE;
@@ -56,7 +56,7 @@ BOOL ControlWrapper::SetPause(BOOL bPause)
 {
 	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-	OutputPacketBuffer[1] = 0x86;			//0x82 is the "Send Command" command in the firmware
+	OutputPacketBuffer[1] = 0x86;			
 	OutputPacketBuffer[2] = (BYTE)bPause;
 	AddCommand(OutputPacketBuffer);
 	return TRUE;
@@ -75,7 +75,7 @@ BOOL ControlWrapper::SetSteps(do_steps& steps)
 	}
 	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-	OutputPacketBuffer[1] = 0x82;			//0x82 is the "Send Command" command in the firmware
+	OutputPacketBuffer[1] = 0x82;			
 	CopyMemory(&OutputPacketBuffer[2],&steps,sizeof(steps));
 	AddCommand(OutputPacketBuffer);
 	return TRUE;
@@ -281,7 +281,7 @@ BOOL ControlWrapper::IsControllerAvailable(void)
 	//InputPacketBuffer[1] is an echo back of the command.
 	//InputPacketBuffer[2] contains the I/O port pin value for the pushbutton.  
 
-	//CopyMemory(&m_steps0,&InputPacketBuffer[3],sizeof(m_steps0));
+	CopyMemory(&m_cur_steps,&InputPacketBuffer[3],sizeof(m_cur_steps));
 	//if(m_steps0%32 == 0)
 	/*{
 	CString s;
