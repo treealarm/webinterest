@@ -319,8 +319,13 @@ void CDlgDraw::OnTimer(UINT_PTR nIDEvent)
 		}
 		
 	}
-	s.Format("step0=%d",m_pControlWrapper->m_steps0);
-	GetDlgItem(IDC_STATIC_INFO)->SetWindowText(s);
+	CString result;
+	for(int i = 0; i < MOTORS_COUNT; i++)
+	{
+		s.Format("motor%d=%d;",i,m_pControlWrapper->m_cur_steps.m_uSteps[i]);
+		result += s;
+	}
+	GetDlgItem(IDC_STATIC_INFO)->SetWindowText(result);
 
 	CDialog::OnTimer(nIDEvent);
 }
