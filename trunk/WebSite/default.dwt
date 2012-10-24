@@ -5,13 +5,11 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<!-- #ParentBeginEditable "doctitle" -->
 <!-- #BeginEditable "doctitle" -->
-<title>Главная</title>
-<meta content="Компьютеры в Химках, бесшумные компьютеры" name="keywords" />
-<meta content="Компьютеры в Химках, бесшумные компьютеры" name="description" />
-<meta content="7ce6221d12f4663e" name="yandex-verification" />
-<meta content="qclPTccIcBhkbMaryTgI0iE6XoZlXkOeps_8dio2sBg" name="google-site-verification" />
+<title></title>
 <!-- #EndEditable -->
+<!-- #ParentEndEditable -->
 <link href="styles/style2.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 .auto-style1 {
@@ -48,20 +46,11 @@
 	<!-- End Navigation -->
 	<!-- Begin Content -->
 	<div id="content">
-		<!-- #BeginEditable "content" -->
-		&nbsp;<h2>Добро пожаловать</h2>
-		Мы предлагаем готовые к работе компьютеры по цене комплектующих.<br />
-		<br />
-		Покупая компьютер, пользователь обычно считает, что покупает 
-		комплектующие мелким оптом, соответственно расчитывая, что работы по 
-		сборке компьютера будут покрыты с учетом этого факта.<br />
-		<br />
-		К сожалению, большинство производителей компьютеров, так не считает и 
-		покупая компьютер в сборе, заказчик получает цену, на десятки процентов 
-		превышающую цену комплектующих.<br />
-		<br />
-		Наши компьютеры всегда стоят столько же, сколько стоят детали из которых 
-		он собран.<!-- #EndEditable "content" --></div>
+		<!-- #ParentBeginEditable "content" -->
+		<h2>Добро пожаловать</h2>
+		<p>&nbsp;</p>
+		<!-- #ParentEndEditable -->
+	</div>
 	<!-- End Content -->
 	<!-- Begin Footer -->
 	<div id="footer">
