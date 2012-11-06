@@ -31,6 +31,12 @@ public:
 	~ControllerLock() { psec->Unlock(); }
 };
 
+const unsigned char COMMAND_TOGGLE_LED = 0x80;
+const unsigned char COMMAND_IS_AVAILABLE = 0x81;
+const unsigned char COMMAND_SET_STEPS = 0x82;
+const unsigned char COMMAND_SET_TIME = 0x83;
+const unsigned char COMMAND_SET_CONTROL_SIGNALS = 0x84;
+const unsigned char COMMAND_SET_PAUSE = 0x86;
 
 class ControlWrapper
 {

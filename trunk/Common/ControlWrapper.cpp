@@ -10,6 +10,16 @@ ControlWrapper::ControlWrapper(void)
 	memset(&m_step_mult,1,sizeof(m_step_mult));
 	m_WriteHandle = INVALID_HANDLE_VALUE;	//Need to get a write "handle" to our device before we can write to it.
 	m_ReadHandle = INVALID_HANDLE_VALUE;	//Need to get a read "handle" to our device before we can read from it.
+
+	unsigned char OutputPacketBuffer[LEN_OF_PACKET];
+	ZeroMemory(OutputPacketBuffer, sizeof(OutputPacketBuffer));
+
+	BIT_SET(OutputPacketBuffer,16);
+	for(int i = 0; i < LEN_OF_PACKET*8; i++)
+	{
+		int test = BIT_ISSET(OutputPacketBuffer, i) != 0;
+		TRACE2("%d)%d\n",i, test );
+	}
 }
 
 ControlWrapper::~ControlWrapper(void)
@@ -36,7 +46,7 @@ BOOL ControlWrapper::SetTimer(do_timer_set& timer_set)
 	INT size2= sizeof(do_timer_set);
 	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-	OutputPacketBuffer[1] = 0x83;
+	OutputPacketBuffer[1] = COMMAND_SET_TIME;
 	CopyMemory(&OutputPacketBuffer[2],&timer_set,sizeof(timer_set));
 	AddCommand(OutputPacketBuffer);
 	return TRUE;
@@ -46,7 +56,7 @@ BOOL ControlWrapper::SetControlSignals(do_control_signals& control_signals)
 {
 	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-	OutputPacketBuffer[1] = 0x84;			
+	OutputPacketBuffer[1] = COMMAND_SET_CONTROL_SIGNALS;			
 	CopyMemory(&OutputPacketBuffer[2],&control_signals,sizeof(control_signals));
 	AddCommand(OutputPacketBuffer);
 	return TRUE;
@@ -56,7 +66,7 @@ BOOL ControlWrapper::SetPause(BOOL bPause)
 {
 	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-	OutputPacketBuffer[1] = 0x86;			
+	OutputPacketBuffer[1] = COMMAND_SET_PAUSE;			
 	OutputPacketBuffer[2] = (BYTE)bPause;
 	AddCommand(OutputPacketBuffer);
 	return TRUE;
@@ -75,7 +85,7 @@ BOOL ControlWrapper::SetSteps(do_steps& steps)
 	}
 	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-	OutputPacketBuffer[1] = 0x82;			
+	OutputPacketBuffer[1] = COMMAND_SET_STEPS;			
 	CopyMemory(&OutputPacketBuffer[2],&steps,sizeof(steps));
 	AddCommand(OutputPacketBuffer);
 	return TRUE;
@@ -258,7 +268,7 @@ BOOL ControlWrapper::IsControllerAvailable(void)
 	InputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
 	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
 
-	OutputPacketBuffer[1] = 0x81;			//0x81 is the "Get Pushbutton State" command in the firmware
+	OutputPacketBuffer[1] = COMMAND_IS_AVAILABLE;			
 	//For simplicity, we will leave the rest of the buffer uninitialized, but you could put real
 	//data in it if you like.
 
@@ -362,7 +372,7 @@ void ControlWrapper::ToggleLed()
 	//one type of report, therefore, we must always initializate this byte to "0" before sending
 	//a data packet to the device.
 
-	OutputPacketBuffer[1] = 0x80;		//0x80 is the "Toggle LED(s)" command in the firmware
+	OutputPacketBuffer[1] = COMMAND_TOGGLE_LED;		//0x80 is the "Toggle LED(s)" command in the firmware
 
 	AddCommand(OutputPacketBuffer);
 }
