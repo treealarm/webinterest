@@ -16,6 +16,7 @@ extern USB_HANDLE USBInHandle;
 do_steps m_do_cur_steps;
 
 BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0};
+BYTE m_timer_ink_impuls = 0;
 BYTE m_b_Pause = FALSE;
 //sr should be 0, it's active mode, so shottky not required
 
@@ -30,6 +31,9 @@ BYTE m_b_Pause = FALSE;
 //#define dir_0           PORTBbits.RB1
 //#define led_0           PORTBbits.RB2
 //#define home_0          PORTDbits.RD7
+
+#define ink_impuls          PORTBbits.RB0
+#define ink_sensor          PORTBbits.RB1
 
 #define step_0          PORTCbits.RC0
 #define dir_0           PORTCbits.RC1
@@ -64,6 +68,8 @@ void RestartTimer(void)
 void ProcessSteps(void)
 {
 	int i;
+	int motors_on_zero = 0;
+	int new_impuls = 0;
 	ProcessHome();
 
 	if(m_b_Pause)
@@ -74,7 +80,7 @@ void ProcessSteps(void)
 
 	PORTDbits.RD3 = !PORTDbits.RD3;
 
-
+	motors_on_zero = CheckIfMotorsOnZero();
 	for(i = 0;i < MOTORS_COUNT;i++)
 	{
 		if(m_timer_cnt[i] >= m_do_timer_set.m_multiplier[i])
@@ -87,9 +93,24 @@ void ProcessSteps(void)
 			m_timer_cnt[i] = m_timer_cnt[i]+1;
 		}
 	}
+	new_impuls = !motors_on_zero && CheckIfMotorsOnZero();
+	ProcessInkImpuls(new_impuls);
+
 	ProcessHome();
 }
 
+int CheckIfMotorsOnZero(void)
+{
+	int i = 0;
+	for(i = 0;i < MOTORS_COUNT;i++)
+	{
+		if(m_do_cur_steps.m_uSteps[i] != 0)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
 void ProcessStep(int motor)
 {
 	if(m_do_cur_steps.m_uSteps[motor] == 0)
@@ -203,9 +224,7 @@ void MyProcessIO(void)
 	case COMMAND_IS_AVAILABLE:  //Get push button state (available state)
 		ToSendDataBuffer[0] = COMMAND_IS_AVAILABLE;				//Echo back to the host PC the command we are fulfilling in the first byte.  In this case, the Get Pushbutton State command.
 	    
-		if(m_do_cur_steps.m_uSteps[0]!=0 || 
-			m_do_cur_steps.m_uSteps[1]!=0 || 
-			m_do_cur_steps.m_uSteps[2]!=0)
+		if(!CheckIfMotorsOnZero())
 		{
 			ToSendDataBuffer[1] = 0x00;
 		}
@@ -300,13 +319,15 @@ void MyUserInit(void)
 
 ///////////////////////////////////.TRIS////////////////
 
+/* ink_impuls  */           TRISBbits.TRISB0 = 0;
+/* ink_sensor   */           TRISBbits.TRISB1 = 1;
+
 
 /* #define ms1_0*/              TRISDbits.TRISD2 = 0;
 /* #define ms2_0*/              TRISCbits.TRISC6 = 0;
 /* #define sr_0  */             TRISCbits.TRISC7 = 0;
 /* #define reset_0*/            TRISDbits.TRISD6 = 0;
-/* #define step_0  */           TRISBbits.TRISB0 = 0;
-/* #define dir_0   */           TRISBbits.TRISB1 = 0;
+
 /* #define enable_0*/           TRISDbits.TRISD4 = 0;
 /* #define sleep_0 */           TRISDbits.TRISD5 = 0;
 
@@ -362,4 +383,25 @@ void ProcessHome(void)
 	led_0 = !home_0;
 	led_1 = !home_1;
 	led_2 = !home_2;
+}
+void ProcessInkImpuls(int new_impuls)
+{
+	if(new_impuls)
+	{
+		m_timer_ink_impuls = 0;
+	}
+	if(ink_sensor == 0)
+	{
+		m_timer_ink_impuls = m_do_timer_set.m_ink_impuls;
+	}
+
+	if(m_timer_ink_impuls < m_do_timer_set.m_ink_impuls)
+	{
+		ink_impuls = 1;
+		m_timer_ink_impuls += 1;
+	}
+	else
+	{
+		ink_impuls = 0;
+	}
 }
