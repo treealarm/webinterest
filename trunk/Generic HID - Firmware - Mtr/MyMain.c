@@ -14,7 +14,7 @@ extern unsigned char ToSendDataBuffer[64];
 extern USB_HANDLE USBInHandle;
 
 do_steps m_do_cur_steps;
-BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0,0};
+BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0};
 BYTE m_b_Pause = FALSE;
 //sr should be 0, it's active mode, so shottky not required
 
@@ -22,28 +22,28 @@ BYTE m_b_Pause = FALSE;
 #define ms2_0           PORTCbits.RC6
 #define sr_0            PORTCbits.RC7
 #define reset_0         PORTDbits.RD6
-#define step_0          PORTBbits.RB0
-#define dir_0           PORTBbits.RB1
 #define enable_0        PORTDbits.RD4
 #define sleep_0         PORTDbits.RD5
 
-#define led_0           PORTBbits.RB2
-#define home_0          PORTDbits.RD7
+//#define step_0          PORTBbits.RB0
+//#define dir_0           PORTBbits.RB1
+//#define led_0           PORTBbits.RB2
+//#define home_0          PORTDbits.RD7
 
-#define step_1          PORTCbits.RC0
-#define dir_1           PORTCbits.RC1
-#define led_1           PORTCbits.RC2
-#define home_1          PORTAbits.RA5
+#define step_0          PORTCbits.RC0
+#define dir_0           PORTCbits.RC1
+#define led_0           PORTCbits.RC2
+#define home_0          PORTAbits.RA5
 
-#define step_2          PORTEbits.RE0
-#define dir_2           PORTEbits.RE1
-#define led_2           PORTEbits.RE2
-#define home_2          PORTAbits.RA4
+#define step_1          PORTEbits.RE0
+#define dir_1           PORTEbits.RE1
+#define led_1           PORTEbits.RE2
+#define home_1          PORTAbits.RA4
 
-#define step_3          PORTAbits.RA0
-#define dir_3           PORTAbits.RA1
-#define led_3           PORTAbits.RA2
-#define home_3          PORTAbits.RA3
+#define step_2          PORTAbits.RA0
+#define dir_2           PORTAbits.RA1
+#define led_2           PORTAbits.RA2
+#define home_2          PORTAbits.RA3
 
 #define btn_1			PORTBbits.RB4
 
@@ -107,11 +107,6 @@ void ProcessStep(int motor)
 		{
 		    step_2 = 0;
 		}
-		else
-		if(motor == 3)
-		{
-		    step_3 = 0;
-		}
 		return;
 	}
 
@@ -141,15 +136,7 @@ void ProcessStep(int motor)
 			return;
 		}
 	}
-	else
-	if(motor == 3)
-	{
-	    if(step_3 != 0)
-		{
-	    	step_3 = 0;
-			return;
-		}
-	}
+
 
 	if(m_do_cur_steps.m_uSteps[motor] == 0)
 	{
@@ -169,11 +156,7 @@ void ProcessStep(int motor)
 	{
 	    step_2 = 1;
 	}
-	else
-	if(motor == 3)
-	{
-	    step_3 = 1;
-	}
+
 	if(m_do_cur_steps.m_uSteps[motor] > 0)
 	{
     	m_do_cur_steps.m_uSteps[motor]--;
@@ -198,10 +181,6 @@ void SetupDirs(void)
 	{
   		dir_2 = (m_do_cur_steps.m_uSteps[2] > 0);
 	}
-	if(m_do_cur_steps.m_uSteps[3] != 0)
-	{
-  		dir_3 = (m_do_cur_steps.m_uSteps[3] > 0);
-	}
 }
 
 void SetupCtrlSignals(void)
@@ -217,16 +196,15 @@ void MyProcessIO(void)
  switch(ReceivedDataBuffer[0])
  {
     INT32 i = 0; 
-	case 0x80:  //Toggle LEDs
+	case COMMAND_TOGGLE_LED:  //Toggle LEDs
 		PORTDbits.RD3 = 1;
 	break;
-	case 0x81:  //Get push button state (available state)
-		ToSendDataBuffer[0] = 0x81;				//Echo back to the host PC the command we are fulfilling in the first byte.  In this case, the Get Pushbutton State command.
+	case COMMAND_IS_AVAILABLE:  //Get push button state (available state)
+		ToSendDataBuffer[0] = COMMAND_IS_AVAILABLE;				//Echo back to the host PC the command we are fulfilling in the first byte.  In this case, the Get Pushbutton State command.
 	    
 		if(m_do_cur_steps.m_uSteps[0]!=0 || 
 			m_do_cur_steps.m_uSteps[1]!=0 || 
-			m_do_cur_steps.m_uSteps[2]!=0 || 
-			m_do_cur_steps.m_uSteps[3]!=0)
+			m_do_cur_steps.m_uSteps[2]!=0)
 		{
 			ToSendDataBuffer[1] = 0x00;
 		}
@@ -249,7 +227,7 @@ void MyProcessIO(void)
 			USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
 		}
 		break;
-	case 0x82:
+	case COMMAND_SET_STEPS:
 	{
 		memcpy(
        			(void*)(&m_do_cur_steps),
@@ -260,14 +238,14 @@ void MyProcessIO(void)
 		memset((void*)(&m_timer_cnt),0,sizeof(m_timer_cnt));
 	}
 	break;
-	case 0x83:
+	case COMMAND_SET_TIME:
 		memcpy(
            		(void*)(&m_do_timer_set),
            		(void*)(&ReceivedDataBuffer[1]),
            		sizeof(m_do_timer_set) );
   		memset((void*)(&m_timer_cnt),0,sizeof(m_timer_cnt));
 	break;
-	case 0x84:
+	case COMMAND_SET_CONTROL_SIGNALS:
    		memcpy(
            		(void*)&m_do_control_signals,
            		(void*)&ReceivedDataBuffer[1],
@@ -276,7 +254,7 @@ void MyProcessIO(void)
 
 	break;
 
-	case 0x86:
+	case COMMAND_SET_PAUSE:
     {
 		m_b_Pause = ReceivedDataBuffer[1];
     }
@@ -350,12 +328,11 @@ void MyUserInit(void)
     dir_0 = 0;
     dir_1 = 0;
     dir_2 = 0;
-    dir_3 = 0;
 
     step_0 = 0;
     step_1 = 0;
     step_2 = 0;
-    step_3 = 0;
+
 
 	ms1_0 = 1;
 	ms2_0 = 1;
@@ -382,5 +359,4 @@ void ProcessHome(void)
 	led_0 = !home_0;
 	led_1 = !home_1;
 	led_2 = !home_2;
-	led_3 = !home_3;
 }
