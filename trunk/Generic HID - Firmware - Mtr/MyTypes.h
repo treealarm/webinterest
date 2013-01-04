@@ -21,6 +21,7 @@ typedef struct _do_steps
 	INT32  m_uSteps[MOTORS_COUNT];
 }do_steps;
 
+
 #define BITS 8
 #define BIT_SET(  p, n) (p[(n)/BITS] |=  (0x80>>((n)%BITS)))
 #define BIT_CLEAR(p, n) (p[(n)/BITS] &= ~(0x80>>((n)%BITS)))
