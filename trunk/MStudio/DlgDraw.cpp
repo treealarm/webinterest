@@ -22,9 +22,6 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgDraw::IDD, pParent)
 	, m_commands_done(0)
 	, m_timer_res(100)
-	, m_alfa(130)
-	, m_ink_z(930)
-	, m_surface_z(2000)
 	, m_pPrevPoint(0)
 {
 	m_selection = -1;
@@ -33,7 +30,6 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	m_p_do_control_signals = new do_control_signals;
 	m_pControlWrapper = new ControlWrapper;
 	m_timer_res = AfxGetApp()->GetProfileInt("settings","m_timer_res",100);
-	m_surface_z = AfxGetApp()->GetProfileInt("settings","m_surface_z",1);
 
 	for(int i=0;i<MOTORS_COUNT;i++)
 	{
@@ -128,10 +124,6 @@ void CDlgDraw::DoDataExchange(CDataExchange* pDX)
 		DDX_Text(pDX, IDC_EDIT_STEP_MULT0+i, m_step_mult[i]);
 		DDV_MinMaxInt(pDX, m_step_mult[i], 1, 65000);
 	}
-
-	DDX_Text(pDX, IDC_EDIT2, m_alfa);
-	DDX_Text(pDX, IDC_EDIT5, m_ink_z);
-	DDX_Text(pDX, IDC_EDIT6, m_surface_z);
 }
 
 
@@ -149,12 +141,8 @@ BEGIN_MESSAGE_MAP(CDlgDraw, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_DRAW_SELECTED, &CDlgDraw::OnBnClickedButtonDrawSelected)
 	ON_BN_CLICKED(IDC_BUTTON_GOTO_XY, &CDlgDraw::OnBnClickedButtonGotoXy)
 	ON_BN_CLICKED(IDC_BUTTON_GOTO_Z, &CDlgDraw::OnBnClickedButtonGotoZ)
-	ON_BN_CLICKED(IDC_BUTTON_DESCEND_TO_INK, &CDlgDraw::OnBnClickedButtonDescendToInk)
 	ON_REGISTERED_MESSAGE(WM_PROCESS_XY, OnProcessXY)
 	ON_REGISTERED_MESSAGE(WM_END_PROCESS_XY, OnEndProcessXY)
-	ON_BN_CLICKED(IDC_BUTTON_GOTO_A, &CDlgDraw::OnBnClickedButtonGotoA)
-	ON_BN_CLICKED(IDC_BUTTON_A_PLUS, &CDlgDraw::OnBnClickedButtonAPlus)
-	ON_BN_CLICKED(IDC_BUTTON_A_MINUS, &CDlgDraw::OnBnClickedButtonAMinus)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_PROREJ, &CDlgDraw::OnBnClickedButtonSaveProrej)
 	ON_BN_CLICKED(IDC_BUTTON2, &CDlgDraw::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CDlgDraw::OnBnClickedButton3)
@@ -203,7 +191,6 @@ void CDlgDraw::OnBnClickedButtonInit()
 	var_do_timer_set.m_timer_res.u16 = 65536 - m_timer_res;//65536 - 2;
 
 	AfxGetApp()->WriteProfileInt("settings","m_timer_res",m_timer_res);
-	AfxGetApp()->WriteProfileInt("settings","m_surface_z",m_surface_z);
 
 	do_steps_multiplier step_mult;
 
@@ -337,7 +324,6 @@ void CDlgDraw::OnDestroy()
 	DriversOff();
 	
 	m_pControlWrapper->WriteCommandFromQueueToController();
-	AfxGetApp()->WriteProfileInt("settings","m_surface_z",m_surface_z);
 	CDialog::OnDestroy();
 }
 
@@ -389,7 +375,6 @@ LRESULT CDlgDraw::OnProcessXY(WPARAM wParam, LPARAM lParam)
 	m_pPrevPoint = point;
 	
 	GoToXY(x,y);
-	GoToZ(-m_surface_z);
 	GoToZ(0);
 
 	if(m_pControlWrapper->GetCountInQueue() == 0 && !IsPaused())
@@ -464,7 +449,6 @@ void CDlgDraw::SetStepsToController(do_steps& steps)
 	m_cur_pos.y += steps.m_uSteps[Y_POS];
 	m_cur_pos.x += steps.m_uSteps[X_POS];
 	m_cur_pos.z += steps.m_uSteps[Z_POS];
-	m_cur_pos.a += steps.m_uSteps[A_POS];
 
 	m_pControlWrapper->SetSteps(steps);
 }
@@ -505,13 +489,6 @@ void CDlgDraw::GoToX(int x)
 	SetStepsToController(var_do_steps);
 }
 
-void CDlgDraw::GoToA(int a)
-{
-	do_steps var_do_steps;
-	ZeroMemory(&var_do_steps,sizeof(var_do_steps));
-	var_do_steps.m_uSteps[A_POS] = a-m_cur_pos.a;
-	SetStepsToController(var_do_steps);
-}
 void CDlgDraw::OnBnClickedButtonGotoZ()
 {
 	CString s;
@@ -520,23 +497,6 @@ void CDlgDraw::OnBnClickedButtonGotoZ()
 	GoToZ(z);
 }
 
-void CDlgDraw::DescendToInk(void)
-{
-	UpdateData(TRUE);
-	GoToStartPositionZ();
-	GoToA(m_alfa);
-	GoToZ(-m_ink_z);
-	GoToStartPositionZ();
-	GoToA(0);
-	//GoToX(14300+g_ink_shift);
-	//GoToZ(-1700);
-	
-}
-
-void CDlgDraw::OnBnClickedButtonDescendToInk()
-{
-	DescendToInk();
-}
 
 void CDlgDraw::DriversOff(void)
 {
@@ -557,33 +517,6 @@ void CDlgDraw::Pause()
 	((CButton*)GetDlgItem(IDC_CHECK_PAUSED))->SetCheck(BST_CHECKED);
 }
 
-void CDlgDraw::OnBnClickedButtonGotoA()
-{
-	CString s;
-	((CEdit*)GetDlgItem(IDC_EDIT_A_TO_GO))->GetWindowText(s);
-	int z = atoi(s);
-	GoToA(z);
-}
-
-void CDlgDraw::OnBnClickedButtonAPlus()
-{
-	CString s;
-	((CEdit*)GetDlgItem(IDC_EDIT_A))->GetWindowText(s);
-	do_steps var_do_steps;
-	ZeroMemory(&var_do_steps,sizeof(var_do_steps));
-	var_do_steps.m_uSteps[A_POS] = atoi(s);
-	SetStepsToController(var_do_steps);
-}
-
-void CDlgDraw::OnBnClickedButtonAMinus()
-{
-	CString s;
-	((CEdit*)GetDlgItem(IDC_EDIT_A))->GetWindowText(s);
-	do_steps var_do_steps;
-	ZeroMemory(&var_do_steps,sizeof(var_do_steps));
-	var_do_steps.m_uSteps[A_POS] = -atoi(s);
-	SetStepsToController(var_do_steps);
-}
 
 void CDlgDraw::OnBnClickedButtonSaveProrej()
 {
@@ -760,3 +693,4 @@ void CDlgDraw::OnBnClickedButton3()
 {
 	m_pControlWrapper->ToggleLed();
 }
+

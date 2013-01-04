@@ -14,10 +14,9 @@ class CDlgDraw : public CDialog
 public:
 	enum COORD_POS
 	{
-		X_POS = 2,
-		Y_POS = 3,
-		Z_POS = 1,
-		A_POS = 0
+		X_POS = 1,
+		Y_POS = 2,
+		Z_POS = 0
 	};
 	CDlgDraw(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CDlgDraw();
@@ -62,10 +61,7 @@ public:
 	afx_msg void OnBnClickedButtonGotoXy();
 	void GoToZ(int z);
 	void GoToX(int x);
-	void GoToA(int a);
 	afx_msg void OnBnClickedButtonGotoZ();
-	void DescendToInk(void);
-	afx_msg void OnBnClickedButtonDescendToInk();
 	int m_commands_done;
 	void DriversOff(void);
 	int m_nPointsDone;
@@ -78,12 +74,6 @@ public:
 	UINT m_timer_res;
 	BYTE m_mult[MOTORS_COUNT];
 	int m_step_mult[MOTORS_COUNT];
-	afx_msg void OnBnClickedButtonGotoA();
-	afx_msg void OnBnClickedButtonAPlus();
-	afx_msg void OnBnClickedButtonAMinus();
-	int m_alfa;
-	int m_ink_z;
-	int m_surface_z;
 	CPoint m_pPrevPoint;
 	afx_msg void OnBnClickedButtonSaveProrej();
 	afx_msg void OnBnClickedButton2();
