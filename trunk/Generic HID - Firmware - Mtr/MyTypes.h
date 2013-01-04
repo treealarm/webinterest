@@ -40,6 +40,7 @@ typedef struct
 
 	}m_timer_res;
     BYTE m_multiplier[MOTORS_COUNT];
+	BYTE m_ink_impuls;
 }
 do_timer_set;
 do_timer_set m_do_timer_set;
