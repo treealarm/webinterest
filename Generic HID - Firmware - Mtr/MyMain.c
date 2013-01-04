@@ -14,6 +14,7 @@ extern unsigned char ToSendDataBuffer[64];
 extern USB_HANDLE USBInHandle;
 
 do_steps m_do_cur_steps;
+
 BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0};
 BYTE m_b_Pause = FALSE;
 //sr should be 0, it's active mode, so shottky not required
@@ -238,6 +239,8 @@ void MyProcessIO(void)
 		memset((void*)(&m_timer_cnt),0,sizeof(m_timer_cnt));
 	}
 	break;
+	
+
 	case COMMAND_SET_TIME:
 		memcpy(
            		(void*)(&m_do_timer_set),
