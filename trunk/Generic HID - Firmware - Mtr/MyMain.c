@@ -32,8 +32,9 @@ BYTE m_b_Pause = FALSE;
 //#define led_0           PORTBbits.RB2
 //#define home_0          PORTDbits.RD7
 
-#define ink_impuls          PORTBbits.RB0
-#define ink_sensor          PORTBbits.RB1
+#define ink_impuls      PORTBbits.RB0
+#define ink_sensor      PORTBbits.RB1
+#define led_3           PORTBbits.RB2
 
 #define step_0          PORTCbits.RC0
 #define dir_0           PORTCbits.RC1
@@ -376,6 +377,7 @@ void MyUserInit(void)
 
 // Set TO to be a 16bits timer
 
+	INTCON2bits.NOT_RBPU = 0;
 }//end MyUserInit
 
 void ProcessHome(void)
@@ -404,4 +406,5 @@ void ProcessInkImpuls(int new_impuls)
 	{
 		ink_impuls = 0;
 	}
+	led_3 = ink_impuls;//ink_sensor;
 }
