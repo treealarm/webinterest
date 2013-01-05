@@ -41,6 +41,7 @@ typedef struct
 	}m_timer_res;
     BYTE m_multiplier[MOTORS_COUNT];
 	UINT16 m_ink_impuls;
+	BYTE m_fake;//for alignment
 }
 do_timer_set;
 do_timer_set m_do_timer_set;
