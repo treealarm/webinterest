@@ -43,6 +43,7 @@ protected:
 	do_steps_multiplier m_step_mult;
 public:
 	do_steps m_cur_steps;
+	UINT16 m_timer_ink_impuls;
 	ControlWrapper(void);
 	virtual ~ControlWrapper(void);
 	BOOL SetTimer(do_timer_set& timer_set);

@@ -79,4 +79,5 @@ public:
 	afx_msg void OnBnClickedButton2();
 	int DoProrejka2(COLORREF selcolor,Bitmap& Image1,BOOL divider1);
 	afx_msg void OnBnClickedButton3();
+	UINT m_nInkImpuls;
 };
