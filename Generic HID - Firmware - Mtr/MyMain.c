@@ -16,7 +16,7 @@ extern USB_HANDLE USBInHandle;
 do_steps m_do_cur_steps;
 
 BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0};
-BYTE m_timer_ink_impuls = 0;
+UINT16 m_timer_ink_impuls = 0;
 BYTE m_b_Pause = FALSE;
 //sr should be 0, it's active mode, so shottky not required
 
@@ -243,6 +243,11 @@ void MyProcessIO(void)
 		(void*)(&m_do_cur_steps),
 		sizeof(m_do_cur_steps) );
 
+		memcpy(
+		(void*)(&ToSendDataBuffer[2])+sizeof(m_do_cur_steps),
+		(void*)(&m_timer_ink_impuls),
+		sizeof(m_timer_ink_impuls) );
+
 		if(!HIDTxHandleBusy(USBInHandle))
 		{
 			USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
@@ -267,6 +272,7 @@ void MyProcessIO(void)
            		(void*)(&ReceivedDataBuffer[1]),
            		sizeof(m_do_timer_set) );
   		memset((void*)(&m_timer_cnt),0,sizeof(m_timer_cnt));
+		m_timer_ink_impuls = m_do_timer_set.m_ink_impuls;
 	break;
 	case COMMAND_SET_CONTROL_SIGNALS:
    		memcpy(
@@ -288,12 +294,14 @@ void MyProcessIO(void)
 
 void MyUserInit(void)
 {
+
 // Timer0 - 1 second interval setup.
 // Fosc/4 = 12MHz
 // Use /256 prescalar, this brings counter freq down to 46,875 Hz
 // Timer0 should = 65536 - 46875 = 18661 or 0x48E5
-	int i = 0;
+	int i = 0 ;
 
+	memset(&m_do_timer_set,0,sizeof(m_do_timer_set));
 	m_do_timer_set.m_timer_res.tmr16.lo   =      0xE5;
 	m_do_timer_set.m_timer_res.tmr16.hi   =      0x48;
 
@@ -307,7 +315,6 @@ void MyUserInit(void)
 	{
 		m_do_timer_set.m_multiplier[i] = 1;
 	}
-
 
     TRISDbits.TRISD3 = 0;
 	PORTDbits.RD3 = 1;
@@ -366,6 +373,7 @@ void MyUserInit(void)
 	sleep_0 = 1;
 
 	reset_0 = 1;
+	ink_impuls = 0;
 
 	INTCONbits.GIEL = 1;
 	INTCON2bits.TMR0IP = 0;
