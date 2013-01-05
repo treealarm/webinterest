@@ -42,10 +42,11 @@ void ControlWrapper::ClearCommandQueue(void)
 
 BOOL ControlWrapper::SetTimer(do_timer_set& timer_set)
 {
-	INT size1 =sizeof(timer_set);
-	INT size2= sizeof(do_timer_set);
-	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
-	OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
+	int size1 = sizeof(timer_set);
+	unsigned char* OutputPacketBuffer = new unsigned char[LEN_OF_PACKET];	
+	//Allocate a memory buffer equal to our endpoint size + 1
+	OutputPacketBuffer[0] = 0;				
+	//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
 	OutputPacketBuffer[1] = COMMAND_SET_TIME;
 	CopyMemory(&OutputPacketBuffer[2],&timer_set,sizeof(timer_set));
 	AddCommand(OutputPacketBuffer);
@@ -292,6 +293,8 @@ BOOL ControlWrapper::IsControllerAvailable(void)
 	//InputPacketBuffer[2] contains the I/O port pin value for the pushbutton.  
 
 	CopyMemory(&m_cur_steps,&InputPacketBuffer[3],sizeof(m_cur_steps));
+	CopyMemory(&m_timer_ink_impuls,&InputPacketBuffer[3+sizeof(m_cur_steps)],sizeof(m_timer_ink_impuls));
+	
 	//if(m_steps0%32 == 0)
 	/*{
 	CString s;

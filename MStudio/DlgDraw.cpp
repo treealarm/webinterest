@@ -23,6 +23,7 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	, m_commands_done(0)
 	, m_timer_res(100)
 	, m_pPrevPoint(0)
+	, m_nInkImpuls(0)
 {
 	m_selection = -1;
 	m_pThreadDrawGenerateXY = NULL;
@@ -40,6 +41,7 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 		s.Format("m_step_mult%d",i);
 		m_step_mult[i] = AfxGetApp()->GetProfileInt("settings",s,1);
 	}
+	m_nInkImpuls = AfxGetApp()->GetProfileInt("settings","m_nInkImpuls",1);
 	m_nPointsDone = 0;
 }
 
@@ -124,6 +126,8 @@ void CDlgDraw::DoDataExchange(CDataExchange* pDX)
 		DDX_Text(pDX, IDC_EDIT_STEP_MULT0+i, m_step_mult[i]);
 		DDV_MinMaxInt(pDX, m_step_mult[i], 1, 65000);
 	}
+	DDX_Text(pDX, IDC_EDITINK_IMPULS, m_nInkImpuls);
+	DDV_MinMaxInt(pDX, m_nInkImpuls, 0, 65000);
 }
 
 
@@ -206,6 +210,9 @@ void CDlgDraw::OnBnClickedButtonInit()
 		s.Format("m_step_mult%d",i);
 		AfxGetApp()->WriteProfileInt("settings",s,m_step_mult[i]);
 	}
+	var_do_timer_set.m_ink_impuls = m_nInkImpuls;
+	AfxGetApp()->WriteProfileInt("settings","m_nInkImpuls",m_nInkImpuls);
+	
 	
 	m_pControlWrapper->SetTimer(var_do_timer_set);
 	m_pControlWrapper->SetStepMultiplier(step_mult);
@@ -312,6 +319,9 @@ void CDlgDraw::OnTimer(UINT_PTR nIDEvent)
 		s.Format("motor%d=%d;",i,m_pControlWrapper->m_cur_steps.m_uSteps[i]);
 		result += s;
 	}
+	s.Format("ink=%d;",m_pControlWrapper->m_timer_ink_impuls);
+	result += s;
+	
 	GetDlgItem(IDC_STATIC_INFO)->SetWindowText(result);
 
 	CDialog::OnTimer(nIDEvent);

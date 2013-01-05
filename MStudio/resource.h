@@ -56,6 +56,7 @@
 #define IDC_BUTTON_GOTO_A               1041
 #define IDC_BUTTON_A_MINUS              1042
 #define IDC_EDIT2                       1043
+#define IDC_EDITINK_IMPULS              1043
 #define IDC_EDIT5                       1044
 #define IDC_EDIT6                       1045
 #define IDC_BUTTON1                     1046
