@@ -164,7 +164,7 @@ BOOL CDlgDraw::OnInitDialog()
 	m_list.InsertColumn(2,"Count",LVCFMT_LEFT,200);
 	m_list.SetItemCount((int)m_list.m_arr_RGBs.GetCount());
 
-	SetTimer(1,10,NULL);
+	SetTimer(1,50,NULL);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
