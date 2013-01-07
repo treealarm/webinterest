@@ -16,5 +16,7 @@ void InitTestSettings(void);
 
 void ProcessInkImpuls(int new_impuls);
 int CheckIfMotorsOnZero(void);
+int CheckIfBufferOnZero(void);
+void CopyBufferToMotor(void);
 
 #endif

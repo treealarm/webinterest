@@ -14,6 +14,7 @@ extern unsigned char ToSendDataBuffer[64];
 extern USB_HANDLE USBInHandle;
 
 do_steps m_do_cur_steps;
+do_steps m_do_cur_steps_buf;
 
 BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0};
 UINT16 m_timer_ink_impuls = 0;
@@ -53,8 +54,6 @@ BYTE m_b_Pause = FALSE;
 
 #define btn_1			PORTBbits.RB4
 
-INT32 g_forvard = 1;
-do_timer_set start_speed = {0};
 
 void RestartTimer(void)
 {
@@ -65,11 +64,55 @@ void RestartTimer(void)
 	INTCONbits.TMR0IF = 0;          // Clear flag
 }
 
+void CopyBufferToMotor(void)
+{
+	if(CheckIfBufferOnZero())
+	{
+		return;
+	}
+	memcpy(
+		(void*)(&m_do_cur_steps),
+		(void*)(&m_do_cur_steps_buf),
+		sizeof(m_do_cur_steps_buf) );
+	memset(&m_do_cur_steps_buf,0,sizeof(m_do_cur_steps_buf));
+
+
+	SetupDirs();
+	memset((void*)(&m_timer_cnt),0,sizeof(m_timer_cnt));
+
+}
+
+int CheckIfMotorsOnZero(void)
+{
+	int i = 0;
+	for(i = 0;i < MOTORS_COUNT;i++)
+	{
+		if(m_do_cur_steps.m_uSteps[i] != 0)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int CheckIfBufferOnZero(void)
+{
+	int i = 0;
+	for(i = 0;i < MOTORS_COUNT;i++)
+	{
+		if(m_do_cur_steps_buf.m_uSteps[i] != 0)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
 
 void ProcessSteps(void)
 {
 	int i;
 	int motors_on_zero = 0;
+	int motors_on_zero_1 = 0;
 	int new_impuls = 0;
 	ProcessHome();
 
@@ -94,44 +137,40 @@ void ProcessSteps(void)
 			m_timer_cnt[i] = m_timer_cnt[i]+1;
 		}
 	}
-	new_impuls = !motors_on_zero && CheckIfMotorsOnZero();
+	//ProcessHome();
+	motors_on_zero_1 = CheckIfMotorsOnZero();
+	new_impuls = !motors_on_zero && motors_on_zero_1;
 	ProcessInkImpuls(new_impuls);
 
-	ProcessHome();
+	if(motors_on_zero_1)
+	{
+		CopyBufferToMotor();
+	}
 }
 
-int CheckIfMotorsOnZero(void)
-{
-	int i = 0;
-	for(i = 0;i < MOTORS_COUNT;i++)
-	{
-		if(m_do_cur_steps.m_uSteps[i] != 0)
-		{
-			return 0;
-		}
-	}
-	return 1;
-}
+
+
 void ProcessStep(int motor)
 {
-	if(m_do_cur_steps.m_uSteps[motor] == 0)
+	/*if(m_do_cur_steps.m_uSteps[motor] == 0)
 	{
 		if(motor == 0)
 		{
 		  step_0 = 0;
 		}
-		else
+
 		if(motor == 1)
 		{
 			step_1 = 0;
 		}
-		else
+
 		if(motor == 2)
 		{
 		    step_2 = 0;
 		}
+
 		return;
-	}
+	}*/
 
 	if(motor == 0)
 	{
@@ -141,7 +180,7 @@ void ProcessStep(int motor)
 			return;
 		}
 	}
-	else
+
 	if(motor == 1)
 	{
 		if(step_1 != 0)
@@ -150,7 +189,7 @@ void ProcessStep(int motor)
 			return;
 		}
 	}
-	else
+
 	if(motor == 2)
 	{
 	    if(step_2 != 0)
@@ -169,12 +208,12 @@ void ProcessStep(int motor)
 	{
 	    step_0 = 1;
 	}
-	else
+
 	if(motor == 1)
 	{
 	    step_1 = 1;
 	}
-	else
+
 	if(motor == 2)
 	{
 	    step_2 = 1;
@@ -225,7 +264,7 @@ void MyProcessIO(void)
 	case COMMAND_IS_AVAILABLE:  //Get push button state (available state)
 		ToSendDataBuffer[0] = COMMAND_IS_AVAILABLE;				//Echo back to the host PC the command we are fulfilling in the first byte.  In this case, the Get Pushbutton State command.
 	    
-		if(!CheckIfMotorsOnZero())
+		if(!CheckIfBufferOnZero())
 		{
 			ToSendDataBuffer[1] = 0x00;
 		}
@@ -256,12 +295,10 @@ void MyProcessIO(void)
 	case COMMAND_SET_STEPS:
 	{
 		memcpy(
-       			(void*)(&m_do_cur_steps),
+       			(void*)(&m_do_cur_steps_buf),
        			(void*)(&ReceivedDataBuffer[1]),
-       			sizeof(m_do_cur_steps) );
+       			sizeof(m_do_cur_steps_buf) );
 
-		SetupDirs();
-		memset((void*)(&m_timer_cnt),0,sizeof(m_timer_cnt));
 	}
 	break;
 	
@@ -322,39 +359,74 @@ void MyUserInit(void)
 	TRISBbits.TRISB4 = 1;
 
     memset(&m_do_cur_steps,0,sizeof(m_do_cur_steps));
+	memset(&m_do_cur_steps_buf,0,sizeof(m_do_cur_steps_buf));
 	memset(&m_do_control_signals,0,sizeof(m_do_control_signals));
 
 
 ///////////////////////////////////.TRIS////////////////
+/*
+#define ms1_0           PORTDbits.RD2
+#define ms2_0           PORTCbits.RC6
+#define sr_0            PORTCbits.RC7
+#define reset_0         PORTDbits.RD6
+#define enable_0        PORTDbits.RD4
+#define sleep_0         PORTDbits.RD5
 
-/* ink_impuls  */           TRISBbits.TRISB0 = 0;
-/* ink_sensor   */           TRISBbits.TRISB1 = 1;
+#define ink_impuls      PORTBbits.RB0
+#define ink_sensor      PORTBbits.RB1
+#define led_3           PORTBbits.RB2
+
+#define step_0          PORTCbits.RC0
+#define dir_0           PORTCbits.RC1
+#define led_0           PORTCbits.RC2
+#define home_0          PORTAbits.RA5
+
+#define step_1          PORTEbits.RE0
+#define dir_1           PORTEbits.RE1
+#define led_1           PORTEbits.RE2
+#define home_1          PORTAbits.RA4
+
+#define step_2          PORTAbits.RA0
+#define dir_2           PORTAbits.RA1
+#define led_2           PORTAbits.RA2
+#define home_2          PORTAbits.RA3
+
+#define btn_1			PORTBbits.RB4
+*/
 
 
-/* #define ms1_0*/              TRISDbits.TRISD2 = 0;
-/* #define ms2_0*/              TRISCbits.TRISC6 = 0;
-/* #define sr_0  */             TRISCbits.TRISC7 = 0;
-/* #define reset_0*/            TRISDbits.TRISD6 = 0;
+	TRISDbits.TRISD2 = 0;
+	TRISCbits.TRISC6 = 0;
+	TRISCbits.TRISC7 = 0;
+	TRISDbits.TRISD6 = 0;
+	TRISDbits.TRISD4 = 0;
+	TRISDbits.TRISD5 = 0;
 
-/* #define enable_0*/           TRISDbits.TRISD4 = 0;
-/* #define sleep_0 */           TRISDbits.TRISD5 = 0;
+	TRISBbits.TRISB0 = 0;
+	TRISBbits.TRISB1 = 1;
+	TRISBbits.TRISB2 = 0;
+	
+	TRISCbits.TRISC0 = 0;
+	TRISCbits.TRISC1 = 0;
+	TRISCbits.TRISC2 = 0;
+	TRISAbits.TRISA5 = 1;
 
-/*#define step_1*/             TRISCbits.TRISC0 = 0;
-/*#define dir_1*/              TRISCbits.TRISC1 = 0;
-/*#define step_2*/             TRISEbits.TRISE0 = 0;
-/*#define dir_2  */            TRISEbits.TRISE1 = 0;
-/*#define step_3*/             TRISAbits.TRISA0 = 0;
-/*#define dir_3*/              TRISAbits.TRISA1 = 0;
+	TRISEbits.TRISE0 = 0;
+	TRISEbits.TRISE1 = 0;
+	TRISEbits.TRISE2 = 0;
+	TRISAbits.TRISA4 = 1;
 
-/*#define led_0*/              TRISBbits.TRISB2 = 0;
-/*#define home_0*/             TRISDbits.TRISD7 = 1;
-/*#define led_1*/              TRISCbits.TRISC2 = 0;
-/*#define home_1*/             TRISAbits.TRISA3 = 1;
-/*#define led_2*/              TRISEbits.TRISE2 = 0;
-/*#define home_2*/             TRISAbits.TRISA4 = 1;
-/*#define led_3*/              TRISAbits.TRISA2 = 0;
-/*#define home_3*/             TRISAbits.TRISA5 = 1;
+	TRISAbits.TRISA0 = 0;
+	TRISAbits.TRISA1 = 0;
+	TRISAbits.TRISA2 = 0;
+	TRISAbits.TRISA3 = 1;
+
+	TRISDbits.TRISD7 = 1;
+
+
+
 ///////////////////////////////////////////////////
+	ink_impuls = 0;
 	reset_0 = 0;
 
     dir_0 = 0;
@@ -373,7 +445,6 @@ void MyUserInit(void)
 	sleep_0 = 1;
 
 	reset_0 = 1;
-	ink_impuls = 0;
 
 	INTCONbits.GIEL = 1;
 	INTCON2bits.TMR0IP = 0;
@@ -386,6 +457,7 @@ void MyUserInit(void)
 // Set TO to be a 16bits timer
 
 	INTCON2bits.NOT_RBPU = 0;
+	ProcessHome();
 }//end MyUserInit
 
 void ProcessHome(void)
