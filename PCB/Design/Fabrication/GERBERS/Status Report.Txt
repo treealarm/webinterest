@@ -1,0 +1,25 @@
+Output: Gerber Files
+Type  : Gerber
+From  : Project [PCB_4550_Project.PrjPCB]
+   Generated File[PCB_4550.GTL]
+   Generated File[PCB_4550.GBL]
+   Generated File[PCB_4550.GPB]
+   Generated File[PCB_4550.GPT]
+   Generated File[PCB_4550.GTO]
+   Generated File[PCB_4550.GTP]
+   Generated File[PCB_4550.GTS]
+   Generated File[PCB_4550.GBS]
+   Generated File[PCB_4550.GM1]
+   Generated File[PCB_4550.GM2]
+   Generated File[PCB_4550.GM13]
+   Generated File[PCB_4550.GM15]
+   Generated File[PCB_4550.GKO]
+   Generated File[PCB_4550.RUL]
+   Generated File[PCB_4550.EXTREP]
+   Generated File[PCB_4550.REP]
+
+
+Files Generated   : 16
+Documents Printed : 0
+
+Finished Output Generation At 22:23:31 On 01.03.2010
