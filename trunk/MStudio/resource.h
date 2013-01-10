@@ -64,6 +64,7 @@
 #define IDC_BUTTON2                     1047
 #define IDC_STATIC_INFO                 1048
 #define IDC_BUTTON3                     1049
+#define IDC_BUTTON4                     1050
 #define ID_IMAGE_PROCESS                32771
 #define ID_IMAGE_SHOWUNIQUECOLORS       32772
 #define ID_IMAGE_FINDUNIQUECOLORS       32773
@@ -87,7 +88,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32789
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
