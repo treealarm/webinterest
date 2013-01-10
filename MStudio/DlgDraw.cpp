@@ -29,10 +29,15 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	m_pThreadDrawGenerateXY = NULL;
 	ZeroMemory(&m_cur_pos,sizeof(m_cur_pos));
 	m_p_do_control_signals = new do_control_signals;
+	m_p_do_control_signals->ms1 = 1;
+	m_p_do_control_signals->ms2 = 1;
+	m_p_do_control_signals->reset = 1;
+
 	m_pControlWrapper = new ControlWrapper;
 	m_timer_res = AfxGetApp()->GetProfileInt("settings","m_timer_res",100);
 
-	for(int i=0;i<MOTORS_COUNT;i++)
+	int i=0;
+	for(i=0;i<MOTORS_COUNT;i++)
 	{
 		CString s;
 		s.Format("m_mult%d",i);
@@ -41,6 +46,14 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 		s.Format("m_step_mult%d",i);
 		m_step_mult[i] = AfxGetApp()->GetProfileInt("settings",s,1);
 	}
+	//i=0;
+	//for(int j=0; j < 32*400;j++)
+	//{
+	//	if(j%32 == 0)
+	//	{
+	//		i++;
+	//	}
+	//}
 	m_nInkImpuls = AfxGetApp()->GetProfileInt("settings","m_nInkImpuls",1);
 	m_nPointsDone = 0;
 }
@@ -150,6 +163,7 @@ BEGIN_MESSAGE_MAP(CDlgDraw, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_PROREJ, &CDlgDraw::OnBnClickedButtonSaveProrej)
 	ON_BN_CLICKED(IDC_BUTTON2, &CDlgDraw::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CDlgDraw::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &CDlgDraw::OnBnClickedButton4)
 END_MESSAGE_MAP()
 
 
@@ -704,3 +718,17 @@ void CDlgDraw::OnBnClickedButton3()
 	m_pControlWrapper->ToggleLed();
 }
 
+
+
+void CDlgDraw::OnBnClickedButton4()
+{
+	m_pControlWrapper->ClearCommandQueue();
+	ZeroMemory(&m_cur_pos,sizeof(m_cur_pos));
+	m_pControlWrapper->CloseController();
+	m_pControlWrapper->Connect();
+	if(!m_pControlWrapper->IsOpen())
+	{
+		AfxMessageBox("Cannot connect to device");
+		return;
+	}
+}
