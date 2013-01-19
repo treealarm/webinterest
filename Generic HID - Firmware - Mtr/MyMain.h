@@ -11,7 +11,6 @@ void SetupCtrlSignals(void);
 void MyProcessIO(void);
 void MyUserInit(void);
 
-void ProcessHome(void);
 void InitTestSettings(void);	
 
 void ProcessInkImpuls(int new_impuls);
