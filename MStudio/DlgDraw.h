@@ -15,8 +15,8 @@ public:
 	enum COORD_POS
 	{
 		X_POS = 1,
-		Y_POS = 2,
-		Z_POS = 0
+		Y_POS = 0,
+		Z_POS = 2
 	};
 	CDlgDraw(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CDlgDraw();
