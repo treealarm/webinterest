@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<!-- #BeginEditable "doctitle" -->
+<title></title>
+<!-- #EndEditable -->
+<link href="styles/style0.css" media="screen" rel="stylesheet" title="CSS" type="text/css" />
+<style type="text/css">
+.auto-style1 {
+	font-size: large;
+	color: #4E5659;
+}
+.auto-style2 {
+	color: #006699;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Begin Container -->
+<div id="container">
+	<!-- Begin Masthead -->
+	<div id="masthead">
+		<h1>Арт-артель</h1>
+		<h3>Живопись. картины.</h3>
+	</div>
+	<!-- End Masthead -->
+	<!-- Begin Navigation -->
+	<div id="navigation">
+		<ul>
+			<li><a href="default.html">Home</a></li>
+			<li><a href="about_me/default.html">О нас</a></li>
+			<li><a href="resume/default.html">Портфолио</a></li>
+			<li><a href="photo_gallery/default.html">Галлерея</a></li>
+			<li><a href="links/default.html">Ссылки</a></li>
+			<li><a href="contact/default.html">Контакты</a></li>
+		</ul>
+	</div>
+	<!-- End Navigation -->
+	<!-- Begin content_container -->
+	<div id="content_container">
+		<!-- Begin Left Column -->
+		<div id="column_left">
+			<!-- #BeginEditable "content" -->
+			<h2>Иван Грозный убивает сына</h2>
+			<p>в разработке</p>
+			<!-- #EndEditable --></div>
+		<!-- End Left Column -->
+		<!-- Begin Right Column -->
+		<div id="column_right">
+			<!-- #BeginEditable "sidebar" -->
+			<span class="auto-style1">Распродажа</span><p>Копия картины 
+			&quot;Подсолнухи&quot;</p>
+			<!-- #EndEditable --></div>
+		<!-- End Right Column -->
+		<!-- Begin Footer -->
+		<div id="footer">
+			<div id="copyright">
+				<p>Copyright © Арт-артель. All Rights Reserved.</p>
+			</div>
+			<p><a href="default.html">Home</a> | <a href="about_me/default.html">
+			О<span class="auto-style2"> нас</span></a> | <a href="resume/default.html">
+			П<span class="auto-style2">ортфолио</span></a> |
+			<a href="photo_gallery/default.html">Г<span class="auto-style2">аллерея</span></a> |
+			<a href="links/default.html">С<span class="auto-style2">сылки</span></a> |
+			<a href="contact/default.html">К<span class="auto-style2">онтакты</span></a></p>
+		</div>
+		<!-- End Footer --></div>
+	<!-- End content_container --></div>
+<!-- End Container -->
+
+</body>
+
+</html>
