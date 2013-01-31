@@ -381,7 +381,7 @@ void MyUserInit(void)
 	ms1_0 = 1;
 	ms2_0 = 1;
 	sr_0 = 0;
-	enable_0 = 0;//(1 -disable, 0 - enable)
+	enable_0 = 1;//(1 -disable, 0 - enable)
 
     dir_0 = 0;
     dir_1 = 0;
