@@ -140,7 +140,7 @@ void CDlgDraw::DoDataExchange(CDataExchange* pDX)
 		DDV_MinMaxInt(pDX, m_step_mult[i], 1, 65000);
 	}
 	DDX_Text(pDX, IDC_EDITINK_IMPULS, m_nInkImpuls);
-	DDV_MinMaxInt(pDX, m_nInkImpuls, 0, 65000);
+	DDV_MinMaxInt(pDX, m_nInkImpuls, 0, 500);
 }
 
 
