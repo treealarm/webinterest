@@ -96,13 +96,14 @@ void CDlgDraw::CreateXYThread(COLORREF selcolor)
 		{
 			Color color;
 			Status status = pImage->GetPixel(x,h-y-1,&color);
-			if(selcolor==color.ToCOLORREF() || (x==0 && (y%5)==0 ) || (x==(w-1) && (y%5)==0))
+			if(selcolor==color.ToCOLORREF()/* 
+										   || (x==0 && (y%5)==0 ) || (x==(w-1) && (y%5)==0)*/)
 			{
 				m_pThreadDrawGenerateXY->AddPoint(x,y);
 			}
 		}
-	}/*
-	m_pThreadDrawGenerateXY->AddPoint(0,0);
+	}
+	/*m_pThreadDrawGenerateXY->AddPoint(0,0);
 	m_pThreadDrawGenerateXY->AddPoint(w-1,0);
 	m_pThreadDrawGenerateXY->AddPoint(w-1,h-1);
 	m_pThreadDrawGenerateXY->AddPoint(0,h-1);*/
