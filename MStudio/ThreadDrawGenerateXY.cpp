@@ -41,39 +41,39 @@ double GetDistanse(CPoint pt1,CPoint pt2)
 }
 BOOL CThreadDrawGenerateXY::InitInstance()
 {
-	for(POSITION pos = m_arr_points.GetHeadPosition();pos!=NULL;)
-	{
-		CPoint cur_pt = m_arr_points.GetNext(pos);
-		CPoint* pPoint = new CPoint(cur_pt);
-		PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
-		WaitForSingleObject(m_EventNext,INFINITE);
-	}
-
-	//m_cur_point = CPoint(0,0);
-	//while(!m_arr_points.IsEmpty() && m_bWorking)
+	//for(POSITION pos = m_arr_points.GetHeadPosition();pos!=NULL;)
 	//{
-	//	double cur_dist = (double)(m_h+m_w);
-	//	POSITION pos_to_send = m_arr_points.GetHeadPosition();
-	//	for(POSITION pos = m_arr_points.GetHeadPosition();pos!=NULL;)
-	//	{
-	//		POSITION prev_pos = pos;
-	//		CPoint cur_pt = m_arr_points.GetNext(pos);
-	//		double dist = GetDistanse(m_cur_point,cur_pt);
-	//		if(dist < cur_dist)
-	//		{
-	//			cur_dist = dist ;
-	//			pos_to_send = prev_pos;
-	//		}
-	//	}
-	//	if(pos_to_send)
-	//	{
-	//		m_cur_point = m_arr_points.GetAt(pos_to_send);
-	//		CPoint* pPoint = new CPoint(m_cur_point);
-	//		m_arr_points.RemoveAt(pos_to_send);
-	//		PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
-	//	}
+	//	CPoint cur_pt = m_arr_points.GetNext(pos);
+	//	CPoint* pPoint = new CPoint(cur_pt);
+	//	PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
 	//	WaitForSingleObject(m_EventNext,INFINITE);
 	//}
+
+	m_cur_point = CPoint(0,0);
+	while(!m_arr_points.IsEmpty() && m_bWorking)
+	{
+		double cur_dist = (double)(m_h+m_w);
+		POSITION pos_to_send = m_arr_points.GetHeadPosition();
+		for(POSITION pos = m_arr_points.GetHeadPosition();pos!=NULL;)
+		{
+			POSITION prev_pos = pos;
+			CPoint cur_pt = m_arr_points.GetNext(pos);
+			double dist = GetDistanse(m_cur_point,cur_pt);
+			if(dist < cur_dist)
+			{
+				cur_dist = dist ;
+				pos_to_send = prev_pos;
+			}
+		}
+		if(pos_to_send)
+		{
+			m_cur_point = m_arr_points.GetAt(pos_to_send);
+			CPoint* pPoint = new CPoint(m_cur_point);
+			m_arr_points.RemoveAt(pos_to_send);
+			PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
+		}
+		WaitForSingleObject(m_EventNext,INFINITE);
+	}
 	/*int g_chet = 0;
 	for(int y = 0; y < m_h;y++)
 	{
