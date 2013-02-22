@@ -434,7 +434,7 @@ void CDlgDraw::GoToStartPosition()
 	do_steps var_do_steps;
 	ZeroMemory(&var_do_steps,sizeof(var_do_steps));
 	var_do_steps.m_uSteps[Z_POS] = -m_cur_pos.z;
-	var_do_steps.m_uSteps[X_POS] = 0;//-m_cur_pos.x;
+	var_do_steps.m_uSteps[X_POS] = -m_cur_pos.x;
 	var_do_steps.m_uSteps[Y_POS] = -m_cur_pos.y;
 	
 	SetStepsToController(var_do_steps);
