@@ -24,6 +24,7 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	, m_timer_res(100)
 	, m_pPrevPoint(0)
 	, m_nInkImpuls(0)
+	, m_bDriversOffPending(FALSE)
 {
 	m_selection = -1;
 	m_pThreadDrawGenerateXY = NULL;
@@ -331,8 +332,13 @@ void CDlgDraw::OnTimer(UINT_PTR nIDEvent)
 		
 	}
 	CString result;
+	BOOL bZeroPos = TRUE;
 	for(int i = 0; i < MOTORS_COUNT; i++)
 	{
+		if(m_pControlWrapper->m_cur_steps.m_uSteps[i] != 0)
+		{
+			bZeroPos = FALSE;
+		}
 		s.Format("motor%d=%d;",i,m_pControlWrapper->m_cur_steps.m_uSteps[i]);
 		result += s;
 	}
@@ -340,6 +346,15 @@ void CDlgDraw::OnTimer(UINT_PTR nIDEvent)
 	result += s;
 	
 	GetDlgItem(IDC_STATIC_INFO)->SetWindowText(result);
+
+	if(m_bDriversOffPending && bZeroPos && m_pControlWrapper->GetCountInQueue() == 0)
+	{
+		m_bDriversOffPending--;
+		if(!m_bDriversOffPending)
+		{
+			DriversOff();
+		}
+	}
 
 	CDialog::OnTimer(nIDEvent);
 }
@@ -370,7 +385,8 @@ LRESULT CDlgDraw::OnEndProcessXY(WPARAM wParam, LPARAM lParam)
 	//m_nPointsDone = 100;
 	GoToStartPositionZ();
 	GoToStartPosition();
-	DriversOff();
+	m_bDriversOffPending = 100;
+	//DriversOff();
 	return 0;
 }
 LRESULT CDlgDraw::OnProcessXY(WPARAM wParam, LPARAM lParam)

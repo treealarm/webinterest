@@ -81,4 +81,5 @@ public:
 	afx_msg void OnBnClickedButton3();
 	UINT m_nInkImpuls;
 	afx_msg void OnBnClickedButton4();
+	BOOL m_bDriversOffPending;
 };
