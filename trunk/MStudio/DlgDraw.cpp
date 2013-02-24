@@ -193,18 +193,7 @@ void CDlgDraw::OnBnClickedButtonInit()
 	size = sizeof(do_timer_set);
 	UpdateData();
 	
-	m_pControlWrapper->ClearCommandQueue();
-	ZeroMemory(&m_cur_pos,sizeof(m_cur_pos));
-	m_pControlWrapper->CloseController();
-	m_pControlWrapper->Connect();
-	if(!m_pControlWrapper->IsOpen())
-	{
-		AfxMessageBox("Cannot connect to device");
-		return;
-	}
-	do_steps var_do_steps;
-	ZeroMemory(&var_do_steps,sizeof(var_do_steps));
-	SetStepsToController(var_do_steps);
+
 
 	do_timer_set var_do_timer_set;
 	var_do_timer_set.m_timer_res.u16 = 65536 - m_timer_res;//65536 - 2;
@@ -228,6 +217,19 @@ void CDlgDraw::OnBnClickedButtonInit()
 	var_do_timer_set.m_ink_impuls = m_nInkImpuls;
 	AfxGetApp()->WriteProfileInt("settings","m_nInkImpuls",m_nInkImpuls);
 	
+	m_pControlWrapper->ClearCommandQueue();
+	ZeroMemory(&m_cur_pos,sizeof(m_cur_pos));
+	m_pControlWrapper->CloseController();
+	m_pControlWrapper->Connect();
+	if(!m_pControlWrapper->IsOpen())
+	{
+		AfxMessageBox("Cannot connect to device");
+		return;
+	}
+	do_steps var_do_steps;
+	ZeroMemory(&var_do_steps,sizeof(var_do_steps));
+	SetStepsToController(var_do_steps);
+
 	
 	m_pControlWrapper->SetTimer(var_do_timer_set);
 	m_pControlWrapper->SetStepMultiplier(step_mult);
