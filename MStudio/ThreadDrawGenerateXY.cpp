@@ -50,6 +50,8 @@ BOOL CThreadDrawGenerateXY::InitInstance()
 	//}
 
 	m_cur_point = CPoint(0,0);
+
+#ifdef GET_NEAREST
 	while(!m_arr_points.IsEmpty() && m_bWorking)
 	{
 		double cur_dist = (double)(m_h+m_w);
@@ -74,12 +76,14 @@ BOOL CThreadDrawGenerateXY::InitInstance()
 		}
 		WaitForSingleObject(m_EventNext,INFINITE);
 	}
-	/*int g_chet = 0;
-	for(int y = 0; y < m_h;y++)
+#else
+
+	int g_chet = 0;
+	for(int y = 0; y < m_h && m_bWorking; y++)
 	{
 		if(y%2)
 		{
-			for(int x = 0; x < m_w;x++)
+			for(int x = 0; x < m_w && m_bWorking; x++)
 			{
 				WaitForSingleObject(m_EventNext,INFINITE);
 				CPoint* pPoint = new CPoint(x,y);
@@ -88,7 +92,7 @@ BOOL CThreadDrawGenerateXY::InitInstance()
 		}
 		else
 		{
-			for(int x = m_w-1; x >=0;x--)
+			for(int x = m_w-1; x >=0 && m_bWorking; x--)
 			{
 				WaitForSingleObject(m_EventNext,INFINITE);
 				CPoint* pPoint = new CPoint(x,y);
@@ -96,7 +100,8 @@ BOOL CThreadDrawGenerateXY::InitInstance()
 			}
 		}
 
-	}*/
+	}
+#endif
 	PostMessage(m_hWnd,WM_END_PROCESS_XY,0,0);
 	
 	return FALSE;
