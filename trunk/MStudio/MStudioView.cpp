@@ -91,8 +91,8 @@ void CMStudioView::OnDraw(CDC* pDC)
 	
 	int x = int((m_current_draw.x-5)*Zoom);
 	int y = int((m_current_draw.y-5)*Zoom);
-    int width = int(10*Zoom);
-    int height = int(10*Zoom);
+    int width = int(5*Zoom);
+    int height = int(5*Zoom);
 
 	Pen pen(Color::Red);
 	myGraphics.DrawEllipse(&pen,x,y,width,height);

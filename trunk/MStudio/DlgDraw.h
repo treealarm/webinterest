@@ -82,4 +82,5 @@ public:
 	UINT m_nInkImpuls;
 	afx_msg void OnBnClickedButton4();
 	BOOL m_bDriversOffPending;
+	BOOL m_OptimizePath;
 };

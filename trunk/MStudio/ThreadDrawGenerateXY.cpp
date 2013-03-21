@@ -14,8 +14,9 @@
 
 IMPLEMENT_DYNCREATE(CThreadDrawGenerateXY, CWinThread)
 
-CThreadDrawGenerateXY::CThreadDrawGenerateXY()
-: m_bWorking(TRUE)
+CThreadDrawGenerateXY::CThreadDrawGenerateXY(BOOL optimizePath)
+: m_bWorking(TRUE),
+m_OptimizePath(optimizePath)
 {
 	m_bAutoDelete = FALSE;
 	m_hWnd = NULL;
@@ -51,57 +52,59 @@ BOOL CThreadDrawGenerateXY::InitInstance()
 
 	m_cur_point = CPoint(0,0);
 
-#ifdef GET_NEAREST
-	while(!m_arr_points.IsEmpty() && m_bWorking)
+	if(m_OptimizePath)
 	{
-		double cur_dist = (double)(m_h+m_w);
-		POSITION pos_to_send = m_arr_points.GetHeadPosition();
-		for(POSITION pos = m_arr_points.GetHeadPosition();pos!=NULL;)
+		while(!m_arr_points.IsEmpty() && m_bWorking)
 		{
-			POSITION prev_pos = pos;
-			CPoint cur_pt = m_arr_points.GetNext(pos);
-			double dist = GetDistanse(m_cur_point,cur_pt);
-			if(dist < cur_dist)
+			double cur_dist = (double)(m_h+m_w);
+			POSITION pos_to_send = m_arr_points.GetHeadPosition();
+			for(POSITION pos = m_arr_points.GetHeadPosition();pos!=NULL;)
 			{
-				cur_dist = dist ;
-				pos_to_send = prev_pos;
+				POSITION prev_pos = pos;
+				CPoint cur_pt = m_arr_points.GetNext(pos);
+				double dist = GetDistanse(m_cur_point,cur_pt);
+				if(dist < cur_dist)
+				{
+					cur_dist = dist ;
+					pos_to_send = prev_pos;
+				}
 			}
-		}
-		if(pos_to_send)
-		{
-			m_cur_point = m_arr_points.GetAt(pos_to_send);
-			CPoint* pPoint = new CPoint(m_cur_point);
-			m_arr_points.RemoveAt(pos_to_send);
-			PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
-		}
-		WaitForSingleObject(m_EventNext,INFINITE);
-	}
-#else
-
-	int g_chet = 0;
-	for(int y = 0; y < m_h && m_bWorking; y++)
-	{
-		if(y%2)
-		{
-			for(int x = 0; x < m_w && m_bWorking; x++)
+			if(pos_to_send)
 			{
-				WaitForSingleObject(m_EventNext,INFINITE);
-				CPoint* pPoint = new CPoint(x,y);
+				m_cur_point = m_arr_points.GetAt(pos_to_send);
+				CPoint* pPoint = new CPoint(m_cur_point);
+				m_arr_points.RemoveAt(pos_to_send);
 				PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
 			}
+			WaitForSingleObject(m_EventNext,INFINITE);
 		}
-		else
-		{
-			for(int x = m_w-1; x >=0 && m_bWorking; x--)
-			{
-				WaitForSingleObject(m_EventNext,INFINITE);
-				CPoint* pPoint = new CPoint(x,y);
-				PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
-			}
-		}
-
 	}
-#endif
+	else
+	{
+		int g_chet = 0;
+		for(int y = 0; y < m_h && m_bWorking; y++)
+		{
+			if(y%2 == 0)
+			{
+				for(int x = 0; x < m_w && m_bWorking; x++)
+				{
+					WaitForSingleObject(m_EventNext,INFINITE);
+					CPoint* pPoint = new CPoint(x,y);
+					PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
+				}
+			}
+			else
+			{
+				for(int x = m_w-1; x >=0 && m_bWorking; x--)
+				{
+					WaitForSingleObject(m_EventNext,INFINITE);
+					CPoint* pPoint = new CPoint(x,y);
+					PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
+				}
+			}
+
+		}
+	}
 	PostMessage(m_hWnd,WM_END_PROCESS_XY,0,0);
 	
 	return FALSE;
