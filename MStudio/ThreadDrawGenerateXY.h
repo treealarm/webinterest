@@ -9,8 +9,10 @@ class CThreadDrawGenerateXY : public CWinThread
 	DECLARE_DYNCREATE(CThreadDrawGenerateXY)
 
 protected:
+	BOOL m_OptimizePath;
+	CThreadDrawGenerateXY(){};           
 public:
-	CThreadDrawGenerateXY();           
+	CThreadDrawGenerateXY(BOOL optimizePath);           
 	virtual ~CThreadDrawGenerateXY();
 
 

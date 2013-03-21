@@ -25,6 +25,7 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	, m_pPrevPoint(0)
 	, m_nInkImpuls(0)
 	, m_bDriversOffPending(FALSE)
+	, m_OptimizePath(AfxGetApp()->GetProfileInt("settings","m_OptimizePath",FALSE))
 {
 	m_selection = -1;
 	m_pThreadDrawGenerateXY = NULL;
@@ -83,7 +84,7 @@ void CDlgDraw::CreateXYThread(COLORREF selcolor)
 	int h = pImage->GetHeight();
 
 
-	m_pThreadDrawGenerateXY = new CThreadDrawGenerateXY();
+	m_pThreadDrawGenerateXY = new CThreadDrawGenerateXY(m_OptimizePath);
 	m_pThreadDrawGenerateXY->m_h = h;
 	m_pThreadDrawGenerateXY->m_w = w;
 	m_pThreadDrawGenerateXY->m_selcolor = selcolor;
@@ -143,6 +144,7 @@ void CDlgDraw::DoDataExchange(CDataExchange* pDX)
 	}
 	DDX_Text(pDX, IDC_EDITINK_IMPULS, m_nInkImpuls);
 	DDV_MinMaxInt(pDX, m_nInkImpuls, 0, 500);
+	DDX_Check(pDX, IDC_CHECK2, m_OptimizePath);
 }
 
 
@@ -199,6 +201,9 @@ void CDlgDraw::OnBnClickedButtonInit()
 	do_timer_set var_do_timer_set;
 	var_do_timer_set.m_timer_res.u16 = 65536 - m_timer_res;//65536 - 2;
 
+	
+
+	AfxGetApp()->WriteProfileInt("settings","m_OptimizePath",m_OptimizePath);
 	AfxGetApp()->WriteProfileInt("settings","m_timer_res",m_timer_res);
 
 	do_steps_multiplier step_mult;
@@ -411,6 +416,10 @@ LRESULT CDlgDraw::OnProcessXY(WPARAM wParam, LPARAM lParam)
 	{
 		m_nPointsDone++;
 	}
+	else
+	{
+		return 0;
+	}
 	g_pView->UpdateCursor(&CPoint(x,h-y-1));
 	
 	GoToZ(0);
@@ -425,14 +434,16 @@ LRESULT CDlgDraw::OnProcessXY(WPARAM wParam, LPARAM lParam)
 		m_pThreadDrawGenerateXY->GoAhead();
 	}
 	
-	
-	
-
 	return 0;
 }
 
 void CDlgDraw::OnBnClickedButtonDrawSelected()
 {
+	UpdateData();
+	if(m_selection >= 0)
+	{
+		AfxMessageBox("Something selected, Reopen Dialog");
+	}
 	m_selection = m_list.GetSelectionMark();
 	if(m_selection < 0)
 		return;
@@ -444,6 +455,8 @@ void CDlgDraw::OnBnClickedButtonDrawSelected()
 	s.Format("%d,%d,%d is now Drawing",GetRValue(selcolor),GetGValue(selcolor),GetBValue(selcolor));
 	SetWindowText(s);
 	CreateXYThread(selcolor);
+	m_list.Invalidate();
+	g_pView->Invalidate();
 }
 
 

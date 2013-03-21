@@ -37,7 +37,7 @@ int compare_count1( void *pParam, const void *cr1, const void *cr2)
 IMPLEMENT_DYNAMIC(CDrawListCtrl, CListCtrl)
 
 CDrawListCtrl::CDrawListCtrl()
-: m_item_selected(0)
+: m_item_selected(-1)
 {
 	for(int r=0;r<256;r++)
 		for(int g=0;g<256;g++)
