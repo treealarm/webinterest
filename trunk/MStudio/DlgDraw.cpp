@@ -22,7 +22,6 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgDraw::IDD, pParent)
 	, m_commands_done(0)
 	, m_timer_res(100)
-	, m_pPrevPoint(0)
 	, m_nInkImpuls(0)
 	, m_bDriversOffPending(FALSE)
 	, m_OptimizePath(AfxGetApp()->GetProfileInt("settings","m_OptimizePath",FALSE))
@@ -415,19 +414,11 @@ LRESULT CDlgDraw::OnProcessXY(WPARAM wParam, LPARAM lParam)
 	if(selcolor==color.ToCOLORREF())
 	{
 		m_nPointsDone++;
+		g_pView->UpdateCursor(&CPoint(x,h-y-1));
+	
+		GoToXY(x,y);
 	}
-	else
-	{
-		return 0;
-	}
-	g_pView->UpdateCursor(&CPoint(x,h-y-1));
-	
-	GoToZ(0);
-	
-	m_pPrevPoint = point;
-	
-	GoToXY(x,y);
-	GoToZ(0);
+
 
 	if(m_pControlWrapper->GetCountInQueue() == 0 && !IsPaused())
 	{
@@ -501,7 +492,14 @@ void CDlgDraw::ShiftX(int x)
 	SetStepsToController(var_do_steps);
 }
 void CDlgDraw::SetStepsToController(do_steps& steps)
-{	//ASSERT(steps.m_uSteps[X_POS] >= 0);// We must not turn roller opposite direction
+{	
+	if(
+		steps.m_uSteps[X_POS] == 0 &&
+		steps.m_uSteps[Y_POS] == 0 &&
+		steps.m_uSteps[Z_POS] == 0)
+	{
+		return;
+	}
 	m_cur_pos.y += steps.m_uSteps[Y_POS];
 	m_cur_pos.x += steps.m_uSteps[X_POS];
 	m_cur_pos.z += steps.m_uSteps[Z_POS];

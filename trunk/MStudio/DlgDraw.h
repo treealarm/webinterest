@@ -74,7 +74,6 @@ public:
 	UINT m_timer_res;
 	BYTE m_mult[MOTORS_COUNT];
 	int m_step_mult[MOTORS_COUNT];
-	CPoint m_pPrevPoint;
 	afx_msg void OnBnClickedButtonSaveProrej();
 	afx_msg void OnBnClickedButton2();
 	int DoProrejka2(COLORREF selcolor,Bitmap& Image1,BOOL divider1);
