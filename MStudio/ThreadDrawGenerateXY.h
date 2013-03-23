@@ -10,9 +10,10 @@ class CThreadDrawGenerateXY : public CWinThread
 
 protected:
 	BOOL m_OptimizePath;
+	int m_StartY;
 	CThreadDrawGenerateXY(){};           
 public:
-	CThreadDrawGenerateXY(BOOL optimizePath);           
+	CThreadDrawGenerateXY(BOOL optimizePath, int start_y);           
 	virtual ~CThreadDrawGenerateXY();
 
 
