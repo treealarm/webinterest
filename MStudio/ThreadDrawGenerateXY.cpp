@@ -84,7 +84,7 @@ BOOL CThreadDrawGenerateXY::InitInstance()
 		int g_chet = 0;
 		for(int y = 0; y < m_h && m_bWorking; y++)
 		{
-			if(y%2 == 0)
+			//if(y%2 == 0)
 			{
 				for(int x = 0; x < m_w && m_bWorking; x++)
 				{
@@ -93,15 +93,15 @@ BOOL CThreadDrawGenerateXY::InitInstance()
 					PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
 				}
 			}
-			else
-			{
-				for(int x = m_w-1; x >=0 && m_bWorking; x--)
-				{
-					WaitForSingleObject(m_EventNext,INFINITE);
-					CPoint* pPoint = new CPoint(x,y);
-					PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
-				}
-			}
+			//else
+			//{
+			//	for(int x = m_w-1; x >=0 && m_bWorking; x--)
+			//	{
+			//		WaitForSingleObject(m_EventNext,INFINITE);
+			//		CPoint* pPoint = new CPoint(x,y);
+			//		PostMessage(m_hWnd,WM_PROCESS_XY,(WPARAM)pPoint,0);
+			//	}
+			//}
 
 		}
 	}
