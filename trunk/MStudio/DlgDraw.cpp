@@ -25,6 +25,7 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	, m_nInkImpuls(0)
 	, m_bDriversOffPending(FALSE)
 	, m_OptimizePath(AfxGetApp()->GetProfileInt("settings","m_OptimizePath",FALSE))
+	, m_StartY(0)
 {
 	m_selection = -1;
 	m_pThreadDrawGenerateXY = NULL;
@@ -83,7 +84,7 @@ void CDlgDraw::CreateXYThread(COLORREF selcolor)
 	int h = pImage->GetHeight();
 
 
-	m_pThreadDrawGenerateXY = new CThreadDrawGenerateXY(m_OptimizePath);
+	m_pThreadDrawGenerateXY = new CThreadDrawGenerateXY(m_OptimizePath, m_StartY);
 	m_pThreadDrawGenerateXY->m_h = h;
 	m_pThreadDrawGenerateXY->m_w = w;
 	m_pThreadDrawGenerateXY->m_selcolor = selcolor;
@@ -144,6 +145,7 @@ void CDlgDraw::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDITINK_IMPULS, m_nInkImpuls);
 	DDV_MinMaxInt(pDX, m_nInkImpuls, 0, 500);
 	DDX_Check(pDX, IDC_CHECK2, m_OptimizePath);
+	DDX_Text(pDX, IDC_EDIT_START_Y, m_StartY);
 }
 
 
@@ -434,6 +436,7 @@ void CDlgDraw::OnBnClickedButtonDrawSelected()
 	if(m_selection >= 0)
 	{
 		AfxMessageBox("Something selected, Reopen Dialog");
+		return;
 	}
 	m_selection = m_list.GetSelectionMark();
 	if(m_selection < 0)

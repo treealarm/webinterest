@@ -58,6 +58,7 @@
 #define IDC_EDIT2                       1043
 #define IDC_EDITINK_IMPULS              1043
 #define IDC_EDIT5                       1044
+#define IDC_EDIT_START_Y                1044
 #define IDC_EDIT6                       1045
 #define IDC_BUTTON1                     1046
 #define IDC_BUTTON_SAVE_PROREJ          1046

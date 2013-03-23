@@ -14,9 +14,10 @@
 
 IMPLEMENT_DYNCREATE(CThreadDrawGenerateXY, CWinThread)
 
-CThreadDrawGenerateXY::CThreadDrawGenerateXY(BOOL optimizePath)
+CThreadDrawGenerateXY::CThreadDrawGenerateXY(BOOL optimizePath, int startY)
 : m_bWorking(TRUE),
-m_OptimizePath(optimizePath)
+m_OptimizePath(optimizePath),
+m_StartY(startY)
 {
 	m_bAutoDelete = FALSE;
 	m_hWnd = NULL;
@@ -82,8 +83,9 @@ BOOL CThreadDrawGenerateXY::InitInstance()
 	else
 	{
 		int g_chet = 0;
-		for(int y = 0; y < m_h && m_bWorking; y++)
+		for(int y = m_StartY; y < m_h && m_bWorking; y++)
 		{
+			AfxGetApp()->WriteProfileInt("last_coord", "last_y", y);
 			//if(y%2 == 0)
 			{
 				for(int x = 0; x < m_w && m_bWorking; x++)
