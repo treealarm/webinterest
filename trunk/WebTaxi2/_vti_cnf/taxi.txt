@@ -2,3 +2,5 @@ vti_encoding:SR|utf8-nl
 vti_timelastmodified:TR|24 Aug 2013 08:31:34 -0000
 vti_extenderversion:SR|12.0.0.0
 vti_backlinkinfo:VX|master.dwt links/default.html default.html contact/default.html
+vti_syncofs_ftp.minimaxis.nichost.ru\:21/minimaxis.ru/docs:TW|24 Aug 2013 10:02:57 -0000
+vti_syncwith_ftp.minimaxis.nichost.ru\:21/minimaxis.ru/docs:TR|24 Aug 2013 08:31:34 -0000
