@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace MMDance
 {
@@ -29,34 +30,45 @@ namespace MMDance
 
         private void canvas1_Loaded(object sender, RoutedEventArgs e)
         {
-            SolidColorBrush mySolidColorBrush = new SolidColorBrush();
 
-            // Describes the brush's color using RGB values.  
-            // Each value has a range of 0-255.
-            //mySolidColorBrush.Color = Color.FromArgb(255, 255, 255, 0);
-            //myEllipse.Fill = mySolidColorBrush;
-            //myEllipse.StrokeThickness = 2;
-            //myEllipse.Stroke = Brushes.Black;
-
-            //// Set the width and height of the Ellipse.
-            
-            //myEllipse.Width = 200;
-            //myEllipse.Height = 100;
-            //// Add the Ellipse to the StackPanel.
-            //image_canvas.Children.Add(myEllipse);
         }
 
-        private void image_canvas_MouseMove(object sender, MouseEventArgs e)
+        private void UpdateCurrentPosition(double x1, double y1)
         {
-            x_line.X1 = e.GetPosition(image_canvas).X;
-            x_line.X2 = e.GetPosition(image_canvas).X;
+            x_line.X1 = x1;
+            x_line.X2 = x1;
             x_line.Y1 = 0;
             x_line.Y2 = image_canvas.ActualHeight;
 
-            y_line.Y1 = e.GetPosition(image_canvas).Y;
-            y_line.Y2 = e.GetPosition(image_canvas).Y;
+            y_line.Y1 = y1;
+            y_line.Y2 = y1;
             y_line.X1 = 0;
             y_line.X2 = image_canvas.ActualWidth;
+        }
+        private void image_canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.GetPosition(image_canvas).Y < menu1.Height)
+            {
+                menu1.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                menu1.Visibility = Visibility.Collapsed;
+            }
+            UpdateCurrentPosition(e.GetPosition(image_canvas).X, e.GetPosition(image_canvas).Y);
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog op = new OpenFileDialog();
+            op.Title = "Открыть изображение";
+            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+                "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+                "Portable Network Graphic (*.png)|*.png";
+            if (op.ShowDialog() == true)
+            {
+                loaded_image.Source = new BitmapImage(new Uri(op.FileName));
+            }
         }
     }
 }
