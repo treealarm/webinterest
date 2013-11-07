@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.Threading;
 
 namespace MMDance
 {
@@ -33,6 +34,7 @@ namespace MMDance
 
         }
 
+        private delegate void UpdateCurrentPositionDelegate(double x1, double y1);
         private void UpdateCurrentPosition(double x1, double y1)
         {
             x_line.X1 = x1;
@@ -55,9 +57,10 @@ namespace MMDance
             {
                 menu1.Visibility = Visibility.Collapsed;
             }
-            UpdateCurrentPosition(e.GetPosition(image_canvas).X, e.GetPosition(image_canvas).Y);
+            //UpdateCurrentPosition(e.GetPosition(image_canvas).X, e.GetPosition(image_canvas).Y);
         }
 
+        BitmapImage bitmapImage = null;
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
@@ -67,7 +70,65 @@ namespace MMDance
                 "Portable Network Graphic (*.png)|*.png";
             if (op.ShowDialog() == true)
             {
-                loaded_image.Source = new BitmapImage(new Uri(op.FileName));
+                bitmapImage = new BitmapImage(new Uri(op.FileName));
+                loaded_image.Source = bitmapImage;
+            }
+        }
+
+        Thread WorkingThread = null;
+        bool StopThread = false;
+
+        private void DoEngraving()
+        {
+            if (bitmapImage == null)
+            {
+                return;
+            }
+            bitmapImage.VerifyAccess();
+            int stride = bitmapImage.PixelWidth * 4;
+            int size = bitmapImage.PixelHeight * stride;
+            byte[] pixels = new byte[size];
+
+            double xratio = bitmapImage.Width / image_canvas.ActualWidth;
+            double yratio = bitmapImage.Height / image_canvas.ActualHeight;
+            for (int x = 0; x < bitmapImage.Width; x++)
+            {
+                for (int y = 0; y < bitmapImage.Height; y++)
+                {
+                    if (StopThread)
+                    {
+                        return;
+                    }
+                    bitmapImage.CopyPixels(pixels, stride, 0);
+
+                    
+                    int index = y * stride + 4 * x;
+                    byte red = pixels[index];
+                    byte green = pixels[index + 1];
+                    byte blue = pixels[index + 2];
+                    byte alpha = pixels[index + 3];
+                    Dispatcher.BeginInvoke(
+                                    System.Windows.Threading.DispatcherPriority.Normal,
+                                    new UpdateCurrentPositionDelegate(UpdateCurrentPosition),
+                                    x * xratio, y * yratio);
+                }
+            }
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            bitmapImage.Freeze();
+            WorkingThread = new Thread(new ThreadStart(DoEngraving));
+            WorkingThread.SetApartmentState(ApartmentState.STA);
+            WorkingThread.Start();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            StopThread = true;
+            if (WorkingThread != null)
+            {
+                WorkingThread.Join();
             }
         }
     }

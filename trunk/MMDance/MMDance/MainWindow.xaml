@@ -1,7 +1,7 @@
 ﻿<Window x:Class="MMDance.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MMDance" Height="350" Width="525" Closing="Window_Closing">
 
     <Grid>
         <Canvas Background="Gainsboro"  Name="image_canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Loaded="canvas1_Loaded" MouseMove="image_canvas_MouseMove">
@@ -11,8 +11,9 @@
                    Width="{Binding ElementName=image_canvas, Path=ActualWidth}"
                    Height="{Binding ElementName=image_canvas, Path=ActualHeight}" Stretch="Fill" />
         </Canvas>
-        <Menu Name="menu1" Grid.Row ="0" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200">
+        <Menu Name="menu1" Grid.Row ="0" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto">
             <MenuItem Header="Открыть" Click="MenuItem_Click" />
+            <MenuItem Header="Начать" Click="MenuItem_Click_1" />
         </Menu>
     </Grid>
 </Window>
