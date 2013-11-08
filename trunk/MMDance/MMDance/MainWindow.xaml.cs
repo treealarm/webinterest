@@ -14,6 +14,10 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Threading;
 
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+
+
 namespace MMDance
 {
     /// <summary>
@@ -21,9 +25,58 @@ namespace MMDance
     /// </summary>
     public partial class MainWindow : Window
     {
+        internal struct xyz_coord
+        {
+            int x;
+            int y;
+            int z;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
+        internal class do_steps_multiplier
+        {
+            [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
+            public Int32[] m_uMult = new Int32[ControlWrapper.MOTORS_COUNT];
+        }
+
+        do_steps_multiplier m_step_mult = new do_steps_multiplier();
+
+        void StructureToByteArray(object obj, byte[] bytearray, int position)
+        {
+            int len = Marshal.SizeOf(obj);
+
+            IntPtr ptr = Marshal.AllocHGlobal(len);
+
+            Marshal.StructureToPtr(obj, ptr, true);
+
+            Marshal.Copy(ptr, bytearray, position, len);
+
+            Marshal.FreeHGlobal(ptr);
+        }
+
+        void ByteArrayToStructure<T>(byte[] bytearray, ref T structureObj, int position) where T : class
+        {
+            int length = Marshal.SizeOf(structureObj);
+            IntPtr ptr = Marshal.AllocHGlobal(length);
+            Marshal.Copy(bytearray, position, ptr, length);
+            structureObj = (T)Marshal.PtrToStructure(ptr, structureObj.GetType());
+            Marshal.FreeHGlobal(ptr);
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            m_step_mult.m_uMult[0] = 1;
+            m_step_mult.m_uMult[1] = 2;
+            m_step_mult.m_uMult[2] = 3;
+
+            byte[] mybytes = new byte[65];
+
+            StructureToByteArray(m_step_mult, mybytes, 2);
+
+            do_steps_multiplier new_step_mult = new do_steps_multiplier();
+            ByteArrayToStructure(mybytes, ref new_step_mult, 2);
+            int i = 9;
         }
 
 
