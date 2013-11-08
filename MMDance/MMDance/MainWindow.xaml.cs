@@ -41,41 +41,20 @@ namespace MMDance
 
         do_steps_multiplier m_step_mult = new do_steps_multiplier();
 
-        void StructureToByteArray(object obj, byte[] bytearray, int position)
-        {
-            int len = Marshal.SizeOf(obj);
 
-            IntPtr ptr = Marshal.AllocHGlobal(len);
-
-            Marshal.StructureToPtr(obj, ptr, true);
-
-            Marshal.Copy(ptr, bytearray, position, len);
-
-            Marshal.FreeHGlobal(ptr);
-        }
-
-        void ByteArrayToStructure<T>(byte[] bytearray, ref T structureObj, int position) where T : class
-        {
-            int length = Marshal.SizeOf(structureObj);
-            IntPtr ptr = Marshal.AllocHGlobal(length);
-            Marshal.Copy(bytearray, position, ptr, length);
-            structureObj = (T)Marshal.PtrToStructure(ptr, structureObj.GetType());
-            Marshal.FreeHGlobal(ptr);
-        }
 
         public MainWindow()
         {
             InitializeComponent();
-            m_step_mult.m_uMult[0] = 1;
-            m_step_mult.m_uMult[1] = 2;
-            m_step_mult.m_uMult[2] = 3;
+            UInt16 m_timer_ink_impuls = 222;
 
             byte[] mybytes = new byte[65];
 
-            StructureToByteArray(m_step_mult, mybytes, 2);
+            ControlWrapper.StructureToByteArray(m_timer_ink_impuls, mybytes, 2);
 
-            do_steps_multiplier new_step_mult = new do_steps_multiplier();
-            ByteArrayToStructure(mybytes, ref new_step_mult, 2);
+            UInt16 m_timer_ink_impul1s = 0;
+
+            ControlWrapper.ByteArrayToStructure(mybytes, ref m_timer_ink_impul1s, 2);
             int i = 9;
         }
 

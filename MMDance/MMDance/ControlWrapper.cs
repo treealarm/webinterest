@@ -106,21 +106,33 @@ public class ControlWrapper
     UInt16 m_timer_ink_impuls;
 
     [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
-    internal struct do_steps
+    internal class do_steps
     {
         [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
         public Int32[] m_uSteps;
     }
     do_steps m_cur_steps = new do_steps();
 
-    object ByteArrayToStructure(byte[] bytearray, object structureObj, int position)
+    public static void StructureToByteArray(object obj, byte[] bytearray, int position)
+    {
+        int len = Marshal.SizeOf(obj);
+
+        IntPtr ptr = Marshal.AllocHGlobal(len);
+
+        Marshal.StructureToPtr(obj, ptr, true);
+
+        Marshal.Copy(ptr, bytearray, position, len);
+
+        Marshal.FreeHGlobal(ptr);
+    }
+
+    public static void ByteArrayToStructure<T>(byte[] bytearray, ref T structureObj, int position)
     {
         int length = Marshal.SizeOf(structureObj);
         IntPtr ptr = Marshal.AllocHGlobal(length);
-        Marshal.Copy(bytearray, 0, ptr, length);
-        structureObj = Marshal.PtrToStructure(Marshal.UnsafeAddrOfPinnedArrayElement(bytearray, position), structureObj.GetType());
+        Marshal.Copy(bytearray, position, ptr, length);
+        structureObj = (T)Marshal.PtrToStructure(ptr, structureObj.GetType());
         Marshal.FreeHGlobal(ptr);
-        return structureObj;
     }
 
     public bool IsControllerAvailable()
@@ -139,8 +151,8 @@ public class ControlWrapper
             //Now get the response packet from the firmware.
             if (ReadFileManagedBuffer(ReadHandleToUSBDevice, INBuffer, 65, ref BytesRead, IntPtr.Zero))		//Blocking function, unless an "overlapped" structure is used	
             {
-                ByteArrayToStructure(INBuffer , m_cur_steps, 3);
-                ByteArrayToStructure(INBuffer, m_timer_ink_impuls, 3 + Marshal.SizeOf(m_cur_steps));
+                ByteArrayToStructure(INBuffer , ref m_cur_steps, 3);
+                ByteArrayToStructure(INBuffer, ref m_timer_ink_impuls, 3 + Marshal.SizeOf(m_cur_steps));
 
                 if (INBuffer[2] == 0x01)
                 {
