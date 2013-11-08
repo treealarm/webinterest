@@ -26,8 +26,6 @@ namespace MMDance
             InitializeComponent();
         }
 
-        Ellipse myEllipse = new Ellipse();
-        Thickness ell_pos = new Thickness(55, 55, 0, 0);
 
         private void canvas1_Loaded(object sender, RoutedEventArgs e)
         {
