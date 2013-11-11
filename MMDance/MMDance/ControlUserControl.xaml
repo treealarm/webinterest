@@ -9,6 +9,7 @@
         <StackPanel>
         <Button Content="Открыть файл" Height="23" HorizontalAlignment="Left" Name="buttonOpenFile" VerticalAlignment="Top" Click="buttonOpenFile_Click" Width="Auto"/>
         <Button Content="Начать" Height="23" HorizontalAlignment="Left" Name="buttonStartWork" VerticalAlignment="Top" Click="buttonStartWork_Click" />
+        <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Left" Name="buttonOpenDevice" VerticalAlignment="Top" Click="buttonOpenDevice_Click" />
         </StackPanel>
     </Grid>
 </UserControl>

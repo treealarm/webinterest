@@ -400,8 +400,6 @@ public class ControlWrapper
     //properly interact with the unmanged C++ style APIs used to find and connect with the USB device.
     public ControlWrapper()
     {
-        WriteHandleToUSBDevice.SetHandleAsInvalid();
-        ReadHandleToUSBDevice.SetHandleAsInvalid();
     }
 
 
