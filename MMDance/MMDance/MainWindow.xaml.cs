@@ -25,35 +25,31 @@ namespace MMDance
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal struct xyz_coord
-        {
-            int x;
-            int y;
-            int z;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
-        internal class do_steps_multiplier
-        {
-            [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
-            public Int32[] m_uMult = new Int32[ControlWrapper.MOTORS_COUNT];
-        }
-
-        do_steps_multiplier m_step_mult = new do_steps_multiplier();
+        
+        public ControlWrapper m_ControlWrapper = new ControlWrapper();
 
         public MainWindow()
         {
             InitializeComponent();
-            UInt16 m_timer_ink_impuls = 222;
+            for (int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
+            {
+                m_step_mult.m_uMult[motor] = 1;
+            }
+            
+            //UInt16 m_timer_ink_impuls = 222;
 
-            byte[] mybytes = new byte[65];
+            //byte[] mybytes = new byte[65];
 
-            ControlWrapper.StructureToByteArray(m_timer_ink_impuls, mybytes, 2);
+            //ControlWrapper.StructureToByteArray(m_timer_ink_impuls, mybytes, 2);
 
-            UInt16 m_timer_ink_impul1s = 0;
+            //UInt16 m_timer_ink_impul1s = 0;
 
-            ControlWrapper.ByteArrayToStructure(mybytes, ref m_timer_ink_impul1s, 2);
-            int i = 9;
+            //ControlWrapper.ByteArrayToStructure(mybytes, ref m_timer_ink_impul1s, 2);
+            
+            
+            WorkingThread = new Thread(new ThreadStart(ProcessCommand));
+            WorkingThread.SetApartmentState(ApartmentState.STA);
+            WorkingThread.Start();
         }
 
 
@@ -67,6 +63,94 @@ namespace MMDance
         Thread WorkingThread = null;
         bool StopThread = false;
         private delegate void UpdateCurrentPositionDelegate(double x1, double y1);
+
+        private Queue<Byte[]> m_out_list = new Queue<Byte[]>();
+
+        public void AddCommand(Byte[] command)
+        {
+            
+            lock (m_out_list)
+            {
+                m_out_list.Enqueue(command);
+            }
+        }
+
+        private void ProcessCommand()
+        {
+            while (!StopThread)
+            {
+                int SleepVal = 10;
+                if (m_ControlWrapper.IsControllerAvailable())
+                {
+                    lock (m_out_list)
+                    {
+                        if (m_out_list.Count <= 0)
+                        {
+                            SleepVal = 100;
+                        }
+                        else
+                        {
+                            Byte[] buf = m_out_list.Dequeue();
+                            m_ControlWrapper.WriteCommandToController(buf);
+                        }
+                    }
+                }
+                
+                Thread.Sleep(SleepVal);
+            }
+        }
+
+        internal class xyz_coord
+        {
+            public int x = 0;
+            public int y = 0;
+            public int z = 0;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
+        internal class do_steps
+        {
+            [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
+            public Int32[] m_uSteps = new Int32[ControlWrapper.MOTORS_COUNT];
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
+        internal class do_steps_multiplier
+        {
+            [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
+            public Int32[] m_uMult = new Int32[ControlWrapper.MOTORS_COUNT];
+        }
+
+        do_steps_multiplier m_step_mult = new do_steps_multiplier();
+        xyz_coord m_cur_pos = new xyz_coord();
+
+        public const int X_POS = 1;
+        public const int Y_POS = 0;
+        public const int Z_POS = 2;
+
+        void SetStepsToController(do_steps steps)
+        {	
+	        if(
+		        steps.m_uSteps[X_POS] == 0 &&
+		        steps.m_uSteps[Y_POS] == 0 &&
+		        steps.m_uSteps[Z_POS] == 0)
+	        {
+		        return;
+	        }
+	        m_cur_pos.y += steps.m_uSteps[Y_POS];
+	        m_cur_pos.x += steps.m_uSteps[X_POS];
+	        m_cur_pos.z += steps.m_uSteps[Z_POS];
+
+	       	for(int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
+	        {
+		        steps.m_uSteps[motor] = steps.m_uSteps[motor]*m_step_mult.m_uMult[motor];
+	        }
+	        byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
+	        OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
+	        OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_STEPS;
+            ControlWrapper.StructureToByteArray(steps, OutputPacketBuffer, 2);
+	        AddCommand(OutputPacketBuffer);
+        }
 
         private void DoEngraving()
         {
@@ -107,14 +191,17 @@ namespace MMDance
 
         public void Start()
         {
-            bitmapImage.Freeze();
-            WorkingThread = new Thread(new ThreadStart(DoEngraving));
-            WorkingThread.SetApartmentState(ApartmentState.STA);
-            WorkingThread.Start();
+            if (bitmapImage != null)
+            {
+                bitmapImage.Freeze();
+            }
+            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            //Properties.Settings.Default.TimerRes = "50";
+            Properties.Settings.Default.Save();
             StopThread = true;
             if (WorkingThread != null)
             {

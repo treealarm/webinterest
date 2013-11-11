@@ -137,6 +137,10 @@ public class ControlWrapper
 
     public bool IsControllerAvailable()
     {
+        if (!IsOpen())
+        {
+            return false;
+        }
         Byte[] OUTBuffer = new byte[LEN_OF_PACKET];	//Allocate a memory buffer equal to the OUT endpoint size + 1
         Byte[] INBuffer = new byte[LEN_OF_PACKET];		//Allocate a memory buffer equal to the IN endpoint size + 1
         uint BytesWritten = 0;
@@ -176,6 +180,10 @@ public class ControlWrapper
 
     public bool IsOpen()
     {
+        if (WriteHandleToUSBDevice == null)
+        {
+            return false;
+        }
 	    return !WriteHandleToUSBDevice.IsInvalid;
     }
     public bool Connect()
