@@ -44,5 +44,12 @@ namespace MMDance
             MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
             wnd.Start();
         }
+
+        ControlWrapper m_ControlWrapper = new ControlWrapper();
+
+        private void buttonOpenDevice_Click(object sender, RoutedEventArgs e)
+        {
+            m_ControlWrapper.Connect();
+        }
     }
 }

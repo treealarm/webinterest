@@ -40,8 +40,6 @@ namespace MMDance
         }
 
         do_steps_multiplier m_step_mult = new do_steps_multiplier();
-        //ControlWrapper m_ControlWrapper = new ControlWrapper();
-
 
         public MainWindow()
         {
