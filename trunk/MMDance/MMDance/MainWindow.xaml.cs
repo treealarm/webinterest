@@ -40,7 +40,7 @@ namespace MMDance
         }
 
         do_steps_multiplier m_step_mult = new do_steps_multiplier();
-
+        //ControlWrapper m_ControlWrapper = new ControlWrapper();
 
 
         public MainWindow()
@@ -59,54 +59,16 @@ namespace MMDance
         }
 
 
-        private void canvas1_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private delegate void UpdateCurrentPositionDelegate(double x1, double y1);
-        private void UpdateCurrentPosition(double x1, double y1)
-        {
-            x_line.X1 = x1;
-            x_line.X2 = x1;
-            x_line.Y1 = 0;
-            x_line.Y2 = image_canvas.ActualHeight;
-
-            y_line.Y1 = y1;
-            y_line.Y2 = y1;
-            y_line.X1 = 0;
-            y_line.X2 = image_canvas.ActualWidth;
-        }
-        private void image_canvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.GetPosition(image_canvas).Y < menu1.Height)
-            {
-                menu1.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                menu1.Visibility = Visibility.Collapsed;
-            }
-            //UpdateCurrentPosition(e.GetPosition(image_canvas).X, e.GetPosition(image_canvas).Y);
-        }
-
         BitmapImage bitmapImage = null;
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        public void OnFileOpen(string filename)
         {
-            OpenFileDialog op = new OpenFileDialog();
-            op.Title = "Открыть изображение";
-            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
-                "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-                "Portable Network Graphic (*.png)|*.png";
-            if (op.ShowDialog() == true)
-            {
-                bitmapImage = new BitmapImage(new Uri(op.FileName));
-                loaded_image.Source = bitmapImage;
-            }
+            bitmapImage = new BitmapImage(new Uri(filename));
+            PictureUserControl.loaded_image.Source = bitmapImage;
         }
 
         Thread WorkingThread = null;
         bool StopThread = false;
+        private delegate void UpdateCurrentPositionDelegate(double x1, double y1);
 
         private void DoEngraving()
         {
@@ -119,8 +81,8 @@ namespace MMDance
             int size = bitmapImage.PixelHeight * stride;
             byte[] pixels = new byte[size];
 
-            double xratio = bitmapImage.Width / image_canvas.ActualWidth;
-            double yratio = bitmapImage.Height / image_canvas.ActualHeight;
+            double xratio = bitmapImage.Width / PictureUserControl.image_canvas.ActualWidth;
+            double yratio = bitmapImage.Height / PictureUserControl.image_canvas.ActualHeight;
             for (int x = 0; x < bitmapImage.Width; x++)
             {
                 for (int y = 0; y < bitmapImage.Height; y++)
@@ -139,13 +101,13 @@ namespace MMDance
                     byte alpha = pixels[index + 3];
                     Dispatcher.BeginInvoke(
                                     System.Windows.Threading.DispatcherPriority.Normal,
-                                    new UpdateCurrentPositionDelegate(UpdateCurrentPosition),
+                                    new UpdateCurrentPositionDelegate(PictureUserControl.UpdateCurrentPosition),
                                     x * xratio, y * yratio);
                 }
             }
         }
 
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        public void Start()
         {
             bitmapImage.Freeze();
             WorkingThread = new Thread(new ThreadStart(DoEngraving));
