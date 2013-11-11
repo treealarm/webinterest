@@ -10,6 +10,8 @@
         <Button Content="Открыть файл" Height="23" HorizontalAlignment="Left" Name="buttonOpenFile" VerticalAlignment="Top" Click="buttonOpenFile_Click" Width="Auto"/>
         <Button Content="Начать" Height="23" HorizontalAlignment="Left" Name="buttonStartWork" VerticalAlignment="Top" Click="buttonStartWork_Click" />
         <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Left" Name="buttonOpenDevice" VerticalAlignment="Top" Click="buttonOpenDevice_Click" />
+            <Label Content="Разрешение таймера:" Height="28" Name="label1" />
+            <TextBox Height="23" Name="textBoxTimerRes" Width="120" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerRes}"/>
         </StackPanel>
     </Grid>
 </UserControl>
