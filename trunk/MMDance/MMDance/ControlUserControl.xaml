@@ -4,14 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <StackPanel>
-        <Button Content="Открыть файл" Height="23" HorizontalAlignment="Left" Name="buttonOpenFile" VerticalAlignment="Top" Click="buttonOpenFile_Click" Width="Auto"/>
-        <Button Content="Начать" Height="23" HorizontalAlignment="Left" Name="buttonStartWork" VerticalAlignment="Top" Click="buttonStartWork_Click" />
-        <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Left" Name="buttonOpenDevice" VerticalAlignment="Top" Click="buttonOpenDevice_Click" />
-            <Label Content="Разрешение таймера:" Height="28" Name="label1" />
+             d:DesignHeight="400" d:DesignWidth="600">
+    <Grid Margin="5,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="89*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column = "0" Grid.Row = "0" VerticalAlignment="Top">
+            <Button Content="Открыть файл" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenFile" Click="buttonOpenFile_Click" Width="Auto"/>
+            <Button Content="Начать" Height="23" HorizontalAlignment="Stretch" Name="buttonStartWork" Click="buttonStartWork_Click" />
+            <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenDevice" Click="buttonOpenDevice_Click" />
+        </StackPanel>
+        
+        <StackPanel Grid.Column = "1"  Grid.Row = "0" Orientation="Horizontal" VerticalAlignment="Top">
+            <Label  Content="Разрешение таймера:" Height="28" Name="label1" />
             <TextBox Height="23" Name="textBoxTimerRes" Width="120" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerRes}"/>
         </StackPanel>
+        
     </Grid>
 </UserControl>
