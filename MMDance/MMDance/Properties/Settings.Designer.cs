@@ -34,5 +34,41 @@ namespace MMDance.Properties {
                 this["TimerRes"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public uint TimerMultiplierX {
+            get {
+                return ((uint)(this["TimerMultiplierX"]));
+            }
+            set {
+                this["TimerMultiplierX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public uint TimerMultiplierY {
+            get {
+                return ((uint)(this["TimerMultiplierY"]));
+            }
+            set {
+                this["TimerMultiplierY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public uint TimerMultiplierZ {
+            get {
+                return ((uint)(this["TimerMultiplierZ"]));
+            }
+            set {
+                this["TimerMultiplierZ"] = value;
+            }
+        }
     }
 }
