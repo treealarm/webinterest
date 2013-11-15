@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace MMDance
 {
@@ -12,5 +13,11 @@ namespace MMDance
     /// </summary>
     public partial class App : Application
     {
+        public void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.Message);
+            e.Handled = true;
+        }
     }
+        
 }

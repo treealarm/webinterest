@@ -58,41 +58,66 @@ namespace MMDance
                     Properties.Settings.Default.TimerMultiplierY,
                     Properties.Settings.Default.TimerMultiplierZ});
 
-
-            wnd.SetControlSettings(true, checkBoxOutpusEnergy.IsChecked == false);
+            SetControlSettings();
+            
             wnd.m_step_mult.m_uMult[MainWindow.X_POS] = Properties.Settings.Default.StepMultiplierX;
             wnd.m_step_mult.m_uMult[MainWindow.Y_POS] = Properties.Settings.Default.StepMultiplierY;
             wnd.m_step_mult.m_uMult[MainWindow.Z_POS] = Properties.Settings.Default.StepMultiplierZ;
         }
 
+        private void SetControlSettings()
+        {
+            MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
+            wnd.SetControlSettings(true, checkBoxOutpusEnergy.IsChecked == false);
+        }
+
+        void PassSteps(int x, int y, int z)
+        {
+            MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
+            MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
+            var_do_steps.m_uSteps[MainWindow.X_POS] = x;
+            var_do_steps.m_uSteps[MainWindow.Y_POS] = y;
+            var_do_steps.m_uSteps[MainWindow.Z_POS] = z;
+            wnd.SetStepsToController(var_do_steps);
+        }
         private void X_Plus_Click(object sender, RoutedEventArgs e)
         {
-
+            PassSteps(Convert.ToInt32(XShift.Text), 0, 0);
         }
 
         private void X_Minus_Click(object sender, RoutedEventArgs e)
         {
-
+            PassSteps(-Convert.ToInt32(XShift.Text), 0, 0);
         }
 
         private void Y_Plus_Click(object sender, RoutedEventArgs e)
         {
-
+            PassSteps(0, Convert.ToInt32(YShift.Text), 0);
         }
 
         private void Y_Minus_Click(object sender, RoutedEventArgs e)
         {
-
+            PassSteps(0, -Convert.ToInt32(YShift.Text), 0);
         }
 
         private void Z_Plus_Click(object sender, RoutedEventArgs e)
         {
-
+            PassSteps(0, 0, Convert.ToInt32(ZShift.Text));
         }
 
         private void Z_Minus_Click(object sender, RoutedEventArgs e)
         {
+            PassSteps(0, 0, -Convert.ToInt32(ZShift.Text));
+        }
 
+        private void checkBoxOutpusEnergy_Checked(object sender, RoutedEventArgs e)
+        {
+            SetControlSettings();
+        }
+
+        private void checkBoxPause_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SetControlSettings();
         }
     }
 }
