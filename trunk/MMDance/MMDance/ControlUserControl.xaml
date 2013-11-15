@@ -9,6 +9,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="89*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -17,10 +18,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column = "0" Grid.Row = "0" VerticalAlignment="Top">
+        <StackPanel Grid.Column = "0" Grid.Row = "0" VerticalAlignment="Top" Height="Auto">
             <Button Content="Открыть файл" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenFile" Click="buttonOpenFile_Click" Width="Auto"/>
-            <Button Content="Начать" Height="23" HorizontalAlignment="Stretch" Name="buttonStartWork" Click="buttonStartWork_Click" />
             <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenDevice" Click="buttonOpenDevice_Click" />
+            <Button Content="Начать" Height="23" HorizontalAlignment="Stretch" Name="buttonStartWork" Click="buttonStartWork_Click" />
+            <CheckBox Content="Включить приводы" Height="16" HorizontalAlignment="Left" Name="checkBoxOutpusEnergy" VerticalAlignment="Top" />
+            <CheckBox Content="Пауза" Height="16" HorizontalAlignment="Left" Name="checkBoxPause" VerticalAlignment="Top" />
         </StackPanel>
 
         <Grid Grid.Column = "1"  Grid.Row = "0">
@@ -33,20 +36,86 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label  Grid.Column = "0"  Grid.Row = "0" Content="Общий множитель таймера:" Height="28" Name="labelTimerRes" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "0" Height="23" Name="textBoxTimerRes" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerRes}"/>
+            <Label  Grid.Column = "0"  Grid.Row = "0" Grid.ColumnSpan="2"  Content="Множители таймера:" Height="28" HorizontalAlignment="Left"/>
+            
+            <Label  Grid.Column = "0"  Grid.Row = "1" Content="Общий:" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "1" Height="23" Name="textBoxTimerRes" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerRes}"/>
 
-            <Label  Grid.Column = "0"  Grid.Row = "1" Content="Множитель таймера Х:" Height="28" Name="labelTimerMultX" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "1" Height="23" Name="textBoxTimerMultiplierX" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierX}"/>
+            <Label  Grid.Column = "0"  Grid.Row = "2" Content="таймера Х:" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "2" Height="23" Name="textBoxTimerMultiplierX" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierX}"/>
 
-            <Label  Grid.Column = "0"  Grid.Row = "2" Content="Множитель таймера Y:" Height="28" Name="labelTimerMultY" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "2" Height="23" Name="textBoxTimerMultiplierY" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierY}"/>
+            <Label  Grid.Column = "0"  Grid.Row = "3" Content="таймера Y:" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23" Name="textBoxTimerMultiplierY" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierY}"/>
 
-            <Label  Grid.Column = "0"  Grid.Row = "3" Content="Множитель таймера Z:" Height="28" Name="labelTimerMultZ" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23" Name="textBoxTimerMultiplierZ" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierZ}"/>
+            <Label  Grid.Column = "0"  Grid.Row = "4" Content="таймера Z:" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "4" Height="23" Name="textBoxTimerMultiplierZ" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierZ}"/>
+
+            <Label  Grid.Column = "0"  Grid.Row = "5" Content="Удар:" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "5" Height="23" Name="textBoxTimerStrike" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerStrike}"/>
         </Grid>
 
+        <Grid Grid.Column = "2"  Grid.Row = "0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label  Grid.Column = "0"  Grid.Row = "0" Grid.ColumnSpan="2"  Content="Множители шага:" Height="28" HorizontalAlignment="Left"/>
+
+            <Label  Grid.Column = "0"  Grid.Row = "1" Content="шаг Х:" Height="28"  HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "1" Height="23" Name="textBoxStepMultiplierX" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierX}"/>
+
+            <Label  Grid.Column = "0"  Grid.Row = "2" Content="шаг Y:" Height="28"  HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "2" Height="23" Name="textBoxStepMultiplierY" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierY}"/>
+
+            <Label  Grid.Column = "0"  Grid.Row = "3" Content="шаг Z:" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23" Name="textBoxStepMultiplierZ" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierZ}"/>
+        </Grid>
+
+        <Grid Grid.Column = "3"  Grid.Row = "0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button  Grid.Column = "0"  Grid.Row = "0" Content="Х+" Height="28"  HorizontalAlignment="Stretch"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "0" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+            <Button  Grid.Column = "2"  Grid.Row = "0" Content="Х-" Height="28"  HorizontalAlignment="Stretch"/>
+
+            <Button  Grid.Column = "0"  Grid.Row = "1" Content="Y+" Height="28"  HorizontalAlignment="Stretch"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "1" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+            <Button  Grid.Column = "2"  Grid.Row = "1" Content="Y-" Height="28"  HorizontalAlignment="Stretch"/>
+
+            <Button  Grid.Column = "0"  Grid.Row = "2" Content="Z+" Height="28"  HorizontalAlignment="Stretch"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "2" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+            <Button  Grid.Column = "2"  Grid.Row = "2" Content="Z-" Height="28"  HorizontalAlignment="Stretch"/>
+
+            <Button  Grid.Column = "0"  Grid.Row = "3" Content="->XY" Height="28"  HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+            <TextBox Grid.Column = "2"  Grid.Row = "3" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+
+            <Button  Grid.Column = "0"  Grid.Row = "4" Content="->Z" Height="28"  HorizontalAlignment="Stretch"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "4" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+        </Grid>
     </Grid>
 </UserControl>

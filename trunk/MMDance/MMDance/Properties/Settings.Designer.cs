@@ -70,5 +70,53 @@ namespace MMDance.Properties {
                 this["TimerMultiplierZ"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public uint StepMultiplierX {
+            get {
+                return ((uint)(this["StepMultiplierX"]));
+            }
+            set {
+                this["StepMultiplierX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public uint StepMultiplierY {
+            get {
+                return ((uint)(this["StepMultiplierY"]));
+            }
+            set {
+                this["StepMultiplierY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public uint StepMultiplierZ {
+            get {
+                return ((uint)(this["StepMultiplierZ"]));
+            }
+            set {
+                this["StepMultiplierZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public uint TimerStrike {
+            get {
+                return ((uint)(this["TimerStrike"]));
+            }
+            set {
+                this["TimerStrike"] = value;
+            }
+        }
     }
 }
