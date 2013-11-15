@@ -108,14 +108,14 @@ namespace MMDance
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
-        internal class do_steps
+        public class do_steps
         {
             [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
             public Int32[] m_uSteps = new Int32[ControlWrapper.MOTORS_COUNT];
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
-        internal class do_steps_multiplier
+        public class do_steps_multiplier
         {
             [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
             public Int32[] m_uMult = new Int32[ControlWrapper.MOTORS_COUNT];
@@ -145,18 +145,18 @@ namespace MMDance
             public byte enable;
         }
         
-        do_steps_multiplier m_step_mult = new do_steps_multiplier();
+        public do_steps_multiplier m_step_mult = new do_steps_multiplier();
         xyz_coord m_cur_pos = new xyz_coord();
 
         public const int X_POS = 1;
         public const int Y_POS = 0;
         public const int Z_POS = 2;
 
-        void SetControlSettings(byte reset, byte enable)
+        public void SetControlSettings(bool reset, bool enable)
         {
             do_control_signals control_sign = new do_control_signals();
-            control_sign.enable = enable;
-            control_sign.reset = reset;
+            control_sign.enable = Convert.ToByte(enable);
+            control_sign.reset = Convert.ToByte(reset);
             
             byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
             OutputPacketBuffer[0] = 0;
@@ -165,7 +165,7 @@ namespace MMDance
             AddCommand(OutputPacketBuffer);
         }
 
-        void SetTimerSettings(UInt16 timer_res, UInt16 strike_impuls, byte[] multiplier)
+        public void SetTimerSettings(UInt16 timer_res, UInt16 strike_impuls, byte[] multiplier)
         {
             do_timer_set timerset = new do_timer_set();
             timerset.m_timer_res = (UInt16)(UInt16.MaxValue - timer_res);
@@ -183,7 +183,7 @@ namespace MMDance
             AddCommand(OutputPacketBuffer);
         }
 	
-        void SetStepsToController(do_steps steps)
+        public void SetStepsToController(do_steps steps)
         {	
 	        if(
 		        steps.m_uSteps[X_POS] == 0 &&

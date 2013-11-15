@@ -26,9 +26,9 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public string TimerRes {
+        public ushort TimerRes {
             get {
-                return ((string)(this["TimerRes"]));
+                return ((ushort)(this["TimerRes"]));
             }
             set {
                 this["TimerRes"] = value;
@@ -38,9 +38,9 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public uint TimerMultiplierX {
+        public byte TimerMultiplierX {
             get {
-                return ((uint)(this["TimerMultiplierX"]));
+                return ((byte)(this["TimerMultiplierX"]));
             }
             set {
                 this["TimerMultiplierX"] = value;
@@ -50,9 +50,9 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public uint TimerMultiplierY {
+        public byte TimerMultiplierY {
             get {
-                return ((uint)(this["TimerMultiplierY"]));
+                return ((byte)(this["TimerMultiplierY"]));
             }
             set {
                 this["TimerMultiplierY"] = value;
@@ -62,9 +62,9 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public uint TimerMultiplierZ {
+        public byte TimerMultiplierZ {
             get {
-                return ((uint)(this["TimerMultiplierZ"]));
+                return ((byte)(this["TimerMultiplierZ"]));
             }
             set {
                 this["TimerMultiplierZ"] = value;
@@ -74,9 +74,9 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public uint StepMultiplierX {
+        public ushort StepMultiplierX {
             get {
-                return ((uint)(this["StepMultiplierX"]));
+                return ((ushort)(this["StepMultiplierX"]));
             }
             set {
                 this["StepMultiplierX"] = value;
@@ -86,9 +86,9 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public uint StepMultiplierY {
+        public ushort StepMultiplierY {
             get {
-                return ((uint)(this["StepMultiplierY"]));
+                return ((ushort)(this["StepMultiplierY"]));
             }
             set {
                 this["StepMultiplierY"] = value;
@@ -98,9 +98,9 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public uint StepMultiplierZ {
+        public ushort StepMultiplierZ {
             get {
-                return ((uint)(this["StepMultiplierZ"]));
+                return ((ushort)(this["StepMultiplierZ"]));
             }
             set {
                 this["StepMultiplierZ"] = value;
@@ -110,9 +110,9 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public uint TimerStrike {
+        public ushort TimerStrike {
             get {
-                return ((uint)(this["TimerStrike"]));
+                return ((ushort)(this["TimerStrike"]));
             }
             set {
                 this["TimerStrike"] = value;

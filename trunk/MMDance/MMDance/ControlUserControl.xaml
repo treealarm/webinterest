@@ -98,17 +98,17 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button  Grid.Column = "0"  Grid.Row = "0" Content="Х+" Name ="X_Plus" Height="28"  HorizontalAlignment="Stretch"/>
+            <Button  Grid.Column = "0"  Grid.Row = "0" Content="Х+" Name ="X_Plus" Height="28"  HorizontalAlignment="Stretch" Click="X_Plus_Click" />
             <TextBox Grid.Column = "1"  Grid.Row = "0" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-            <Button  Grid.Column = "2"  Grid.Row = "0" Content="Х-" Name ="X_Minus" Height="28"  HorizontalAlignment="Stretch"/>
+            <Button  Grid.Column = "2"  Grid.Row = "0" Content="Х-" Name ="X_Minus" Height="28"  HorizontalAlignment="Stretch" Click="X_Minus_Click" />
 
-            <Button  Grid.Column = "0"  Grid.Row = "1" Content="Y+" Name ="Y_Plus" Height="28"  HorizontalAlignment="Stretch"/>
+            <Button  Grid.Column = "0"  Grid.Row = "1" Content="Y+" Name ="Y_Plus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Plus_Click" />
             <TextBox Grid.Column = "1"  Grid.Row = "1" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-            <Button  Grid.Column = "2"  Grid.Row = "1" Content="Y-" Name ="Y_Minus" Height="28"  HorizontalAlignment="Stretch"/>
+            <Button  Grid.Column = "2"  Grid.Row = "1" Content="Y-" Name ="Y_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Minus_Click" />
 
-            <Button  Grid.Column = "0"  Grid.Row = "2" Content="Z+" Name ="Z_Plus" Height="28"  HorizontalAlignment="Stretch"/>
+            <Button  Grid.Column = "0"  Grid.Row = "2" Content="Z+" Name ="Z_Plus" Height="28"  HorizontalAlignment="Stretch" Click="Z_Plus_Click" />
             <TextBox Grid.Column = "1"  Grid.Row = "2" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-            <Button  Grid.Column = "2"  Grid.Row = "2" Content="Z-" Name ="Z_Minus" Height="28"  HorizontalAlignment="Stretch"/>
+            <Button  Grid.Column = "2"  Grid.Row = "2" Content="Z-" Name ="Z_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Z_Minus_Click" />
 
             <Button  Grid.Column = "0"  Grid.Row = "3" Content="->XY" Name ="GoToXY" Height="28"  HorizontalAlignment="Right"/>
             <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
