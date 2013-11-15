@@ -50,8 +50,49 @@ namespace MMDance
             MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
             if (!wnd.m_ControlWrapper.Connect())
             {
-                MessageBox.Show("Устройство недоступно");
+                MessageBox.Show(Properties.Resources.StringDevIsUnavailable);
             }
+            wnd.SetTimerSettings(Properties.Settings.Default.TimerRes, Properties.Settings.Default.TimerStrike,
+                new byte[]{
+                    Properties.Settings.Default.TimerMultiplierX,
+                    Properties.Settings.Default.TimerMultiplierY,
+                    Properties.Settings.Default.TimerMultiplierZ});
+
+
+            wnd.SetControlSettings(true, checkBoxOutpusEnergy.IsChecked == false);
+            wnd.m_step_mult.m_uMult[MainWindow.X_POS] = Properties.Settings.Default.StepMultiplierX;
+            wnd.m_step_mult.m_uMult[MainWindow.Y_POS] = Properties.Settings.Default.StepMultiplierY;
+            wnd.m_step_mult.m_uMult[MainWindow.Z_POS] = Properties.Settings.Default.StepMultiplierZ;
+        }
+
+        private void X_Plus_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void X_Minus_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Y_Plus_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Y_Minus_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Z_Plus_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Z_Minus_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -2,28 +2,28 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MMDance.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="TimerRes" Type="System.String" Scope="User">
+    <Setting Name="TimerRes" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="TimerMultiplierX" Type="System.UInt32" Scope="User">
+    <Setting Name="TimerMultiplierX" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="TimerMultiplierY" Type="System.UInt32" Scope="User">
+    <Setting Name="TimerMultiplierY" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="TimerMultiplierZ" Type="System.UInt32" Scope="User">
+    <Setting Name="TimerMultiplierZ" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="StepMultiplierX" Type="System.UInt32" Scope="User">
+    <Setting Name="StepMultiplierX" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="StepMultiplierY" Type="System.UInt32" Scope="User">
+    <Setting Name="StepMultiplierY" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="StepMultiplierZ" Type="System.UInt32" Scope="User">
+    <Setting Name="StepMultiplierZ" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="TimerStrike" Type="System.UInt32" Scope="User">
+    <Setting Name="TimerStrike" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
   </Settings>
