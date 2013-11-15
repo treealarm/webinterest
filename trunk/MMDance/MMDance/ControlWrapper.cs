@@ -276,15 +276,6 @@ public class ControlWrapper
         internal uint Reserved;     //ULONG_PTR  MSDN says ULONG_PTR is "typedef unsigned __int3264 ULONG_PTR;"  
     }
 
-    internal struct DEV_BROADCAST_DEVICEINTERFACE
-    {
-        internal uint dbcc_size;            //DWORD
-        internal uint dbcc_devicetype;      //DWORD
-        internal uint dbcc_reserved;        //DWORD
-        internal Guid dbcc_classguid;       //GUID
-        internal char[] dbcc_name;          //TCHAR array
-    }
-
     //DLL Imports.  Need these to access various C style unmanaged functions contained in their respective DLL files.
     //--------------------------------------------------------------------------------------------------------------
     //Returns a HDEVINFO type for a device information set.  We will need the 

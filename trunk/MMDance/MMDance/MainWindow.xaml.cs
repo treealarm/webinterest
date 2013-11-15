@@ -121,6 +121,30 @@ namespace MMDance
             public Int32[] m_uMult = new Int32[ControlWrapper.MOTORS_COUNT];
         }
 
+        [StructLayout(LayoutKind.Sequential, Size = 4 + ControlWrapper.MOTORS_COUNT), Serializable]
+        internal class do_timer_set
+        {
+            [MarshalAs(UnmanagedType.U2)]
+            public UInt16 m_timer_res;
+            [MarshalAs(UnmanagedType.U2)]
+            public UInt16 m_strike_impuls;
+            [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
+            public byte[] m_multiplier = new byte[ControlWrapper.MOTORS_COUNT];
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size = 4), Serializable]
+        internal class  do_control_signals
+        {
+            [MarshalAs(UnmanagedType.U1)]
+	        byte ms1;
+            [MarshalAs(UnmanagedType.U1)]
+	        byte ms2;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte reset;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte enable;
+        }
+        
         do_steps_multiplier m_step_mult = new do_steps_multiplier();
         xyz_coord m_cur_pos = new xyz_coord();
 
@@ -128,6 +152,37 @@ namespace MMDance
         public const int Y_POS = 0;
         public const int Z_POS = 2;
 
+        void SetControlSettings(byte reset, byte enable)
+        {
+            do_control_signals control_sign = new do_control_signals();
+            control_sign.enable = enable;
+            control_sign.reset = reset;
+            
+            byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
+            OutputPacketBuffer[0] = 0;
+            OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_CONTROL_SIGNALS;
+            ControlWrapper.StructureToByteArray(control_sign, OutputPacketBuffer, 2);
+            AddCommand(OutputPacketBuffer);
+        }
+
+        void SetTimerSettings(UInt16 timer_res, UInt16 strike_impuls, byte[] multiplier)
+        {
+            do_timer_set timerset = new do_timer_set();
+            timerset.m_timer_res = (UInt16)(UInt16.MaxValue - timer_res);
+            timerset.m_strike_impuls = strike_impuls;
+
+            for (int i = 0; i < ControlWrapper.MOTORS_COUNT && i < multiplier.Length; i++)
+            {
+                timerset.m_multiplier[i] = multiplier[i];
+            }
+            
+            byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
+            OutputPacketBuffer[0] = 0;
+            OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_TIME;
+            ControlWrapper.StructureToByteArray(timerset, OutputPacketBuffer, 2);
+            AddCommand(OutputPacketBuffer);
+        }
+	
         void SetStepsToController(do_steps steps)
         {	
 	        if(
