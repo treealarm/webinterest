@@ -197,9 +197,15 @@ namespace MMDance
             {
                 return;
             }
-            double xratio = bitmapImage.Width / PictureUserControl.image_canvas.ActualWidth;
-            double yratio = bitmapImage.Height / PictureUserControl.image_canvas.ActualHeight;
-            PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio, m_cur_pos.y * yratio);
+            try
+            {
+                double xratio = PictureUserControl.image_canvas.ActualWidth / bitmapImage.Width;
+                double yratio = PictureUserControl.image_canvas.ActualHeight / bitmapImage.Height;
+                PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio, m_cur_pos.y * yratio);
+            }
+            catch (Exception e)
+            {
+            }
         }
         public void SetStepsToController(do_steps steps)
         {	
@@ -232,6 +238,13 @@ namespace MMDance
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
             var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
             var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
+            SetStepsToController(var_do_steps);
+        }
+
+        public void GoToZ(int z)
+        {
+            MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
+            var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
             SetStepsToController(var_do_steps);
         }
 
@@ -290,6 +303,10 @@ namespace MMDance
             {
                 WorkingThread.Join();
             }
+        }
+        static public MainWindow GetMainWnd()
+        {
+            return (MainWindow)System.Windows.Application.Current.Windows[0];
         }
     }
 }

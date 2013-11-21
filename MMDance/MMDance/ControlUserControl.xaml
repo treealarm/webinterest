@@ -112,12 +112,12 @@
             <TextBox Grid.Column = "1"  Grid.Row = "2" Name ="ZShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
             <Button  Grid.Column = "2"  Grid.Row = "2" Content="Z-" Name ="Z_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Z_Minus_Click" />
 
-            <Button  Grid.Column = "0"  Grid.Row = "3" Content="->XY" Name ="GoToXY" Height="28"  HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-            <TextBox Grid.Column = "2"  Grid.Row = "3" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+            <Button  Grid.Column = "0"  Grid.Row = "3" Content="->XY" Name ="GoToXY" Height="28"  HorizontalAlignment="Right" Click="GoToXY_Click" />
+            <TextBox Grid.Column = "1"  Grid.Row = "3" Name="GoToXEdit"  Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+            <TextBox Grid.Column = "2"  Grid.Row = "3" Name="GoToYEdit" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
 
-            <Button  Grid.Column = "0"  Grid.Row = "4" Content="->Z" Name ="GoToZ" Height="28"  HorizontalAlignment="Stretch"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "4" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+            <Button  Grid.Column = "0"  Grid.Row = "4" Content="->Z" Name ="GoToZ" Height="28"  HorizontalAlignment="Stretch" Click="GoToZ_Click" />
+            <TextBox Grid.Column = "1"  Grid.Row = "4" Name="GoToZEdit" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
         </Grid>
     </Grid>
 </UserControl>
