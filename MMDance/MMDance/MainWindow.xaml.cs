@@ -183,6 +183,16 @@ namespace MMDance
             AddCommand(OutputPacketBuffer);
         }
 	
+        public void UpdateCurrentPosition()
+        {
+            if(bitmapImage == null)
+            {
+                return;
+            }
+            double xratio = bitmapImage.Width / PictureUserControl.image_canvas.ActualWidth;
+            double yratio = bitmapImage.Height / PictureUserControl.image_canvas.ActualHeight;
+            PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio, m_cur_pos.y * yratio);
+        }
         public void SetStepsToController(do_steps steps)
         {	
 	        if(
@@ -205,6 +215,8 @@ namespace MMDance
 	        OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_STEPS;
             ControlWrapper.StructureToByteArray(steps, OutputPacketBuffer, 2);
 	        AddCommand(OutputPacketBuffer);
+
+            UpdateCurrentPosition();
         }
 
         private void DoEngraving()
