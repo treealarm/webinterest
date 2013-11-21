@@ -11,7 +11,7 @@
             <Line Name="y_line" Stroke="Green" Panel.ZIndex="1"/>
             <Image Canvas.Left="0" Canvas.Top="0"  Name="loaded_image"
                    Width="{Binding ElementName=image_canvas, Path=ActualWidth}"
-                   Height="{Binding ElementName=image_canvas, Path=ActualHeight}" Stretch="Fill" />
+                   Height="{Binding ElementName=image_canvas, Path=ActualHeight}" Stretch="Fill" SizeChanged="loaded_image_SizeChanged" />
         </Canvas>
     </Grid>
 </UserControl>

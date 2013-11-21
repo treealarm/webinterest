@@ -27,7 +27,7 @@ namespace MMDance
 
         private void buttonOpenFile_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
+            MainWindow wnd = MainWindow.GetMainWnd();
             OpenFileDialog op = new OpenFileDialog();
             op.Title = "Открыть изображение";
             op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
@@ -44,13 +44,13 @@ namespace MMDance
 
         private void buttonStartWork_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
+            MainWindow wnd = MainWindow.GetMainWnd();
             wnd.Start();
         }
 
         private void buttonOpenDevice_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
+            MainWindow wnd = MainWindow.GetMainWnd();
             if (!wnd.m_ControlWrapper.Connect())
             {
                 MessageBox.Show(Properties.Resources.StringDevIsUnavailable);
@@ -70,13 +70,13 @@ namespace MMDance
 
         private void SetControlSettings()
         {
-            MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
+            MainWindow wnd = MainWindow.GetMainWnd();
             wnd.SetControlSettings(true, checkBoxOutpusEnergy.IsChecked == false);
         }
 
         void PassSteps(int x, int y, int z)
         {
-            MainWindow wnd = (MainWindow)System.Windows.Application.Current.Windows[0];
+            MainWindow wnd = MainWindow.GetMainWnd();
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
             var_do_steps.m_uSteps[MainWindow.X_POS] = x;
             var_do_steps.m_uSteps[MainWindow.Y_POS] = y;
@@ -122,6 +122,18 @@ namespace MMDance
         private void checkBoxPause_Unchecked(object sender, RoutedEventArgs e)
         {
             SetControlSettings();
+        }
+
+        private void GoToXY_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.GoToXY(Convert.ToInt32(GoToXEdit.Text), Convert.ToInt32(GoToYEdit.Text));
+        }
+
+        private void GoToZ_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.GoToZ(Convert.ToInt32(GoToZEdit.Text));
         }
     }
 }

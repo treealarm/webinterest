@@ -36,5 +36,10 @@ namespace MMDance
             y_line.X1 = 0;
             y_line.X2 = image_canvas.ActualWidth;
         }
+
+        private void loaded_image_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            MainWindow.GetMainWnd().UpdateCurrentPosition();
+        }
     }
 }
