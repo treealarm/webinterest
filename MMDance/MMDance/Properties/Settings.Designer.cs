@@ -109,13 +109,25 @@ namespace MMDance.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public ushort TimerStrike {
             get {
                 return ((ushort)(this["TimerStrike"]));
             }
             set {
                 this["TimerStrike"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PicFile {
+            get {
+                return ((string)(this["PicFile"]));
+            }
+            set {
+                this["PicFile"] = value;
             }
         }
     }

@@ -35,7 +35,10 @@ namespace MMDance
                 "Portable Network Graphic (*.png)|*.png";
             if (op.ShowDialog() == true)
             {
-                wnd.OnFileOpen(op.FileName);
+                if (wnd.OnFileOpen(op.FileName))
+                {
+                    Properties.Settings.Default.PicFile = op.FileName;
+                }                
             }
         }
 
@@ -80,6 +83,7 @@ namespace MMDance
             var_do_steps.m_uSteps[MainWindow.Z_POS] = z;
             wnd.SetStepsToController(var_do_steps);
         }
+ 
         private void X_Plus_Click(object sender, RoutedEventArgs e)
         {
             PassSteps(Convert.ToInt32(XShift.Text), 0, 0);

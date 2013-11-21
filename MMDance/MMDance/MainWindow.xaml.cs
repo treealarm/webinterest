@@ -45,8 +45,8 @@ namespace MMDance
             //UInt16 m_timer_ink_impul1s = 0;
 
             //ControlWrapper.ByteArrayToStructure(mybytes, ref m_timer_ink_impul1s, 2);
-            
-            
+
+            OnFileOpen(Properties.Settings.Default.PicFile);
             WorkingThread = new Thread(new ThreadStart(ProcessCommand));
             WorkingThread.SetApartmentState(ApartmentState.STA);
             WorkingThread.Start();
@@ -54,10 +54,18 @@ namespace MMDance
 
 
         BitmapImage bitmapImage = null;
-        public void OnFileOpen(string filename)
+        public bool OnFileOpen(string filename)
         {
-            bitmapImage = new BitmapImage(new Uri(filename));
-            PictureUserControl.loaded_image.Source = bitmapImage;
+            try
+            {
+                bitmapImage = new BitmapImage(new Uri(filename));
+                PictureUserControl.loaded_image.Source = bitmapImage;
+            }
+            catch (System.Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
 
         Thread WorkingThread = null;
@@ -217,6 +225,14 @@ namespace MMDance
 	        AddCommand(OutputPacketBuffer);
 
             UpdateCurrentPosition();
+        }
+
+        public void GoToXY(int x, int y)
+        {
+            MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
+            var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
+            var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
+            SetStepsToController(var_do_steps);
         }
 
         private void DoEngraving()
