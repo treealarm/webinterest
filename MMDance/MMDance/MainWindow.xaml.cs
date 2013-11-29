@@ -69,11 +69,20 @@ namespace MMDance
         }
 
         Thread WorkingThread = null;
+        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+
         bool StopThread = false;
         private delegate void UpdateCurrentPositionDelegate(double x1, double y1);
 
         private Queue<Byte[]> m_out_list = new Queue<Byte[]>();
 
+        public int GetQueueLen()
+        {
+            lock (m_out_list)
+            {
+                return m_out_list.Count;
+            }
+        }
         public void AddCommand(Byte[] command)
         {
             
@@ -155,6 +164,7 @@ namespace MMDance
         
         public do_steps_multiplier m_step_mult = new do_steps_multiplier();
         xyz_coord m_cur_pos = new xyz_coord();
+        xyz_coord m_cur_task = new xyz_coord();//Последняя отправленная на обработку координата
 
         public const int X_POS = 1;
         public const int Y_POS = 0;
@@ -248,41 +258,46 @@ namespace MMDance
             SetStepsToController(var_do_steps);
         }
 
-        private void DoEngraving()
+        private bool DoEngraving(ref xyz_coord cur_coords)
         {
             if (bitmapImage == null)
             {
-                return;
+                return false;
             }
             bitmapImage.VerifyAccess();
+
             int stride = bitmapImage.PixelWidth * 4;
             int size = bitmapImage.PixelHeight * stride;
             byte[] pixels = new byte[size];
 
-            double xratio = bitmapImage.Width / PictureUserControl.image_canvas.ActualWidth;
-            double yratio = bitmapImage.Height / PictureUserControl.image_canvas.ActualHeight;
-            for (int x = 0; x < bitmapImage.Width; x++)
+            int start_x = cur_coords.x;
+            int start_y = cur_coords.y+1;
+            if (start_y >= bitmapImage.PixelHeight)
             {
-                for (int y = 0; y < bitmapImage.Height; y++)
+                start_y = 0;
+                start_x++;
+            }
+
+            for (int x = start_x; x < bitmapImage.PixelWidth; x++)
+            {
+                for (int y = start_y; y < bitmapImage.PixelHeight; y++)
                 {
-                    if (StopThread)
-                    {
-                        return;
-                    }
                     bitmapImage.CopyPixels(pixels, stride, 0);
 
-                    
                     int index = y * stride + 4 * x;
                     byte red = pixels[index];
                     byte green = pixels[index + 1];
                     byte blue = pixels[index + 2];
                     byte alpha = pixels[index + 3];
-                    Dispatcher.BeginInvoke(
-                                    System.Windows.Threading.DispatcherPriority.Normal,
-                                    new UpdateCurrentPositionDelegate(PictureUserControl.UpdateCurrentPosition),
-                                    x * xratio, y * yratio);
+                    if (red != 0 || green!=0 || blue!=0)
+                    {
+                        cur_coords.x = x;
+                        cur_coords.y = y;
+                        return true;
+                    }
                 }
             }
+            return false;
         }
 
         public void Start()
@@ -292,8 +307,22 @@ namespace MMDance
                 bitmapImage.Freeze();
             }
             
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
+            dispatcherTimer.Start(); 
         }
 
+        xyz_coord m_CurTask = new xyz_coord();
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            //if (GetQueueLen() < 10)
+            {
+                if (DoEngraving(ref m_CurTask))
+                {
+                    GoToXY(m_CurTask.x, m_CurTask.y);
+                }
+            }
+        } 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             //Properties.Settings.Default.TimerRes = "50";
