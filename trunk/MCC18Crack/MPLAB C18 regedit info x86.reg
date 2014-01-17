@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+;--------------------------------------
+[HKEY_CURRENT_USER\Software\Microchip\MPLAB  C18]
+"InstallDir"="C:\\Program Files\\Microchip\\MPLABC18"
+;"InstallDir"="C:\\Program Files (x86)\\Microchip\\MPLABC18"
+"ProductVersion"="v3.36"
+;[-HKEY_CURRENT_USER\Software\Microchip\MPLAB  C18]
