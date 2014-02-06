@@ -71,7 +71,7 @@ namespace MMDance
         private void SetControlSettings()
         {
             MainWindow wnd = MainWindow.GetMainWnd();
-            wnd.SetControlSettings(true, checkBoxOutpusEnergy.IsChecked == false);
+            wnd.SetControlSettings(checkBoxOutpusEnergy.IsChecked == false);
         }
 
         void PassSteps(int x, int y, int z)
@@ -119,10 +119,6 @@ namespace MMDance
             SetControlSettings();
         }
 
-        private void checkBoxPause_Unchecked(object sender, RoutedEventArgs e)
-        {
-            SetControlSettings();
-        }
 
         private void GoToXY_Click(object sender, RoutedEventArgs e)
         {
@@ -134,6 +130,29 @@ namespace MMDance
         {
             MainWindow wnd = MainWindow.GetMainWnd();
             wnd.GoToZ(Convert.ToInt32(GoToZEdit.Text));
+        }
+
+        private void checkBoxPause_Checked(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.SetPause(checkBoxPause.IsChecked == true);
+        }
+        private void checkBoxPause_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.SetPause(checkBoxPause.IsChecked == true);
+        }
+
+        private void checkBoxInk_Checked(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.SetInk(checkBoxInk.IsChecked == true);
+        }
+
+        private void checkBoxInk_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.SetInk(checkBoxInk.IsChecked == true);
         }
     }
 }
