@@ -153,12 +153,6 @@ namespace MMDance
         internal class  do_control_signals
         {
             [MarshalAs(UnmanagedType.U1)]
-	        byte ms1;
-            [MarshalAs(UnmanagedType.U1)]
-	        byte ms2;
-            [MarshalAs(UnmanagedType.U1)]
-            public byte reset;
-            [MarshalAs(UnmanagedType.U1)]
             public byte enable;
         }
         
@@ -169,12 +163,12 @@ namespace MMDance
         public const int X_POS = 1;
         public const int Y_POS = 0;
         public const int Z_POS = 2;
+        public const int B_POS = 3;
 
-        public void SetControlSettings(bool reset, bool enable)
+        public void SetControlSettings(bool enable)
         {
             do_control_signals control_sign = new do_control_signals();
             control_sign.enable = Convert.ToByte(enable);
-            control_sign.reset = Convert.ToByte(reset);
             
             byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
             OutputPacketBuffer[0] = 0;
@@ -200,7 +194,25 @@ namespace MMDance
             ControlWrapper.StructureToByteArray(timerset, OutputPacketBuffer, 2);
             AddCommand(OutputPacketBuffer);
         }
-	
+
+        public void SetPause(bool pause)
+        {
+            byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
+            OutputPacketBuffer[0] = 0;
+            OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_PAUSE;
+            OutputPacketBuffer[3] = Convert.ToByte(pause);
+            AddCommand(OutputPacketBuffer);
+        }
+        
+        public void SetInk(bool ink)
+        {
+            byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
+            OutputPacketBuffer[0] = 0;
+            OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_INK;
+            OutputPacketBuffer[3] = Convert.ToByte(ink);
+            AddCommand(OutputPacketBuffer);
+        }
+
         public void UpdateCurrentPosition()
         {
             if(bitmapImage == null)
@@ -217,8 +229,10 @@ namespace MMDance
             {
             }
         }
+        
         public void SetStepsToController(do_steps steps)
-        {	
+        {
+            steps.m_uSteps[B_POS] = 0;
 	        if(
 		        steps.m_uSteps[X_POS] == 0 &&
 		        steps.m_uSteps[Y_POS] == 0 &&

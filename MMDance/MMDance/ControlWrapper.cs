@@ -94,7 +94,7 @@ using System.Threading;
 
 public class ControlWrapper
 {
-    public const int MOTORS_COUNT = 3;
+    public const int MOTORS_COUNT = 4;
     public const int LEN_OF_PACKET = 65;
     public const byte COMMAND_TOGGLE_LED = 0x80;
     public const byte COMMAND_IS_AVAILABLE = 0x81;
@@ -102,6 +102,7 @@ public class ControlWrapper
     public const byte COMMAND_SET_TIME = 0x83;
     public const byte COMMAND_SET_CONTROL_SIGNALS = 0x84;
     public const byte COMMAND_SET_PAUSE = 0x86;
+    public const byte COMMAND_SET_INK = 0x87;
 
     UInt16 m_timer_ink_impuls;
 
