@@ -16,20 +16,14 @@ extern USB_HANDLE USBInHandle;
 do_steps m_do_cur_steps;
 do_steps m_do_cur_steps_buf;
 
-BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0};
+BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0,0};
 UINT16 m_timer_ink_impuls = 0;
 BYTE m_b_Pause = FALSE;
+BYTE m_b_InkOn = FALSE;
 //sr should be 0, it's active mode, so shottky not required
-
-#define ms1_0           PORTBbits.RB0
-#define ms2_0           PORTCbits.RC6
-#define sr_0            PORTCbits.RC7
-#define reset_0         PORTDbits.RD6
 #define enable_0        PORTDbits.RD4
-#define sleep_0         PORTDbits.RD5
 
 #define ink_impuls      PORTDbits.RD2
-#define ink_sensor      PORTBbits.RB1
 #define led_3           PORTBbits.RB2
 
 #define step_0          PORTCbits.RC0
@@ -98,7 +92,7 @@ int CheckIfBufferOnZero(void)
 
 void ProcessSteps(void)
 {
-	int i;
+	int i = 0;
 	int motors_on_zero = 0;
 	int motors_on_zero_1 = 0;
 	int new_impuls = 0;
@@ -129,7 +123,19 @@ void ProcessSteps(void)
 
 	motors_on_zero_1 = CheckIfMotorsOnZero();
 	new_impuls = !motors_on_zero && motors_on_zero_1;
-	ProcessInkImpuls(new_impuls);
+
+	if(m_do_timer_set.m_ink_impuls > 0)
+	{
+		ProcessInkImpuls(new_impuls);
+	}
+	else
+	{
+		if(motors_on_zero_1)
+		{
+			ink_impuls = m_b_InkOn;
+			led_3 = ink_impuls;//ink_sensor;
+		}
+	}
 
 	if(motors_on_zero_1)
 	{
@@ -228,9 +234,6 @@ void SetupDirs(void)
 
 void SetupCtrlSignals(void)
 {
-	ms1_0 = m_do_control_signals.ms1;
-	ms2_0 = m_do_control_signals.ms2;
-	//reset_0 = m_do_control_signals.reset;
 	enable_0 = m_do_control_signals.enable;
 	RestartTimer();
 }
@@ -306,6 +309,10 @@ void MyProcessIO(void)
     {
 		m_b_Pause = ReceivedDataBuffer[1];
     }
+	case COMMAND_SET_INK:
+    {
+		m_b_InkOn = ReceivedDataBuffer[1];
+    }
 	break;
  }
   
@@ -377,10 +384,6 @@ void MyUserInit(void)
     step_1 = 0;
     step_2 = 0;
 
-
-	ms1_0 = 1;
-	ms2_0 = 1;
-	sr_0 = 0;
 	enable_0 = 1;//(1 -disable, 0 - enable)
 
     dir_0 = 0;
@@ -416,10 +419,6 @@ void ProcessInkImpuls(int new_impuls)
 	if(new_impuls)
 	{
 		m_timer_ink_impuls = 0;
-	}
-	if(ink_sensor == 0)
-	{
-		m_timer_ink_impuls = m_do_timer_set.m_ink_impuls;
 	}
 
 	if(m_timer_ink_impuls < m_do_timer_set.m_ink_impuls)

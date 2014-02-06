@@ -14,18 +14,19 @@
 #define COMMAND_SET_TIME  0x83
 #define COMMAND_SET_CONTROL_SIGNALS  0x84
 #define COMMAND_SET_PAUSE  0x86
-
-#define MOTORS_COUNT 3
-typedef struct _do_steps
-{
-	INT32  m_uSteps[MOTORS_COUNT];
-}do_steps;
+#define COMMAND_SET_INK  0x87
 
 
 #define BITS 8
 #define BIT_SET(  p, n) (p[(n)/BITS] |=  (0x80>>((n)%BITS)))
 #define BIT_CLEAR(p, n) (p[(n)/BITS] &= ~(0x80>>((n)%BITS)))
 #define BIT_ISSET(p, n) (p[(n)/BITS] &   (0x80>>((n)%BITS)))
+
+#define MOTORS_COUNT 4
+typedef struct _do_steps
+{
+	INT32  m_uSteps[MOTORS_COUNT];
+}do_steps;
 
 typedef struct 
 {
@@ -47,9 +48,6 @@ do_timer_set m_do_timer_set;
 
 struct do_control_signals
 {
-	BYTE ms1;
-	BYTE ms2;
-	BYTE reset;
 	BYTE enable;
 }
 m_do_control_signals;
