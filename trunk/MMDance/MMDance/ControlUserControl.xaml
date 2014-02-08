@@ -25,6 +25,7 @@
             <CheckBox Content="Включить приводы" Height="16" HorizontalAlignment="Left" Name="checkBoxOutpusEnergy" VerticalAlignment="Top" Checked="checkBoxOutpusEnergy_Checked" />
             <CheckBox Content="Пауза" Height="16" HorizontalAlignment="Left" Name="checkBoxPause" VerticalAlignment="Top" Unchecked="checkBoxPause_Unchecked" Checked="checkBoxPause_Checked" />
             <CheckBox Content="Поднять" Height="16" HorizontalAlignment="Left" Name="checkBoxInk" VerticalAlignment="Top" Checked="checkBoxInk_Checked" Unchecked="checkBoxInk_Unchecked" />
+            <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockInfo" Text="->>>" VerticalAlignment="Top" />
         </StackPanel>
 
         <Grid Grid.Column = "1"  Grid.Row = "0">
@@ -120,5 +121,6 @@
             <Button  Grid.Column = "0"  Grid.Row = "4" Content="->Z" Name ="GoToZ" Height="28"  HorizontalAlignment="Stretch" Click="GoToZ_Click" />
             <TextBox Grid.Column = "1"  Grid.Row = "4" Name="GoToZEdit" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
         </Grid>
+        
     </Grid>
 </UserControl>

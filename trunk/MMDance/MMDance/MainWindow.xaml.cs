@@ -104,6 +104,12 @@ namespace MMDance
                         if (m_out_list.Count <= 0)
                         {
                             SleepVal = 100;
+
+                            ControlUserControl.textBlockInfo.Dispatcher.BeginInvoke(new Action(delegate()
+                            {
+                                ControlUserControl.textBlockInfo.Text = m_ControlWrapper.GetCurText(); //where item is the item to be added and listbox is the control being updated.
+                            }));
+            
                         }
                         else
                         {
@@ -200,7 +206,7 @@ namespace MMDance
             byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
             OutputPacketBuffer[0] = 0;
             OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_PAUSE;
-            OutputPacketBuffer[3] = Convert.ToByte(pause);
+            OutputPacketBuffer[2] = Convert.ToByte(pause);
             AddCommand(OutputPacketBuffer);
         }
         
@@ -209,7 +215,7 @@ namespace MMDance
             byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
             OutputPacketBuffer[0] = 0;
             OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_INK;
-            OutputPacketBuffer[3] = Convert.ToByte(ink);
+            OutputPacketBuffer[2] = Convert.ToByte(ink);
             AddCommand(OutputPacketBuffer);
         }
 
