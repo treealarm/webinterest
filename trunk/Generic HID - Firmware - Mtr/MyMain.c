@@ -308,7 +308,9 @@ void MyProcessIO(void)
 	case COMMAND_SET_PAUSE:
     {
 		m_b_Pause = ReceivedDataBuffer[1];
+
     }
+	break;
 	case COMMAND_SET_INK:
     {
 		m_b_InkOn = ReceivedDataBuffer[1];
@@ -331,7 +333,7 @@ void MyUserInit(void)
 	m_do_timer_set.m_timer_res.tmr16.lo   =      0xE5;
 	m_do_timer_set.m_timer_res.tmr16.hi   =      0x48;
 
-	m_do_timer_set.m_timer_res.u16 = 65536 - 4;
+	//m_do_timer_set.m_timer_res.u16 = 65536 - 4;
 	
 
 	TMR0H = m_do_timer_set.m_timer_res.tmr16.hi;
@@ -411,6 +413,7 @@ void MyUserInit(void)
 	//CopyBufferToMotor();
 	//SetupDirs();
 	RestartTimer();
+
 }//end MyUserInit
 
 
