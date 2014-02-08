@@ -114,6 +114,13 @@ public class ControlWrapper
     }
     do_steps m_cur_steps = new do_steps();
 
+    public string GetCurText()
+    {
+        string ret;
+        ret = string.Format("{0},{1},{2},{3}",
+            m_cur_steps.m_uSteps[0], m_cur_steps.m_uSteps[1], m_cur_steps.m_uSteps[2], m_timer_ink_impuls);
+        return ret;
+    }
     public static void StructureToByteArray(object obj, byte[] bytearray, int position)
     {
         int len = Marshal.SizeOf(obj);
