@@ -127,7 +127,8 @@ namespace MMDance
         {
             public int x = 0;
             public int y = 0;
-            public int z = 0;
+            public int b = 0;
+            public int w = 0;
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
@@ -168,8 +169,8 @@ namespace MMDance
 
         public const int X_POS = 1;
         public const int Y_POS = 0;
-        public const int Z_POS = 2;
-        public const int B_POS = 3;
+        public const int B_POS = 2;
+        public const int W_POS = 3;
 
         public void SetControlSettings(bool enable)
         {
@@ -242,13 +243,15 @@ namespace MMDance
 	        if(
 		        steps.m_uSteps[X_POS] == 0 &&
 		        steps.m_uSteps[Y_POS] == 0 &&
-		        steps.m_uSteps[Z_POS] == 0)
+                steps.m_uSteps[B_POS] == 0 &&
+		        steps.m_uSteps[W_POS] == 0)
 	        {
 		        return;
 	        }
 	        m_cur_pos.y += steps.m_uSteps[Y_POS];
 	        m_cur_pos.x += steps.m_uSteps[X_POS];
-	        m_cur_pos.z += steps.m_uSteps[Z_POS];
+            m_cur_pos.b += steps.m_uSteps[B_POS];
+	        m_cur_pos.w += steps.m_uSteps[W_POS];
 
 	       	for(int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
 	        {
@@ -271,10 +274,11 @@ namespace MMDance
             SetStepsToController(var_do_steps);
         }
 
-        public void GoToZ(int z)
+        public void GoToBW(int b, int w)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
-            var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
+            var_do_steps.m_uSteps[B_POS] = w - m_cur_pos.b;
+            var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
             SetStepsToController(var_do_steps);
         }
 
