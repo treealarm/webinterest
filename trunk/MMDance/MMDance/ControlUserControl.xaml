@@ -18,7 +18,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column = "0" Grid.Row = "0" VerticalAlignment="Top" Height="Auto">
+        <StackPanel Grid.Column = "0" Grid.Row = "0" VerticalAlignment="Top" Height="Auto" Margin="5" Background="#23000000">
             <Button Content="Открыть файл" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenFile" Click="buttonOpenFile_Click" Width="Auto"/>
             <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenDevice" Click="buttonOpenDevice_Click" />
             <Button Content="Начать" Height="23" HorizontalAlignment="Stretch" Name="buttonStartWork" Click="buttonStartWork_Click" />
@@ -40,27 +40,51 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
             <Label  Grid.Column = "0"  Grid.Row = "0" Grid.ColumnSpan="2"  Content="Множители таймера:" Height="28" HorizontalAlignment="Left"/>
-            
-            <Label  Grid.Column = "0"  Grid.Row = "1" Content="Общий:" Height="28" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "1" Height="23" Name="textBoxTimerRes" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerRes}"/>
 
-            <Label  Grid.Column = "0"  Grid.Row = "2" Content="таймера Х:" Height="28" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "2" Height="23" Name="textBoxTimerMultiplierX" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierX}"/>
-
-            <Label  Grid.Column = "0"  Grid.Row = "3" Content="таймера Y:" Height="28" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23" Name="textBoxTimerMultiplierY" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierY}"/>
-
-            <Label  Grid.Column = "0"  Grid.Row = "4" Content="таймера Z:" Height="28" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "4" Height="23" Name="textBoxTimerMultiplierZ" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierZ}"/>
-
-            <Label  Grid.Column = "0"  Grid.Row = "5" Content="Удар:" Height="28" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "5" Height="23" Name="textBoxTimerStrike" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerStrike}"/>
+            <StackPanel Grid.Column = "0"  Grid.Row = "1" Grid.RowSpan ="6" Grid.ColumnSpan="2">
+                <StackPanel.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="MinWidth" Value="70"/>
+                    </Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="MinWidth" Value="40"/>
+                    </Style>
+                </StackPanel.Resources>
+                
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Общий:" Height="28" HorizontalAlignment="Right"/>
+                    <TextBox Height="23" Name="textBoxTimerRes" HorizontalAlignment="Right" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerRes}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="таймера Х:" Height="28" HorizontalAlignment="Left"/>
+                    <TextBox Height="23" Name="textBoxTimerMultiplierX" HorizontalAlignment="Right" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierX}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="таймера Y:" Height="28" HorizontalAlignment="Left"/>
+                    <TextBox Height="23" Name="textBoxTimerMultiplierY" HorizontalAlignment="Right" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierY}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label  Content="таймера B:" Height="28" HorizontalAlignment="Left"/>
+                    <TextBox Height="23" Name="textBoxTimerMultiplierB" HorizontalAlignment="Right" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierB}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="таймера W:" Height="28" HorizontalAlignment="Left"/>
+                    <TextBox Height="23" Name="textBoxTimerMultiplierW" HorizontalAlignment="Right" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerMultiplierW}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Удар:" Height="28" HorizontalAlignment="Left"/>
+                    <TextBox Height="23" Name="textBoxTimerStrike" HorizontalAlignment="Right" Text="{Binding Source={StaticResource Settings}, Path=Default.TimerStrike}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                </StackPanel>
+            </StackPanel>
         </Grid>
 
-        <Grid Grid.Column = "2"  Grid.Row = "0">
+        <Grid Grid.Column = "2"  Grid.Row = "0" Background="#2D000000">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -74,18 +98,29 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="MinWidth" Value="30"/>
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="MinWidth" Value="40"/>
+                </Style>
+            </Grid.Resources>
+            
             <StackPanel Grid.Column = "0"  Grid.Row = "0" Grid.ColumnSpan="2">
-            <Label  Content="Множители" Height="28" HorizontalAlignment="Left"/>
-                <Label  Content="шага:" Height="28" HorizontalAlignment="Right"/>
+                <Label  Content="Множители шага:" Height="28" HorizontalAlignment="Left"/>
             </StackPanel>
             <Label  Grid.Column = "0"  Grid.Row = "1" Content="шаг Х:" Height="28"  HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "1" Height="23" Name="textBoxStepMultiplierX" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierX}"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "1" Height="23" Name="textBoxStepMultiplierX" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierX}"/>
 
             <Label  Grid.Column = "0"  Grid.Row = "2" Content="шаг Y:" Height="28"  HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "2" Height="23" Name="textBoxStepMultiplierY" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierY}"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "2" Height="23" Name="textBoxStepMultiplierY" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierY}"/>
 
-            <Label  Grid.Column = "0"  Grid.Row = "3" Content="шаг Z:" Height="28" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23" Name="textBoxStepMultiplierZ" MinWidth="20" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierZ}"/>
+            <Label  Grid.Column = "0"  Grid.Row = "3" Content="шаг B:" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "3" Height="23" Name="textBoxStepMultiplierB" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierB}"/>
+
+            <Label  Grid.Column = "0"  Grid.Row = "4" Content="шаг W:" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "4" Height="23" Name="textBoxStepMultiplierW" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepMultiplierW}"/>
         </Grid>
 
         <Grid Grid.Column = "3"  Grid.Row = "0">
@@ -102,24 +137,52 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button  Grid.Column = "0"  Grid.Row = "0" Content="Х+" Name ="X_Plus" Height="28"  HorizontalAlignment="Stretch" Click="X_Plus_Click" />
-            <TextBox Grid.Column = "1"  Grid.Row = "0" Name ="XShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-            <Button  Grid.Column = "2"  Grid.Row = "0" Content="Х-" Name ="X_Minus" Height="28"  HorizontalAlignment="Stretch" Click="X_Minus_Click" />
-
-            <Button  Grid.Column = "0"  Grid.Row = "1" Content="Y+" Name ="Y_Plus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Plus_Click" />
-            <TextBox Grid.Column = "1"  Grid.Row = "1" Name ="YShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-            <Button  Grid.Column = "2"  Grid.Row = "1" Content="Y-" Name ="Y_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Minus_Click" />
-
-            <Button  Grid.Column = "0"  Grid.Row = "2" Content="Z+" Name ="Z_Plus" Height="28"  HorizontalAlignment="Stretch" Click="Z_Plus_Click" />
-            <TextBox Grid.Column = "1"  Grid.Row = "2" Name ="ZShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-            <Button  Grid.Column = "2"  Grid.Row = "2" Content="Z-" Name ="Z_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Z_Minus_Click" />
-
-            <Button  Grid.Column = "0"  Grid.Row = "3" Content="->XY" Name ="GoToXY" Height="28"  HorizontalAlignment="Right" Click="GoToXY_Click" />
-            <TextBox Grid.Column = "1"  Grid.Row = "3" Name="GoToXEdit"  Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-            <TextBox Grid.Column = "2"  Grid.Row = "3" Name="GoToYEdit" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-
-            <Button  Grid.Column = "0"  Grid.Row = "4" Content="->Z" Name ="GoToZ" Height="28"  HorizontalAlignment="Stretch" Click="GoToZ_Click" />
-            <TextBox Grid.Column = "1"  Grid.Row = "4" Name="GoToZEdit" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+            <StackPanel Grid.Column = "0"  Grid.Row = "0" Grid.RowSpan ="6" Margin="5">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="MinWidth" Value="40"/>
+                    </Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="MinWidth" Value="40"/>
+                    </Style>
+                </StackPanel.Resources>
+                
+                
+                <StackPanel Orientation="Horizontal">
+                    <Button  Content="Х+" Name ="X_Plus" Height="28" HorizontalAlignment="Stretch" Click="X_Plus_Click" />
+                    <TextBox Name ="XShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                    <Button  Content="Х-" Name ="X_Minus" Height="28"  HorizontalAlignment="Stretch" Click="X_Minus_Click" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Y+" Name ="Y_Plus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Plus_Click" />
+                    <TextBox Name ="YShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                    <Button Content="Y-" Name ="Y_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Minus_Click" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button  Content="B+" Name ="B_Plus" Height="28"  HorizontalAlignment="Stretch" Click="B_Plus_Click" />
+                    <TextBox Name ="BShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                    <Button Content="B-" Name ="B_Minus" Height="28"  HorizontalAlignment="Stretch" Click="B_Minus_Click" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button  Content="W+" Name ="W_Plus" Height="28"  HorizontalAlignment="Stretch" Click="W_Plus_Click" />
+                    <TextBox Name ="WShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                    <Button Content="W-" Name ="W_Minus" Height="28"  HorizontalAlignment="Stretch" Click="W_Minus_Click" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button  Content="->XY" Name ="GoToXY" Height="28"  HorizontalAlignment="Stretch" Click="GoToXY_Click" />
+                    <TextBox Name="GoToXEdit"  Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                    <TextBox Name="GoToYEdit" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button  Content="->BW" Name ="GoToB" Height="28"  HorizontalAlignment="Stretch" Click="GoToBW_Click" />
+                    <TextBox Name="GoToBEdit" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                    <TextBox Name="GoToWEdit" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                </StackPanel>
+            </StackPanel>
         </Grid>
         
     </Grid>

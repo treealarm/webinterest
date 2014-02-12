@@ -62,12 +62,12 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public byte TimerMultiplierZ {
+        public byte TimerMultiplierB {
             get {
-                return ((byte)(this["TimerMultiplierZ"]));
+                return ((byte)(this["TimerMultiplierB"]));
             }
             set {
-                this["TimerMultiplierZ"] = value;
+                this["TimerMultiplierB"] = value;
             }
         }
         
@@ -98,12 +98,12 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public ushort StepMultiplierZ {
+        public ushort StepMultiplierB {
             get {
-                return ((ushort)(this["StepMultiplierZ"]));
+                return ((ushort)(this["StepMultiplierB"]));
             }
             set {
-                this["StepMultiplierZ"] = value;
+                this["StepMultiplierB"] = value;
             }
         }
         
@@ -128,6 +128,30 @@ namespace MMDance.Properties {
             }
             set {
                 this["PicFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public byte TimerMultiplierW {
+            get {
+                return ((byte)(this["TimerMultiplierW"]));
+            }
+            set {
+                this["TimerMultiplierW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public ushort StepMultiplierW {
+            get {
+                return ((ushort)(this["StepMultiplierW"]));
+            }
+            set {
+                this["StepMultiplierW"] = value;
             }
         }
     }
