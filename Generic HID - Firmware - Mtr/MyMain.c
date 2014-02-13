@@ -21,6 +21,8 @@ UINT16 m_timer_ink_impuls = 0;
 BYTE m_b_Pause = FALSE;
 BYTE m_b_InkOn = FALSE;
 //sr should be 0, it's active mode, so shottky not required
+
+#define led_main        PORTDbits.RD3
 #define enable_0        PORTDbits.RD4
 
 #define ink_impuls      PORTDbits.RD2
@@ -34,6 +36,9 @@ BYTE m_b_InkOn = FALSE;
 
 #define step_2          PORTAbits.RA0
 #define dir_2           PORTAbits.RA1
+
+#define step_3          PORTBbits.RB0
+#define dir_3           PORTBbits.RB1
 
 #define btn_1			PORTBbits.RB4
 
@@ -100,12 +105,12 @@ void ProcessSteps(void)
 
 	if(m_b_Pause)
 	{
-	  PORTDbits.RD3 = 1;
+	  led_main = 1;
 	  return;
 	}
 
 
-	PORTDbits.RD3 = !PORTDbits.RD3;
+	led_main = !led_main;
 	motors_on_zero = CheckIfMotorsOnZero();
 	for(i = 0;i < MOTORS_COUNT;i++)
 	{
@@ -173,6 +178,14 @@ void ProcessStep(int motor)
 			return;
 		}
 	}
+	if(motor == 3)
+	{
+	    if(step_3 != 0)
+		{
+	    	step_3 = 0;
+			return;
+		}
+	}
 
 
 	if(m_do_cur_steps.m_uSteps[motor] == 0)
@@ -194,6 +207,11 @@ void ProcessStep(int motor)
 	    step_2 = 1;
 	}
 
+	if(motor == 3)
+	{
+	    step_3 = 1;
+	}
+
 	if(m_do_cur_steps.m_uSteps[motor] > 0)
 	{
     	m_do_cur_steps.m_uSteps[motor]--;
@@ -206,25 +224,10 @@ void ProcessStep(int motor)
 
 void SetupDirs(void)
 {
-	Delay10KTCYx(1);
-
-    step_0 = 0;
-    step_1 = 0;
-    step_2 = 0;
-
-	Delay10KTCYx(1);
-
-    dir_0 = 0;
-    dir_1 = 0;
-    dir_2 = 0;
-
-	Delay10KTCYx(1);
-
 	dir_0 = (m_do_cur_steps.m_uSteps[0] > 0);
-
   	dir_1 = (m_do_cur_steps.m_uSteps[1] > 0);
-
   	dir_2 = (m_do_cur_steps.m_uSteps[2] > 0);
+	dir_3 = (m_do_cur_steps.m_uSteps[3] > 0);
 
 
 	memset((void*)(&m_timer_cnt),0,sizeof(m_timer_cnt));
@@ -244,7 +247,7 @@ void MyProcessIO(void)
  {
     INT32 i = 0; 
 	case COMMAND_TOGGLE_LED:  //Toggle LEDs
-		PORTDbits.RD3 = 1;
+		led_main = 1;
 	break;
 	case COMMAND_IS_AVAILABLE:  //Get push button state (available state)
 		ToSendDataBuffer[0] = COMMAND_IS_AVAILABLE;				//Echo back to the host PC the command we are fulfilling in the first byte.  In this case, the Get Pushbutton State command.
@@ -343,41 +346,34 @@ void MyUserInit(void)
 	memset(&m_do_cur_steps_buf,0,sizeof(m_do_cur_steps_buf));
 	memset(&m_do_control_signals,0,sizeof(m_do_control_signals));
 
-    TRISDbits.TRISD3 = 0;
-	PORTDbits.RD3 = 1;
-
-	TRISBbits.TRISB4 = 1;
-
-
-
-
 	
 ///////////////////////////////////.TRIS////////////////
 /*
 
 */
 
-
-	TRISBbits.TRISB0 = 0;
-	TRISCbits.TRISC6 = 0;
-	TRISCbits.TRISC7 = 0;
 	TRISDbits.TRISD6 = 0;
 	TRISDbits.TRISD4 = 0;
 	TRISDbits.TRISD5 = 0;
-
 	TRISDbits.TRISD2 = 0;
-	TRISBbits.TRISB1 = 1;
-	TRISBbits.TRISB2 = 0;
+    TRISDbits.TRISD3 = 0;
 	
 	TRISCbits.TRISC0 = 0;
 	TRISCbits.TRISC1 = 0;
+	TRISCbits.TRISC6 = 0;
+	TRISCbits.TRISC7 = 0;
+
 	TRISAbits.TRISA5 = 0;
 	TRISAbits.TRISA4 = 0;
-
-
 	TRISAbits.TRISA0 = 0;
 	TRISAbits.TRISA1 = 0;
 
+	TRISBbits.TRISB0 = 0;
+	TRISBbits.TRISB1 = 0;
+	TRISBbits.TRISB2 = 0;
+
+	led_main = 1;
+	TRISBbits.TRISB4 = 1;
 ///////////////////////////////////////////////////
 
 	ink_impuls = 0;
@@ -385,12 +381,14 @@ void MyUserInit(void)
     step_0 = 0;
     step_1 = 0;
     step_2 = 0;
+    step_3 = 0;
 
 	enable_0 = 1;//(1 -disable, 0 - enable)
 
     dir_0 = 0;
     dir_1 = 0;
     dir_2 = 0;
+    dir_3 = 0;
 
 	INTCONbits.GIEL = 1;
 	INTCON2bits.TMR0IP = 0;
