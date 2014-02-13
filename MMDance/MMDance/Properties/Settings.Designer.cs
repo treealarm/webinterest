@@ -154,5 +154,29 @@ namespace MMDance.Properties {
                 this["StepMultiplierW"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public ushort WhiteColorMax {
+            get {
+                return ((ushort)(this["WhiteColorMax"]));
+            }
+            set {
+                this["WhiteColorMax"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public ushort BlackColorMax {
+            get {
+                return ((ushort)(this["BlackColorMax"]));
+            }
+            set {
+                this["BlackColorMax"] = value;
+            }
+        }
     }
 }

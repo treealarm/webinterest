@@ -315,6 +315,10 @@ namespace MMDance
                     byte alpha = pixels[index + 3];
                     if (red != 0 || green!=0 || blue!=0)
                     {
+                        int grayScale = (int)((red * 0.3) + (green * 0.59) + (blue * 0.11));
+
+                        cur_coords.b = grayScale * Properties.Settings.Default.BlackColorMax / 255;
+                        cur_coords.w = grayScale * Properties.Settings.Default.WhiteColorMax / 255;
                         cur_coords.x = x;
                         cur_coords.y = y;
                         return true;
@@ -344,6 +348,7 @@ namespace MMDance
                 if (DoEngraving(ref m_CurTask))
                 {
                     GoToXY(m_CurTask.x, m_CurTask.y);
+                    GoToBW(m_CurTask.b, m_CurTask.w);
                 }
             }
         } 
