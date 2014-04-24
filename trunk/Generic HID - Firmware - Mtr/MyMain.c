@@ -22,24 +22,25 @@ BYTE m_b_Pause = FALSE;
 BYTE m_b_InkOn = FALSE;
 //sr should be 0, it's active mode, so shottky not required
 
-#define led_main        PORTDbits.RD3
-#define enable_0        PORTDbits.RD4
 
 #define ink_impuls      PORTDbits.RD2
 #define led_3           PORTBbits.RB2
+////////////////////////////////////////////
+#define step_0          PORTAbits.RA5
+#define dir_0           PORTAbits.RA4
 
-#define step_0          PORTCbits.RC0
-#define dir_0           PORTCbits.RC1
+#define step_1          PORTAbits.RA0
+#define dir_1           PORTCbits.RC0
 
-#define step_1          PORTAbits.RA5
-#define dir_1           PORTAbits.RA4
+#define step_2          PORTCbits.RC2
+#define dir_2           PORTCbits.RC1
 
-#define step_2          PORTAbits.RA0
-#define dir_2           PORTAbits.RA1
+#define step_3          PORTAbits.RA1
+#define dir_3           PORTAbits.RA2
 
-#define step_3          PORTBbits.RB0
-#define dir_3           PORTBbits.RB1
-
+#define enable_0        PORTAbits.RA3
+/////////////////////////////////////////////
+#define led_main        PORTDbits.RD3
 #define btn_1			PORTBbits.RB4
 
 
@@ -352,24 +353,42 @@ void MyUserInit(void)
 
 */
 
-	TRISDbits.TRISD6 = 0;
-	TRISDbits.TRISD4 = 0;
-	TRISDbits.TRISD5 = 0;
+#define ink_impuls      PORTDbits.RD2
+#define led_3           PORTBbits.RB2
+////////////////////////////////////////////
+#define step_0          PORTAbits.RA5
+#define dir_0           PORTAbits.RA4
+
+#define step_1          PORTAbits.RA0
+#define dir_1           PORTCbits.RC0
+
+#define step_2          PORTCbits.RC2
+#define dir_2           PORTCbits.RC1
+
+#define step_3          PORTAbits.RA1
+#define dir_3           PORTAbits.RA2
+
+#define enable_0        PORTAbits.RA3
+/////////////////////////////////////////////
+#define led_main        PORTDbits.RD3
+#define btn_1			PORTBbits.RB4
+
 	TRISDbits.TRISD2 = 0;
-    TRISDbits.TRISD3 = 0;
+	TRISDbits.TRISD3 = 0;
+	
 	
 	TRISCbits.TRISC0 = 0;
+	TRISCbits.TRISC2 = 0;
 	TRISCbits.TRISC1 = 0;
-	TRISCbits.TRISC6 = 0;
-	TRISCbits.TRISC7 = 0;
+
 
 	TRISAbits.TRISA5 = 0;
 	TRISAbits.TRISA4 = 0;
-	TRISAbits.TRISA0 = 0;
+	TRISAbits.TRISA3 = 0;
+	TRISAbits.TRISA2 = 0;
 	TRISAbits.TRISA1 = 0;
+	TRISAbits.TRISA0 = 0;
 
-	TRISBbits.TRISB0 = 0;
-	TRISBbits.TRISB1 = 0;
 	TRISBbits.TRISB2 = 0;
 
 	led_main = 1;
