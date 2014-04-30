@@ -106,6 +106,8 @@ void ProcessSteps(void)
 	if(btn_1 == 0)
 	{
 		enable_0 = 0; 
+		m_do_timer_set.m_timer_res.u16 = 65536 - 16;
+		RestartTimer();
 		for(i = 0;i < MOTORS_COUNT;i++)
 		{
 			m_do_timer_set.m_multiplier[i] = 1;
