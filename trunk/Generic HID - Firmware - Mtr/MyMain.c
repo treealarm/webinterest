@@ -103,7 +103,7 @@ void ProcessSteps(void)
 	int motors_on_zero_1 = 0;
 	int new_impuls = 0;
 
-	if(btn_1 != 0)
+	if(btn_1 == 0)
 	{
 		enable_0 = 0; 
 		for(i = 0;i < MOTORS_COUNT;i++)
