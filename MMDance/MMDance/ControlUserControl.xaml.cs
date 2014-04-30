@@ -131,6 +131,10 @@ namespace MMDance
             SetControlSettings();
         }
 
+        private void checkBoxOutpusEnergy_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SetControlSettings();
+        }
 
         private void GoToXY_Click(object sender, RoutedEventArgs e)
         {
