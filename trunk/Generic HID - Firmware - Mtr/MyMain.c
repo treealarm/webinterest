@@ -103,6 +103,16 @@ void ProcessSteps(void)
 	int motors_on_zero_1 = 0;
 	int new_impuls = 0;
 
+	if(btn_1 != 0)
+	{
+		enable_0 = 0; 
+		for(i = 0;i < MOTORS_COUNT;i++)
+		{
+			m_do_timer_set.m_multiplier[i] = 1;
+			m_do_cur_steps_buf.m_uSteps[i] = 32*200;
+			m_do_cur_steps.m_uSteps[i] = -32*200;
+		}
+	}
 
 	if(m_b_Pause)
 	{
@@ -353,25 +363,6 @@ void MyUserInit(void)
 
 */
 
-#define ink_impuls      PORTDbits.RD2
-#define led_3           PORTBbits.RB2
-////////////////////////////////////////////
-#define step_0          PORTAbits.RA5
-#define dir_0           PORTAbits.RA4
-
-#define step_1          PORTAbits.RA0
-#define dir_1           PORTCbits.RC0
-
-#define step_2          PORTCbits.RC2
-#define dir_2           PORTCbits.RC1
-
-#define step_3          PORTAbits.RA1
-#define dir_3           PORTAbits.RA2
-
-#define enable_0        PORTAbits.RA3
-/////////////////////////////////////////////
-#define led_main        PORTDbits.RD3
-#define btn_1			PORTBbits.RB4
 
 	TRISDbits.TRISD2 = 0;
 	TRISDbits.TRISD3 = 0;
