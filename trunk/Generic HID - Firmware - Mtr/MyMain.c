@@ -29,14 +29,16 @@ BYTE m_b_InkOn = FALSE;
 #define step_0          PORTAbits.RA5
 #define dir_0           PORTAbits.RA4
 
-#define step_1          PORTAbits.RA0
-#define dir_1           PORTCbits.RC0
+#define step_1           PORTCbits.RC0
+#define dir_1            PORTAbits.RA0
 
-#define step_2          PORTCbits.RC2
-#define dir_2           PORTCbits.RC1
+#define step_2          PORTAbits.RA1
+#define dir_2           PORTAbits.RA2
 
-#define step_3          PORTAbits.RA1
-#define dir_3           PORTAbits.RA2
+#define step_3          PORTCbits.RC1
+#define dir_3           PORTCbits.RC2
+
+
 
 #define enable_0        PORTAbits.RA3
 /////////////////////////////////////////////
