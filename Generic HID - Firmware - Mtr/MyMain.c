@@ -267,6 +267,7 @@ void MyProcessIO(void)
     INT32 i = 0; 
 	case COMMAND_TOGGLE_LED:  //Toggle LEDs
 		led_main = 1;
+		up_impuls = ToSendDataBuffer[1];
 	break;
 	case COMMAND_IS_AVAILABLE:  //Get push button state (available state)
 		ToSendDataBuffer[0] = COMMAND_IS_AVAILABLE;				//Echo back to the host PC the command we are fulfilling in the first byte.  In this case, the Get Pushbutton State command.
