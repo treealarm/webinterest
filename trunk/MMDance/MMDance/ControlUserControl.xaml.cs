@@ -76,34 +76,35 @@ namespace MMDance
             wnd.SetControlSettings(checkBoxOutpusEnergy.IsChecked == false);
         }
 
-        void PassSteps(int x, int y, int z)
+        void PassSteps(int x = 0, int y = 0, int b = 0, int w = 0)
         {
             MainWindow wnd = MainWindow.GetMainWnd();
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
             var_do_steps.m_uSteps[MainWindow.X_POS] = x;
             var_do_steps.m_uSteps[MainWindow.Y_POS] = y;
-            var_do_steps.m_uSteps[MainWindow.W_POS] = z;
+            var_do_steps.m_uSteps[MainWindow.B_POS] = b;
+            var_do_steps.m_uSteps[MainWindow.W_POS] = w;
             wnd.SetStepsToController(var_do_steps);
         }
  
         private void X_Plus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(Convert.ToInt32(XShift.Text), 0, 0);
+            PassSteps(Convert.ToInt32(XShift.Text));
         }
 
         private void X_Minus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(-Convert.ToInt32(XShift.Text), 0, 0);
+            PassSteps(-Convert.ToInt32(XShift.Text));
         }
 
         private void Y_Plus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, Convert.ToInt32(YShift.Text), 0);
+            PassSteps(0, Convert.ToInt32(YShift.Text));
         }
 
         private void Y_Minus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, -Convert.ToInt32(YShift.Text), 0);
+            PassSteps(0, -Convert.ToInt32(YShift.Text));
         }
 
         private void B_Plus_Click(object sender, RoutedEventArgs e)
@@ -119,12 +120,12 @@ namespace MMDance
 
         private void W_Plus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, Convert.ToInt32(WShift.Text));
+            PassSteps(0, 0, 0,Convert.ToInt32(WShift.Text));
         }
 
         private void W_Minus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, -Convert.ToInt32(WShift.Text));
+            PassSteps(0, 0, 0, -Convert.ToInt32(WShift.Text));
         }
         private void checkBoxOutpusEnergy_Checked(object sender, RoutedEventArgs e)
         {

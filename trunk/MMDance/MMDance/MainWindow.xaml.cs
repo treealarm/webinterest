@@ -239,7 +239,6 @@ namespace MMDance
         
         public void SetStepsToController(do_steps steps)
         {
-            steps.m_uSteps[B_POS] = 0;
 	        if(
 		        steps.m_uSteps[X_POS] == 0 &&
 		        steps.m_uSteps[Y_POS] == 0 &&
