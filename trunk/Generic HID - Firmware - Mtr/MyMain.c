@@ -24,6 +24,9 @@ BYTE m_b_InkOn = FALSE;
 
 
 #define ink_impuls      PORTDbits.RD2
+#define not_enable      PORTDbits.RD4
+#define up_impuls       PORTDbits.RD5
+
 #define led_3           PORTBbits.RB2
 ////////////////////////////////////////////
 #define step_0          PORTAbits.RA5
@@ -253,6 +256,7 @@ void SetupDirs(void)
 void SetupCtrlSignals(void)
 {
 	enable_0 = m_do_control_signals.enable;
+    not_enable = !enable_0;
 	RestartTimer();
 }
 
@@ -370,6 +374,8 @@ void MyUserInit(void)
 
 	TRISDbits.TRISD2 = 0;
 	TRISDbits.TRISD3 = 0;
+    TRISDbits.TRISD4 = 0;
+    TRISDbits.TRISD5 = 0;
 	
 	
 	TRISCbits.TRISC0 = 0;
@@ -391,6 +397,7 @@ void MyUserInit(void)
 ///////////////////////////////////////////////////
 
 	ink_impuls = 0;
+    up_impuls = 0;
 
     step_0 = 0;
     step_1 = 0;
@@ -398,6 +405,7 @@ void MyUserInit(void)
     step_3 = 0;
 
 	enable_0 = 1;//(1 -disable, 0 - enable)
+    not_enable = 0;
 
     dir_0 = 0;
     dir_1 = 0;
