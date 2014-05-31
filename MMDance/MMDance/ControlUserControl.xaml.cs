@@ -73,7 +73,7 @@ namespace MMDance
         private void SetControlSettings()
         {
             MainWindow wnd = MainWindow.GetMainWnd();
-            wnd.SetControlSettings(checkBoxOutpusEnergy.IsChecked == false);
+            wnd.SetControlSettings(checkBoxOutpusEnergy.IsChecked==true);
         }
 
         void PassSteps(int x = 0, int y = 0, int b = 0, int w = 0)
