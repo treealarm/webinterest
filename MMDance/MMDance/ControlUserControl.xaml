@@ -24,7 +24,8 @@
             <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenDevice" Click="buttonOpenDevice_Click" />
             <Button Content="Начать" Height="23" HorizontalAlignment="Stretch" Name="buttonStartWork" Click="buttonStartWork_Click" />
             <CheckBox Content="Включить приводы" Height="16" HorizontalAlignment="Left" Name="checkBoxOutpusEnergy" VerticalAlignment="Top" Checked="checkBoxOutpusEnergy_Checked" Unchecked="checkBoxOutpusEnergy_Unchecked" />
-            <CheckBox Content="Пауза" Height="16" HorizontalAlignment="Left" Name="checkBoxPause" VerticalAlignment="Top" Unchecked="checkBoxPause_Unchecked" Checked="checkBoxPause_Checked" />
+            <CheckBox Content="Пауза контроллер" Height="16" HorizontalAlignment="Left" Name="checkBoxPause" VerticalAlignment="Top" Unchecked="checkBoxPause_Unchecked" Checked="checkBoxPause_Checked" />
+            <CheckBox Content="Пауза софт" Height="16" HorizontalAlignment="Left" Name="checkBoxPauseSoft" VerticalAlignment="Top" Checked="checkBoxPauseSoft_Checked" Unchecked="checkBoxPauseSoft_Unchecked" />
             <CheckBox Content="Поднять" Height="16" HorizontalAlignment="Left" Name="checkBoxInk" VerticalAlignment="Top" Checked="checkBoxInk_Checked" Unchecked="checkBoxInk_Unchecked" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockInfo" Text="->>>" VerticalAlignment="Top" />
         </StackPanel>
