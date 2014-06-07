@@ -171,5 +171,17 @@ namespace MMDance
             MainWindow wnd = MainWindow.GetMainWnd();
             wnd.SetInk(checkBoxInk.IsChecked == true);
         }
+
+        private void checkBoxPauseSoft_Checked(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.SetPauseSoft(checkBoxPauseSoft.IsChecked == true);
+        }
+
+        private void checkBoxPauseSoft_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.SetPauseSoft(checkBoxPauseSoft.IsChecked == true);
+        }
     }
 }
