@@ -129,6 +129,7 @@ namespace MMDance
             public int y = 0;
             public int b = 0;
             public int w = 0;
+            public bool end_of_stride = true;
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
@@ -167,7 +168,7 @@ namespace MMDance
         xyz_coord m_cur_pos = new xyz_coord();
         xyz_coord m_cur_task = new xyz_coord();//Последняя отправленная на обработку координата
                                     //steps max x8
-        public const int X_POS = 2; //2300
+        public const int X_POS = 2; //2200
         public const int Y_POS = 1; //1900  ~0.38 мм на шаг
         public const int B_POS = 3; //12000 
         public const int W_POS = 0; //12000 
@@ -232,8 +233,8 @@ namespace MMDance
             }
             try
             {
-                double xratio = PictureUserControl.image_canvas.ActualWidth / bitmapImage.Width;
-                double yratio = PictureUserControl.image_canvas.ActualHeight / bitmapImage.Height;
+                double xratio = PictureUserControl.image_canvas.ActualWidth / bitmapImage.PixelWidth;
+                double yratio = PictureUserControl.image_canvas.ActualHeight / bitmapImage.PixelHeight;
                 PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio, m_cur_pos.y * yratio);
             }
             catch (Exception e)
@@ -280,7 +281,7 @@ namespace MMDance
         public void GoToBW(int b, int w)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
-            var_do_steps.m_uSteps[B_POS] = w - m_cur_pos.b;
+            var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
             var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
             SetStepsToController(var_do_steps);
         }
@@ -299,10 +300,12 @@ namespace MMDance
 
             int start_x = cur_coords.x;
             int start_y = cur_coords.y+1;
+            cur_coords.end_of_stride = false;
             if (start_y >= bitmapImage.PixelHeight)
             {
                 start_y = 0;
                 start_x++;
+                cur_coords.end_of_stride = true;
             }
 
             for (int x = start_x; x < bitmapImage.PixelWidth; x++)
@@ -316,12 +319,14 @@ namespace MMDance
                     byte green = pixels[index + 1];
                     byte blue = pixels[index + 2];
                     byte alpha = pixels[index + 3];
-                    if (red != 0 || green!=0 || blue!=0)
+                    //if (red != 0 || green!=0 || blue!=0)
                     {
                         int grayScale = (int)((red * 0.3) + (green * 0.59) + (blue * 0.11));
 
-                        cur_coords.b = grayScale * Properties.Settings.Default.BlackColorMax / 255;
-                        cur_coords.w = grayScale * Properties.Settings.Default.WhiteColorMax / 255;
+                        int black = grayScale * Properties.Settings.Default.BlackColorMax / 255;
+                        int white = grayScale * Properties.Settings.Default.WhiteColorMax / 255;
+                        cur_coords.b += black;
+                        cur_coords.w += white;
                         cur_coords.x = x;
                         cur_coords.y = y;
                         return true;
@@ -350,12 +355,24 @@ namespace MMDance
             {
                 return;
             }
-            //if (GetQueueLen() < 10)
+            if (GetQueueLen() < 10)
             {
                 if (DoEngraving(ref m_CurTask))
                 {
+                    SetInk(m_CurTask.end_of_stride);
+                    if (m_CurTask.end_of_stride)
+                    {
+                        Thread.Sleep(1000);
+                    }
                     GoToXY(m_CurTask.x, m_CurTask.y);
                     GoToBW(m_CurTask.b, m_CurTask.w);
+                }
+                else
+                {
+                    SetInk(true);
+                    Thread.Sleep(1000);
+                    GoToXY(0, 0);
+                    GoToBW(0, 0);
                 }
             }
         } 

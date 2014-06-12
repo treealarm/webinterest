@@ -30,7 +30,7 @@ namespace MMDance
             MainWindow wnd = MainWindow.GetMainWnd();
             OpenFileDialog op = new OpenFileDialog();
             op.Title = "Открыть изображение";
-            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bmp|" +
                 "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
                 "Portable Network Graphic (*.png)|*.png";
             if (op.ShowDialog() == true)
