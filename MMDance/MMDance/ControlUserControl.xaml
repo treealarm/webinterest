@@ -138,6 +138,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Column = "0"  Grid.Row = "0" Grid.RowSpan ="6" Margin="5">
                 <StackPanel.Resources>
@@ -202,6 +203,19 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
-        
+    <DataGrid Grid.ColumnSpan="3" Grid.Row="7" Height="100" HorizontalAlignment="Left"  
+              Name="listViewColors" VerticalAlignment="Top" MinWidth="220" 
+              ItemsSource="{Binding}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Цвет" MinWidth="50" Binding="{Binding Path=color_text}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="{Binding BackgroundColor}" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Количество" Binding="{Binding Path=count}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

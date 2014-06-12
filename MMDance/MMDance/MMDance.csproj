@@ -81,6 +81,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PictureColors.cs" />
     <Compile Include="PictureUserControl.xaml.cs">
       <DependentUpon>PictureUserControl.xaml</DependentUpon>
     </Compile>
@@ -107,6 +108,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
