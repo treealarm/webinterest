@@ -54,31 +54,40 @@ namespace MMDance
         }
 
         public ObservableCollection<PictureColors> m_colors = new ObservableCollection<PictureColors>();
-        BitmapImage bitmapImage = null;
+        FormatConvertedBitmap newFormatedBitmapSource = null;
         public bool OnFileOpen(string filename)
         {
             try
             {
-                bitmapImage = new BitmapImage(new Uri(filename));
-                PictureUserControl.loaded_image.Source = bitmapImage;
+                BitmapImage bitmapImage = new BitmapImage(new Uri(filename));
+                
+                newFormatedBitmapSource = new FormatConvertedBitmap();
+                newFormatedBitmapSource.BeginInit();
+                newFormatedBitmapSource.Source = bitmapImage;
+                newFormatedBitmapSource.DestinationFormat = PixelFormats.Rgb24;
+                newFormatedBitmapSource.EndInit();
+
+                PictureUserControl.loaded_image.Source = newFormatedBitmapSource;
                 m_colors.Clear();
 
                Dictionary<Color, int> ColorMap = new Dictionary<Color,int>();
 
-                int stride = bitmapImage.PixelWidth * 4;
-                int size = bitmapImage.PixelHeight * stride;
-                byte[] pixels = new byte[size];
-
-                bitmapImage.CopyPixels(pixels, stride, 0);
-                for (int y = 0; y < bitmapImage.PixelHeight; y++)
+               int width = newFormatedBitmapSource.PixelWidth;
+               int stride = width * 3;
+               int size = newFormatedBitmapSource.PixelHeight * stride;
+               byte[] pixels = new byte[size];
+               Array.Clear(pixels, 0, size);
+               newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
+                for (int y = 0; y < newFormatedBitmapSource.PixelHeight; y++)
                 {
-                    for (int x = 0; x < bitmapImage.PixelWidth; x++)
+                    
+                    for (int x = 0; x < newFormatedBitmapSource.PixelWidth; x++)
                     {
-                        int index = y * stride + 4 * x;
+                        int index = y * stride + 3 * x;
                         byte red = pixels[index];
                         byte green = pixels[index + 1];
                         byte blue = pixels[index + 2];
-                        byte alpha = pixels[index + 3];
+                        //byte alpha = pixels[index + 3];
                         Color cur_col = Color.FromRgb(red, green, blue);
                         int Count = 0;
                         ColorMap.TryGetValue(cur_col, out Count);
@@ -263,14 +272,14 @@ namespace MMDance
 
         public void UpdateCurrentPosition()
         {
-            if(bitmapImage == null)
+            if (newFormatedBitmapSource == null)
             {
                 return;
             }
             try
             {
-                double xratio = PictureUserControl.image_canvas.ActualWidth / bitmapImage.PixelWidth;
-                double yratio = PictureUserControl.image_canvas.ActualHeight / bitmapImage.PixelHeight;
+                double xratio = PictureUserControl.image_canvas.ActualWidth / newFormatedBitmapSource.PixelWidth;
+                double yratio = PictureUserControl.image_canvas.ActualHeight / newFormatedBitmapSource.PixelHeight;
                 PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio, m_cur_pos.y * yratio);
             }
             catch (Exception e)
@@ -324,36 +333,36 @@ namespace MMDance
 
         private bool DoEngraving(ref xyz_coord cur_coords)
         {
-            if (bitmapImage == null)
+            if (newFormatedBitmapSource == null)
             {
                 return false;
             }
-            bitmapImage.VerifyAccess();
+            newFormatedBitmapSource.VerifyAccess();
 
-            int stride = bitmapImage.PixelWidth * 4;
-            int size = bitmapImage.PixelHeight * stride;
+            int stride = newFormatedBitmapSource.PixelWidth * 3;
+            int size = newFormatedBitmapSource.PixelHeight * stride;
             byte[] pixels = new byte[size];
 
             int start_x = cur_coords.x;
             int start_y = cur_coords.y+1;
             cur_coords.end_of_stride = false;
-            if (start_y >= bitmapImage.PixelHeight)
+            if (start_y >= newFormatedBitmapSource.PixelHeight)
             {
                 start_y = 0;
                 start_x++;
                 cur_coords.end_of_stride = true;
             }
 
-            bitmapImage.CopyPixels(pixels, stride, 0);
-            for (int x = start_x; x < bitmapImage.PixelWidth; x++)
+            newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
+            for (int x = start_x; x < newFormatedBitmapSource.PixelWidth; x++)
             {
-                for (int y = start_y; y < bitmapImage.PixelHeight; y++)
+                for (int y = start_y; y < newFormatedBitmapSource.PixelHeight; y++)
                 {
-                    int index = y * stride + 4 * x;
+                    int index = y * stride + 3 * x;
                     byte red = pixels[index];
                     byte green = pixels[index + 1];
                     byte blue = pixels[index + 2];
-                    byte alpha = pixels[index + 3];
+                    //byte alpha = pixels[index + 3];
                     //if (red != 0 || green!=0 || blue!=0)
                     {
                         int grayScale = (int)((red * 0.3) + (green * 0.59) + (blue * 0.11));
@@ -373,9 +382,11 @@ namespace MMDance
 
         public void Start()
         {
-            if (bitmapImage != null)
+            m_CurTask = new xyz_coord();
+            m_CurTask.y = -1;//start from -1 it will be incremented
+            if (newFormatedBitmapSource != null)
             {
-                bitmapImage.Freeze();
+                newFormatedBitmapSource.Freeze();
             }
             
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
