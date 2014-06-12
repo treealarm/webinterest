@@ -16,6 +16,7 @@ using System.Threading;
 
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Collections.ObjectModel;
 
 
 namespace MMDance
@@ -52,7 +53,7 @@ namespace MMDance
             WorkingThread.Start();
         }
 
-
+        public ObservableCollection<PictureColors> m_colors = new ObservableCollection<PictureColors>();
         BitmapImage bitmapImage = null;
         public bool OnFileOpen(string filename)
         {
@@ -60,11 +61,46 @@ namespace MMDance
             {
                 bitmapImage = new BitmapImage(new Uri(filename));
                 PictureUserControl.loaded_image.Source = bitmapImage;
+                m_colors.Clear();
+
+               Dictionary<Color, int> ColorMap = new Dictionary<Color,int>();
+
+                int stride = bitmapImage.PixelWidth * 4;
+                int size = bitmapImage.PixelHeight * stride;
+                byte[] pixels = new byte[size];
+
+                bitmapImage.CopyPixels(pixels, stride, 0);
+                for (int y = 0; y < bitmapImage.PixelHeight; y++)
+                {
+                    for (int x = 0; x < bitmapImage.PixelWidth; x++)
+                    {
+                        int index = y * stride + 4 * x;
+                        byte red = pixels[index];
+                        byte green = pixels[index + 1];
+                        byte blue = pixels[index + 2];
+                        byte alpha = pixels[index + 3];
+                        Color cur_col = Color.FromRgb(red, green, blue);
+                        int Count = 0;
+                        ColorMap.TryGetValue(cur_col, out Count);
+                        Count++;
+
+                        ColorMap[cur_col] = Count;
+                    }
+                }
+                foreach(KeyValuePair<Color,int> pair in ColorMap)
+                {
+                    Color color = pair.Key;
+                    m_colors.Add(new PictureColors(color, pair.Value));
+                }
             }
             catch (System.Exception ex)
             {
                 return false;
             }
+
+            
+
+            ControlUserControl.listViewColors.DataContext = m_colors;
             return true;
         }
 
@@ -308,12 +344,11 @@ namespace MMDance
                 cur_coords.end_of_stride = true;
             }
 
+            bitmapImage.CopyPixels(pixels, stride, 0);
             for (int x = start_x; x < bitmapImage.PixelWidth; x++)
             {
                 for (int y = start_y; y < bitmapImage.PixelHeight; y++)
                 {
-                    bitmapImage.CopyPixels(pixels, stride, 0);
-
                     int index = y * stride + 4 * x;
                     byte red = pixels[index];
                     byte green = pixels[index + 1];
