@@ -31,9 +31,9 @@ CDlgDraw::CDlgDraw(CWnd* pParent /*=NULL*/)
 	m_pThreadDrawGenerateXY = NULL;
 	ZeroMemory(&m_cur_pos,sizeof(m_cur_pos));
 	m_p_do_control_signals = new do_control_signals;
-	m_p_do_control_signals->ms1 = 1;
-	m_p_do_control_signals->ms2 = 1;
-	m_p_do_control_signals->reset = 1;
+//	m_p_do_control_signals->ms1 = 1;
+//	m_p_do_control_signals->ms2 = 1;
+//	m_p_do_control_signals->reset = 1;
 
 	m_pControlWrapper = new ControlWrapper;
 	m_timer_res = AfxGetApp()->GetProfileInt("settings","m_timer_res",100);
@@ -134,7 +134,7 @@ void CDlgDraw::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST1, m_list);
 	DDX_Text(pDX, IDC_EDIT_TIMER_RES, m_timer_res);
 	DDV_MinMaxUInt(pDX, m_timer_res, 1, 65000);
-	for(int i=0;i<MOTORS_COUNT;i++)
+	for(int i=0;i<MOTORS_COUNT-1;i++)
 	{
 		DDX_Text(pDX, IDC_EDIT_TMR_MULT0+i, m_mult[i]);
 		DDV_MinMaxByte(pDX, m_mult[i], 0, 255);
@@ -242,9 +242,9 @@ void CDlgDraw::OnBnClickedButtonInit()
 	m_pControlWrapper->SetStepMultiplier(step_mult);
 
 
-	m_p_do_control_signals->ms1 = 1;
-	m_p_do_control_signals->ms2 = 1;
-	m_p_do_control_signals->reset = 1;
+	//m_p_do_control_signals->ms1 = 1;
+	//m_p_do_control_signals->ms2 = 1;
+	//m_p_do_control_signals->reset = 1;
 
 	
 	GetEnableFromCheck();
