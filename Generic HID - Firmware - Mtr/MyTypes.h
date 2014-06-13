@@ -15,6 +15,8 @@
 #define COMMAND_SET_CONTROL_SIGNALS  0x84
 #define COMMAND_SET_PAUSE  0x86
 #define COMMAND_SET_INK  0x87
+#define COMMAND_SET_CRUISERS  0x88
+
 
 
 #define BITS 8
@@ -27,6 +29,14 @@ typedef struct _do_steps
 {
 	INT32  m_uSteps[MOTORS_COUNT];
 }do_steps;
+
+typedef struct _cruise_motors
+{
+	BYTE  is_cruiser[MOTORS_COUNT];
+	BYTE  ink_signal;
+}cruise_motors;
+
+cruise_motors m_cruise_motors;
 
 typedef struct 
 {
