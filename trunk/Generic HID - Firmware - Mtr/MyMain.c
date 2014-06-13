@@ -79,7 +79,7 @@ int CheckIfMotorsOnZero(void)
 	int i = 0;
 	for(i = 0;i < MOTORS_COUNT;i++)
 	{
-		if(m_do_cur_steps.m_uSteps[i] != 0)
+		if(m_cruise_motors.is_cruiser[i] != 0 && m_do_cur_steps.m_uSteps[i] != 0)
 		{
 			return 0;
 		}
@@ -300,6 +300,17 @@ void MyProcessIO(void)
 			USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
 		}
 		break;
+
+
+	case COMMAND_SET_CRUISERS:
+	{
+		memcpy(
+       			(void*)(&m_cruise_motors),
+       			(void*)(&ReceivedDataBuffer[1]),
+       			sizeof(m_cruise_motors) );
+
+	}
+	break;
 	case COMMAND_SET_STEPS:
 	{
 		memcpy(
@@ -353,6 +364,10 @@ void MyUserInit(void)
 	int i = 0 ;
 
 	memset(&m_do_timer_set,0,sizeof(m_do_timer_set));
+	memset(&m_cruise_motors,1,sizeof(m_cruise_motors));
+
+	
+
 	m_do_timer_set.m_timer_res.tmr16.lo   =      0xE5;
 	m_do_timer_set.m_timer_res.tmr16.hi   =      0x48;
 
@@ -447,12 +462,12 @@ void ProcessInkImpuls(int new_impuls)
 
 	if(m_timer_ink_impuls < m_do_timer_set.m_ink_impuls)
 	{
-		ink_impuls = 1;
+		ink_impuls = m_cruise_motors.ink_signal;
 		m_timer_ink_impuls += 1;
 	}
 	else
 	{
-		ink_impuls = 0;
+		ink_impuls = !m_cruise_motors.ink_signal;
 	}
 	led_3 = ink_impuls;//ink_sensor;
 }
