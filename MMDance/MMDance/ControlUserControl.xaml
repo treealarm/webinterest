@@ -203,11 +203,11 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
-    <DataGrid Grid.ColumnSpan="3" Grid.Row="7" Height="100" HorizontalAlignment="Left"  
-              Name="listViewColors" VerticalAlignment="Top" MinWidth="220" 
-              ItemsSource="{Binding}" AutoGenerateColumns="False">
+    <DataGrid Grid.ColumnSpan="3" Grid.Row="7" Height="Auto" HorizontalAlignment="Left"  
+              Name="listViewColors" VerticalAlignment="Top" MinWidth="220" MinHeight="100"
+              ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionMode="Single" SelectionChanged="listViewColors_SelectionChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Цвет" MinWidth="50" Binding="{Binding Path=color_text}">
+                <DataGridTextColumn Header="Цвет" MinWidth="150" Binding="{Binding Path=color_text}">
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="DataGridCell">
                             <Setter Property="Background" Value="{Binding BackgroundColor}" />
