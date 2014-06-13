@@ -183,5 +183,14 @@ namespace MMDance
             MainWindow wnd = MainWindow.GetMainWnd();
             wnd.SetPauseSoft(checkBoxPauseSoft.IsChecked == true);
         }
+
+        private void listViewColors_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PictureColors colors = e.AddedItems[0] as PictureColors;
+            if (colors != null)
+            {
+                MainWindow.GetMainWnd().SelectionChanged(colors.color);
+            }
+        }
     }
 }

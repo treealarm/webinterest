@@ -113,6 +113,39 @@ namespace MMDance
             return true;
         }
 
+        Color m_SelectedColor = Color.FromRgb(0, 0, 0);
+        public void SelectionChanged(Color color)
+        {
+            m_SelectedColor = color;
+            int width = newFormatedBitmapSource.PixelWidth;
+            int stride = width * 3;
+            int size = newFormatedBitmapSource.PixelHeight * stride;
+            byte[] pixels = new byte[size];
+            Array.Clear(pixels, 0, size);
+            newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
+            for (int y = 0; y < newFormatedBitmapSource.PixelHeight; y++)
+            {
+
+                for (int x = 0; x < newFormatedBitmapSource.PixelWidth; x++)
+                {
+                    int index = y * stride + 3 * x;
+                    byte red = pixels[index];
+                    byte green = pixels[index + 1];
+                    byte blue = pixels[index + 2];
+                    Color cur_col = Color.FromRgb(red, green, blue);
+                    if (cur_col == color)
+                    {
+                        pixels[index] = 0;
+                        pixels[index+1] = 255;
+                        pixels[index+2] = 0;
+                    }
+                }
+            }
+            PictureUserControl.loaded_image.Source = BitmapSource.Create(newFormatedBitmapSource.PixelWidth, newFormatedBitmapSource.PixelHeight,
+                newFormatedBitmapSource.DpiX, newFormatedBitmapSource.DpiY, newFormatedBitmapSource.Format,
+                null, pixels, stride);
+        }
+
         Thread WorkingThread = null;
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 
@@ -362,8 +395,8 @@ namespace MMDance
                     byte red = pixels[index];
                     byte green = pixels[index + 1];
                     byte blue = pixels[index + 2];
-                    //byte alpha = pixels[index + 3];
-                    //if (red != 0 || green!=0 || blue!=0)
+                    Color cur_col = Color.FromRgb(red, green, blue);
+                    if(m_SelectedColor == cur_col)
                     {
                         int grayScale = (int)((red * 0.3) + (green * 0.59) + (blue * 0.11));
 
