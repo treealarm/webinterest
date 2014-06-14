@@ -44,23 +44,43 @@ namespace MMDance
 
         private void buttonStartWork_Click(object sender, RoutedEventArgs e)
         {
+            m_nFastMode = -1;
             MainWindow wnd = MainWindow.GetMainWnd();
             wnd.Start();
         }
 
+        int m_nFastMode = -1;
+        public void SetTimerSetting(int nFastMode = 1)
+        {
+            if(m_nFastMode == nFastMode)
+            {
+                return;
+            }
+            MainWindow wnd = MainWindow.GetMainWnd();
+
+            byte TimerMultiplierX = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierX :
+                            Properties.Settings.Default.TimerMultiplierX*5);
+            byte TimerMultiplierY = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierY :
+                            Properties.Settings.Default.TimerMultiplierY * 5);
+            wnd.SetTimerSettings(
+                Properties.Settings.Default.TimerRes, 
+                Properties.Settings.Default.TimerStrike,
+                new byte[]{
+                TimerMultiplierX,
+                TimerMultiplierY,
+                Properties.Settings.Default.TimerMultiplierB,
+                Properties.Settings.Default.TimerMultiplierW});
+
+        }
         private void buttonOpenDevice_Click(object sender, RoutedEventArgs e)
         {
+            m_nFastMode = -1;
             MainWindow wnd = MainWindow.GetMainWnd();
             if (!wnd.m_ControlWrapper.Connect())
             {
                 MessageBox.Show(Properties.Resources.StringDevIsUnavailable);
             }
-            wnd.SetTimerSettings(Properties.Settings.Default.TimerRes, Properties.Settings.Default.TimerStrike,
-                new byte[]{
-                    Properties.Settings.Default.TimerMultiplierX,
-                    Properties.Settings.Default.TimerMultiplierY,
-                    Properties.Settings.Default.TimerMultiplierB,
-                    Properties.Settings.Default.TimerMultiplierW});
+           SetTimerSetting();
 
             SetControlSettings();
             
@@ -193,6 +213,11 @@ namespace MMDance
             {
                 MainWindow.GetMainWnd().SelectionChanged(colors.color);
             }
+        }
+
+        private void buttonUpdateTimer_Click(object sender, RoutedEventArgs e)
+        {
+            SetTimerSetting();
         }
     }
 }
