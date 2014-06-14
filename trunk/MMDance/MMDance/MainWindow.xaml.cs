@@ -210,6 +210,15 @@ namespace MMDance
             public bool end_of_stride = true;
         }
 
+        [StructLayout(LayoutKind.Sequential, Size = 1 * ControlWrapper.MOTORS_COUNT), Serializable]
+        public class cruise_motors
+        {
+            [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
+            public byte[] m_is_cruiser = new byte[ControlWrapper.MOTORS_COUNT];
+            [MarshalAs(UnmanagedType.I1)]
+            public byte m_signal_on_zero;
+        }
+
         [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
         public class do_steps
         {
@@ -313,13 +322,28 @@ namespace MMDance
             {
                 double xratio = PictureUserControl.image_canvas.ActualWidth / newFormatedBitmapSource.PixelWidth;
                 double yratio = PictureUserControl.image_canvas.ActualHeight / newFormatedBitmapSource.PixelHeight;
-                PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio, m_cur_pos.y * yratio);
+                PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio,
+                    (newFormatedBitmapSource.PixelHeight - m_cur_pos.y - 1) * yratio);
             }
             catch (Exception e)
             {
             }
         }
-        
+
+        public void SetCruisersToController()
+        {
+            cruise_motors cm = new cruise_motors();
+            cm.m_signal_on_zero = 0;
+            for (int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
+            {
+                cm.m_is_cruiser[motor] = Convert.ToByte(motor == X_POS || motor == Y_POS);
+            }
+            byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
+            OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
+            OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_CRUISERS;
+            ControlWrapper.StructureToByteArray(cm, OutputPacketBuffer, 2);
+            AddCommand(OutputPacketBuffer);
+        }
         public void SetStepsToController(do_steps steps)
         {
 	        if(
@@ -348,11 +372,20 @@ namespace MMDance
             UpdateCurrentPosition();
         }
 
-        public void GoToXY(int x, int y)
+        public void GoToXY(int x, int y, int b = -1, int w = -1)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
             var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
             var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
+
+            if (b >= 0)
+            {
+                var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
+            }
+            if (w >= 0)
+            {
+                var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
+            }
             SetStepsToController(var_do_steps);
         }
 
@@ -364,6 +397,7 @@ namespace MMDance
             SetStepsToController(var_do_steps);
         }
 
+        int m_counter = 0;
         private bool DoEngraving(ref xyz_coord cur_coords)
         {
             if (newFormatedBitmapSource == null)
@@ -391,7 +425,7 @@ namespace MMDance
             {
                 for (int y = start_y; y < newFormatedBitmapSource.PixelHeight; y++)
                 {
-                    int index = y * stride + 3 * x;
+                    int index = (newFormatedBitmapSource.PixelHeight-y-1) * stride + 3 * x;
                     byte red = pixels[index];
                     byte green = pixels[index + 1];
                     byte blue = pixels[index + 2];
@@ -400,23 +434,35 @@ namespace MMDance
                     {
                         int grayScale = (int)((red * 0.3) + (green * 0.59) + (blue * 0.11));
 
-                        int black = grayScale * Properties.Settings.Default.BlackColorMax / 255;
-                        int white = grayScale * Properties.Settings.Default.WhiteColorMax / 255;
-                        cur_coords.b += black;
-                        cur_coords.w += white;
+                        //int black = grayScale * Properties.Settings.Default.BlackColorMax / 255;
+                        //int white = grayScale * Properties.Settings.Default.WhiteColorMax / 255;
+                        m_PixelCounter++;
+                        if (m_PixelCounter > Properties.Settings.Default.StepsPerPixel)
+                        {
+                            m_PixelCounter = 0;
+                            cur_coords.b += Properties.Settings.Default.BlackColorMax;
+                            cur_coords.w += Properties.Settings.Default.WhiteColorMax;
+                        }
+                        
+
                         cur_coords.x = x;
                         cur_coords.y = y;
                         return true;
                     }
                 }
+                cur_coords.end_of_stride = true;
+                start_y = 0;
             }
             return false;
         }
 
+        int m_PixelCounter = 0;
         public void Start()
         {
             m_CurTask = new xyz_coord();
             m_CurTask.y = -1;//start from -1 it will be incremented
+            m_CurTask.x = Convert.ToInt32(ControlUserControl.StartX.Text);
+            m_counter = 0;
             if (newFormatedBitmapSource != null)
             {
                 newFormatedBitmapSource.Freeze();
@@ -439,19 +485,21 @@ namespace MMDance
                 if (DoEngraving(ref m_CurTask))
                 {
                     SetInk(m_CurTask.end_of_stride);
-                    if (m_CurTask.end_of_stride)
-                    {
-                        Thread.Sleep(1000);
-                    }
-                    GoToXY(m_CurTask.x, m_CurTask.y);
-                    GoToBW(m_CurTask.b, m_CurTask.w);
+                    GoToXY(m_CurTask.x, m_CurTask.y, m_CurTask.b, m_CurTask.w);
+                    //GoToBW(m_CurTask.b, m_CurTask.w);
+                    m_counter++;
+                    ControlUserControl.textBlockCounter.Text = m_counter.ToString();
                 }
                 else
                 {
                     SetInk(true);
                     Thread.Sleep(1000);
                     GoToXY(0, 0);
-                    GoToBW(0, 0);
+                    //GoToBW(0, 0);
+                    m_CurTask = new xyz_coord();
+                    ControlUserControl.checkBoxPauseSoft.IsChecked = true;
+                    dispatcherTimer.Stop();
+                    //ControlUserControl.checkBoxOutpusEnergy.IsChecked = false;
                 }
             }
         } 
