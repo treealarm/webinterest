@@ -103,6 +103,8 @@ public class ControlWrapper
     public const byte COMMAND_SET_CONTROL_SIGNALS = 0x84;
     public const byte COMMAND_SET_PAUSE = 0x86;
     public const byte COMMAND_SET_INK = 0x87;
+    public const byte COMMAND_SET_CRUISERS = 0x88;
+    
 
     UInt16 m_timer_ink_impuls;
 

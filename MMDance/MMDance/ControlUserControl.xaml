@@ -28,6 +28,7 @@
             <CheckBox Content="Пауза софт" Height="16" HorizontalAlignment="Left" Name="checkBoxPauseSoft" VerticalAlignment="Top" Checked="checkBoxPauseSoft_Checked" Unchecked="checkBoxPauseSoft_Unchecked" />
             <CheckBox Content="Поднять" Height="16" HorizontalAlignment="Left" Name="checkBoxInk" VerticalAlignment="Top" Checked="checkBoxInk_Checked" Unchecked="checkBoxInk_Unchecked" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockInfo" Text="->>>" VerticalAlignment="Top" />
+            <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockCounter" Text="->>>" VerticalAlignment="Top" />
         </StackPanel>
 
         <Grid Grid.Column = "1"  Grid.Row = "0">
@@ -201,11 +202,19 @@
                     <Label Content="Черный:"></Label>
                     <TextBox Name ="BlackColorMax" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.BlackColorMax}"/>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Точек на шаг:"></Label>
+                    <TextBox Name ="StepsPerPixel" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepsPerPixel}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Начать с Х:"></Label>
+                    <TextBox Name ="StartX" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
     <DataGrid Grid.ColumnSpan="3" Grid.Row="7" Height="Auto" HorizontalAlignment="Left"  
               Name="listViewColors" VerticalAlignment="Top" MinWidth="220" MinHeight="100"
-              ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionMode="Single" SelectionChanged="listViewColors_SelectionChanged">
+              ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionMode="Single" SelectionChanged="listViewColors_SelectionChanged" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Цвет" MinWidth="150" Binding="{Binding Path=color_text}">
                     <DataGridTextColumn.CellStyle>
