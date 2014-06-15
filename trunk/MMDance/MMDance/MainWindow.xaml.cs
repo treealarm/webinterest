@@ -254,11 +254,12 @@ namespace MMDance
         public do_steps_multiplier m_step_mult = new do_steps_multiplier();
         xyz_coord m_cur_pos = new xyz_coord();
         xyz_coord m_cur_task = new xyz_coord();//Последняя отправленная на обработку координата
-                                    //steps max x8
-        public const int X_POS = 2; //2200
-        public const int Y_POS = 1; //1900  ~0.38 мм на шаг
+                                    //steps max x8 x16
+        public const int X_POS = 2; //2225 //1150 - x16
+        public const int Y_POS = 1; //1900 //950  -x16
         public const int B_POS = 3; //12000 
         public const int W_POS = 0; //12000 
+        //~0.38 мм на шаг x16 0.76 mm
 
         public void SetControlSettings(bool enable)
         {
