@@ -164,14 +164,14 @@
                     <Button Content="Y-" Name ="Y_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Minus_Click" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button  Content="B+" Name ="B_Plus" Height="28"  HorizontalAlignment="Stretch" Click="B_Plus_Click" />
+                    <Button  Content="Чё+" Name ="B_Plus" Height="28"  HorizontalAlignment="Stretch" Click="B_Plus_Click" />
                     <TextBox Name ="BShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-                    <Button Content="B-" Name ="B_Minus" Height="28"  HorizontalAlignment="Stretch" Click="B_Minus_Click" />
+                    <Button Content="Чё-" Name ="B_Minus" Height="28"  HorizontalAlignment="Stretch" Click="B_Minus_Click" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button  Content="W+" Name ="W_Plus" Height="28"  HorizontalAlignment="Stretch" Click="W_Plus_Click" />
+                    <Button  Content="Бе+" Name ="W_Plus" Height="28"  HorizontalAlignment="Stretch" Click="W_Plus_Click" />
                     <TextBox Name ="WShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-                    <Button Content="W-" Name ="W_Minus" Height="28"  HorizontalAlignment="Stretch" Click="W_Minus_Click" />
+                    <Button Content="Бе-" Name ="W_Minus" Height="28"  HorizontalAlignment="Stretch" Click="W_Minus_Click" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button  Content="->XY" Name ="GoToXY" Height="28"  HorizontalAlignment="Stretch" Click="GoToXY_Click" />
@@ -195,13 +195,14 @@
                 </StackPanel.Resources>
 
 
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Белый:"></Label>
-                    <TextBox Name ="WhiteColorMax" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.WhiteColorMax}"/>
-                </StackPanel>
+
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Черный:"></Label>
                     <TextBox Name ="BlackColorMax" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.BlackColorMax}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Белый:"></Label>
+                    <TextBox Name ="WhiteColorMax" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.WhiteColorMax}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Точек на шаг:"></Label>
