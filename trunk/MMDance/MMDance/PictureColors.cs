@@ -17,6 +17,8 @@ namespace MMDance
         protected Color m_color;
         protected SolidColorBrush m_brush = new SolidColorBrush();
 
+        
+
         public Color color 
         {
             get
@@ -27,6 +29,13 @@ namespace MMDance
             {
                 m_brush = new SolidColorBrush(value);
                 m_color = value;
+            }
+        }
+        public int gray
+        {
+            get
+            {
+                return (int)((color.R * 0.3) + (color.G * 0.59) + (color.B * 0.11));
             }
         }
         public string color_text
