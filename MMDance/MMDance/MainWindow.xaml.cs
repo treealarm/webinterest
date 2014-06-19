@@ -87,7 +87,7 @@ namespace MMDance
                         byte red = pixels[index];
                         byte green = pixels[index + 1];
                         byte blue = pixels[index + 2];
-                        //byte alpha = pixels[index + 3];
+                        
                         Color cur_col = Color.FromRgb(red, green, blue);
                         int Count = 0;
                         ColorMap.TryGetValue(cur_col, out Count);
@@ -99,6 +99,7 @@ namespace MMDance
                 foreach(KeyValuePair<Color,int> pair in ColorMap)
                 {
                     Color color = pair.Key;
+                    
                     m_colors.Add(new PictureColors(color, pair.Value));
                 }
             }
@@ -106,10 +107,9 @@ namespace MMDance
             {
                 return false;
             }
-
             
-
             ControlUserControl.listViewColors.DataContext = m_colors;
+
             return true;
         }
 
@@ -117,6 +117,7 @@ namespace MMDance
         public void SelectionChanged(Color color)
         {
             m_SelectedColor = color;
+            this.Background = new SolidColorBrush(color);
             int width = newFormatedBitmapSource.PixelWidth;
             int stride = width * 3;
             int size = newFormatedBitmapSource.PixelHeight * stride;
@@ -383,13 +384,13 @@ namespace MMDance
             var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
             var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
 
-            if(Math.Abs(var_do_steps.m_uSteps[X_POS]) > 10 || Math.Abs(var_do_steps.m_uSteps[Y_POS]) > 10)
+            if (Math.Abs(var_do_steps.m_uSteps[X_POS]) > 10 || Math.Abs(var_do_steps.m_uSteps[Y_POS]) > 10)
             {
                 ControlUserControl.SetTimerSetting(1);
                 m_nTimerCounter = 0;
             }
             m_nTimerCounter++;
-            if(m_nTimerCounter > 2)
+            if (m_nTimerCounter > 2)
             {
                 ControlUserControl.SetTimerSetting(0);
                 m_nTimerCounter = 0;

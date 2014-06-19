@@ -226,6 +226,7 @@
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Количество" Binding="{Binding Path=count}"/>
+                <DataGridTextColumn Header="Серый" Binding="{Binding Path=gray}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
