@@ -41,5 +41,17 @@ namespace MMDance
         {
             MainWindow.GetMainWnd().UpdateCurrentPosition();
         }
+
+        private void image_canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point pt = e.GetPosition(image_canvas);
+            double xratio = MainWindow.GetMainWnd().GetImageSize().Width / image_canvas.ActualWidth;
+            double yratio = MainWindow.GetMainWnd().GetImageSize().Height / image_canvas.ActualHeight;
+            textBlock.Text = string.Format("{0}:{1}", Convert.ToInt32(pt.X * xratio),
+                MainWindow.GetMainWnd().GetImageSize().Height-Convert.ToInt32(pt.Y * yratio));
+            textBlock.Visibility = System.Windows.Visibility.Visible;
+            Canvas.SetLeft(textBlock, pt.X-20);
+            Canvas.SetTop(textBlock, pt.Y - 20);
+        }
     }
 }

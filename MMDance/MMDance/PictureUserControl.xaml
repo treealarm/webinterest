@@ -6,9 +6,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Canvas Background="Gainsboro"  Name="image_canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Canvas Background="Gainsboro"  Name="image_canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="image_canvas_MouseMove">
             <Line Name="x_line" Stroke="Green" Panel.ZIndex="1"/>
             <Line Name="y_line" Stroke="Green" Panel.ZIndex="1"/>
+            <TextBlock Name="textBlock" Panel.ZIndex="1"/>
             <Image Canvas.Left="0" Canvas.Top="0"  Name="loaded_image"
                    Width="{Binding ElementName=image_canvas, Path=ActualWidth}"
                    Height="{Binding ElementName=image_canvas, Path=ActualHeight}" Stretch="Fill" SizeChanged="loaded_image_SizeChanged" />

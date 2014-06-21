@@ -55,6 +55,16 @@ namespace MMDance
 
         public ObservableCollection<PictureColors> m_colors = new ObservableCollection<PictureColors>();
         FormatConvertedBitmap newFormatedBitmapSource = null;
+        Size m_image_size = new Size(0, 0);
+        public Size GetImageSize()
+        {
+            if (newFormatedBitmapSource != null)
+            {
+                m_image_size.Width = newFormatedBitmapSource.PixelWidth;
+                m_image_size.Height = newFormatedBitmapSource.PixelHeight;
+            }
+            return m_image_size;
+        }
         public bool OnFileOpen(string filename)
         {
             try
