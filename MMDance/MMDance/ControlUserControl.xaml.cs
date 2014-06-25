@@ -98,7 +98,7 @@ namespace MMDance
             wnd.SetControlSettings(checkBoxOutpusEnergy.IsChecked==true);
         }
 
-        void PassSteps(int x = 0, int y = 0, int b = 0, int w = 0)
+        void PassSteps(int x = 0, int y = 0, int b = 0, int w = 0, bool update_pos = true)
         {
             MainWindow wnd = MainWindow.GetMainWnd();
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
@@ -106,7 +106,7 @@ namespace MMDance
             var_do_steps.m_uSteps[MainWindow.Y_POS] = y;
             var_do_steps.m_uSteps[MainWindow.B_POS] = b;
             var_do_steps.m_uSteps[MainWindow.W_POS] = w;
-            wnd.SetStepsToController(var_do_steps);
+            wnd.SetStepsToController(var_do_steps, update_pos);
         }
  
         private void X_Plus_Click(object sender, RoutedEventArgs e)
@@ -131,23 +131,23 @@ namespace MMDance
 
         private void B_Plus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, Convert.ToInt32(BShift.Text));
+            PassSteps(0, 0, Convert.ToInt32(BShift.Text), 0, false);
         }
 
         private void B_Minus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, -Convert.ToInt32(BShift.Text));
+            PassSteps(0, 0, -Convert.ToInt32(BShift.Text), 0, false);
         }
 
 
         private void W_Plus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, 0,Convert.ToInt32(WShift.Text));
+            PassSteps(0, 0, 0,Convert.ToInt32(WShift.Text), false);
         }
 
         private void W_Minus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, 0, -Convert.ToInt32(WShift.Text));
+            PassSteps(0, 0, 0, -Convert.ToInt32(WShift.Text), false);
         }
         private void checkBoxOutpusEnergy_Checked(object sender, RoutedEventArgs e)
         {
