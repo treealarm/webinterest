@@ -358,7 +358,7 @@ namespace MMDance
             ControlWrapper.StructureToByteArray(cm, OutputPacketBuffer, 2);
             AddCommand(OutputPacketBuffer);
         }
-        public void SetStepsToController(do_steps steps)
+        public void SetStepsToController(do_steps steps, bool update_pos = true)
         {
 	        if(
 		        steps.m_uSteps[X_POS] == 0 &&
@@ -368,10 +368,13 @@ namespace MMDance
 	        {
 		        return;
 	        }
-	        m_cur_pos.y += steps.m_uSteps[Y_POS];
-	        m_cur_pos.x += steps.m_uSteps[X_POS];
-            m_cur_pos.b += steps.m_uSteps[B_POS];
-	        m_cur_pos.w += steps.m_uSteps[W_POS];
+            if (update_pos)
+            {
+                m_cur_pos.y += steps.m_uSteps[Y_POS];
+                m_cur_pos.x += steps.m_uSteps[X_POS];
+                m_cur_pos.b += steps.m_uSteps[B_POS];
+                m_cur_pos.w += steps.m_uSteps[W_POS];
+            }
 
 	       	for(int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
 	        {
