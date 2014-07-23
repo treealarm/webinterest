@@ -208,11 +208,14 @@ namespace MMDance
 
         private void listViewColors_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PictureColors colors = e.AddedItems[0] as PictureColors;
-            if (colors != null)
+            if (e.AddedItems.Count > 0)
             {
-                MainWindow.GetMainWnd().SelectionChanged(colors.color);
-            }
+                PictureColors colors = e.AddedItems[0] as PictureColors;
+                if (colors != null)
+                {
+                    MainWindow.GetMainWnd().SelectionChanged(colors.color);
+                }
+            }            
         }
 
         private void buttonUpdateTimer_Click(object sender, RoutedEventArgs e)
