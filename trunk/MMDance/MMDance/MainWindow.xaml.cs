@@ -124,6 +124,15 @@ namespace MMDance
         }
 
         Color m_SelectedColor = Color.FromRgb(0, 0, 0);
+        Color GetPixelColor(byte[] pixels, int x, int y, int stride)
+        {
+            int index = y * stride + 3 * x;
+            byte red = pixels[index];
+            byte green = pixels[index + 1];
+            byte blue = pixels[index + 2];
+            return Color.FromRgb(red, green, blue);
+        }
+
         public void SelectionChanged(Color color)
         {
             m_SelectedColor = color;
@@ -134,23 +143,49 @@ namespace MMDance
             byte[] pixels = new byte[size];
             Array.Clear(pixels, 0, size);
             newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
+            List<KeyValuePair<int, int>> arr = new List<KeyValuePair<int, int>>();
+
             for (int y = 0; y < newFormatedBitmapSource.PixelHeight; y++)
             {
 
                 for (int x = 0; x < newFormatedBitmapSource.PixelWidth; x++)
                 {
                     int index = y * stride + 3 * x;
-                    byte red = pixels[index];
-                    byte green = pixels[index + 1];
-                    byte blue = pixels[index + 2];
-                    Color cur_col = Color.FromRgb(red, green, blue);
+                    Color cur_col = GetPixelColor(pixels, x, y, stride);
                     if (cur_col == color)
                     {
-                        pixels[index] = 0;
-                        pixels[index+1] = 255;
-                        pixels[index+2] = 0;
+                        if (x > 0 && y > 0 && x < newFormatedBitmapSource.PixelWidth-1 && y < newFormatedBitmapSource.PixelHeight-1) 
+                        {
+                            KeyValuePair<int, int>[] P = new KeyValuePair<int, int>[] 
+                            { 
+                                new KeyValuePair<int,int> ( x - 1, y ), 
+                                new KeyValuePair<int,int> ( x + 1, y ), 
+                                new KeyValuePair<int,int> ( x, y - 1 ), 
+                                new KeyValuePair<int,int> ( x, y + 1 )
+                            };
+                            for (int i = 0; i < P.Length; i++)
+                            {
+                                Color nColor = GetPixelColor(pixels, P[i].Key, P[i].Value, stride);
+                                if (nColor != color)
+                                {
+                                    arr.Add(new KeyValuePair<int, int>(x, y));
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            arr.Add(new KeyValuePair<int, int>(x, y));
+                        }
                     }
                 }
+            }
+            foreach (KeyValuePair<int, int> pair in arr)
+            {
+                int index = pair.Value * stride + 3 * pair.Key;
+                pixels[index] = 0;
+                pixels[index + 1] = 255;
+                pixels[index + 2] = 0;
             }
             PictureUserControl.loaded_image.Source = BitmapSource.Create(newFormatedBitmapSource.PixelWidth, newFormatedBitmapSource.PixelHeight,
                 newFormatedBitmapSource.DpiX, newFormatedBitmapSource.DpiY, newFormatedBitmapSource.Format,
