@@ -28,6 +28,7 @@
             <CheckBox Content="Пауза контроллер" Height="16" HorizontalAlignment="Left" Name="checkBoxPause" VerticalAlignment="Top" Unchecked="checkBoxPause_Unchecked" Checked="checkBoxPause_Checked" />
             <CheckBox Content="Пауза софт" Height="16" HorizontalAlignment="Left" Name="checkBoxPauseSoft" VerticalAlignment="Top" Checked="checkBoxPauseSoft_Checked" Unchecked="checkBoxPauseSoft_Unchecked" />
             <CheckBox Content="Поднять" Height="16" HorizontalAlignment="Left" Name="checkBoxInk" VerticalAlignment="Top" Checked="checkBoxInk_Checked" Unchecked="checkBoxInk_Unchecked" />
+            <CheckBox Content="Контур" Height="16" HorizontalAlignment="Left" Name="checkBoxContour" Checked="checkBoxContour_Checked" Unchecked="checkBoxContour_Unchecked" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockInfo" Text="->>>" VerticalAlignment="Top" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockCounter" Text="->>>" VerticalAlignment="Top" />
         </StackPanel>

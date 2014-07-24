@@ -206,21 +206,35 @@ namespace MMDance
             wnd.SetPauseSoft(checkBoxPauseSoft.IsChecked == true);
         }
 
+        private void OnSelectionChanged()
+        {
+            PictureColors colors = listViewColors.SelectedItem as PictureColors;
+            if (colors != null)
+            {
+                MainWindow.GetMainWnd().SelectionChanged(colors.color, checkBoxContour.IsChecked == true);
+            }
+        }
         private void listViewColors_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
-                PictureColors colors = e.AddedItems[0] as PictureColors;
-                if (colors != null)
-                {
-                    MainWindow.GetMainWnd().SelectionChanged(colors.color);
-                }
+                OnSelectionChanged();                
             }            
         }
 
         private void buttonUpdateTimer_Click(object sender, RoutedEventArgs e)
         {
             SetTimerSetting();
+        }
+
+        private void checkBoxContour_Checked(object sender, RoutedEventArgs e)
+        {
+            OnSelectionChanged();
+        }
+
+        private void checkBoxContour_Unchecked(object sender, RoutedEventArgs e)
+        {
+            OnSelectionChanged();
         }
     }
 }
