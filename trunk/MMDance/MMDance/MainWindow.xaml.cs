@@ -133,8 +133,11 @@ namespace MMDance
             return Color.FromRgb(red, green, blue);
         }
 
-        public void SelectionChanged(Color color)
+        List<KeyValuePair<int, int>> m_selected_points = new List<KeyValuePair<int, int>>();
+
+        public void SelectionChanged(Color color, bool bContour)
         {
+            m_selected_points.Clear();
             m_SelectedColor = color;
             this.Background = new SolidColorBrush(color);
             int width = newFormatedBitmapSource.PixelWidth;
@@ -143,7 +146,6 @@ namespace MMDance
             byte[] pixels = new byte[size];
             Array.Clear(pixels, 0, size);
             newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
-            List<KeyValuePair<int, int>> arr = new List<KeyValuePair<int, int>>();
 
             for (int y = 0; y < newFormatedBitmapSource.PixelHeight; y++)
             {
@@ -154,33 +156,43 @@ namespace MMDance
                     Color cur_col = GetPixelColor(pixels, x, y, stride);
                     if (cur_col == color)
                     {
-                        if (x > 0 && y > 0 && x < newFormatedBitmapSource.PixelWidth-1 && y < newFormatedBitmapSource.PixelHeight-1) 
+                        if (bContour)
                         {
-                            KeyValuePair<int, int>[] P = new KeyValuePair<int, int>[] 
+                            if (x > 0 && y > 0 && x < newFormatedBitmapSource.PixelWidth - 1 && y < newFormatedBitmapSource.PixelHeight - 1)
+                            {
+                                KeyValuePair<int, int>[] P = new KeyValuePair<int, int>[] 
                             { 
                                 new KeyValuePair<int,int> ( x - 1, y ), 
                                 new KeyValuePair<int,int> ( x + 1, y ), 
                                 new KeyValuePair<int,int> ( x, y - 1 ), 
                                 new KeyValuePair<int,int> ( x, y + 1 )
                             };
-                            for (int i = 0; i < P.Length; i++)
-                            {
-                                Color nColor = GetPixelColor(pixels, P[i].Key, P[i].Value, stride);
-                                if (nColor != color)
+                                for (int i = 0; i < P.Length; i++)
                                 {
-                                    arr.Add(new KeyValuePair<int, int>(x, y));
-                                    break;
+                                    Color nColor = GetPixelColor(pixels, P[i].Key, P[i].Value, stride);
+                                    if (nColor != color)
+                                    {
+                                        m_selected_points.Add(new KeyValuePair<int, int>(x, y));
+                                        break;
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                m_selected_points.Add(new KeyValuePair<int, int>(x, y));
                             }
                         }
                         else
                         {
-                            arr.Add(new KeyValuePair<int, int>(x, y));
-                        }
+                            m_selected_points.Add(new KeyValuePair<int, int>(x, y));
+                            pixels[index] = 0;
+                            pixels[index + 1] = 255;
+                            pixels[index + 2] = 0;
+                        }                        
                     }
                 }
             }
-            foreach (KeyValuePair<int, int> pair in arr)
+            foreach (KeyValuePair<int, int> pair in m_selected_points)
             {
                 int index = pair.Value * stride + 3 * pair.Key;
                 pixels[index] = 0;
@@ -547,7 +559,7 @@ namespace MMDance
             {
                 return;
             }
-            if (GetQueueLen() < 10)
+            //if (GetQueueLen() < 10)
             {
                 if (DoEngraving(ref m_CurTask))
                 {
