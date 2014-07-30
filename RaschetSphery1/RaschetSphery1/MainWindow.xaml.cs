@@ -80,6 +80,7 @@ namespace RaschetSphery1
         double[] R = new double[] { 20, 10, 5, 1 };
         double gamma = Math.PI / (2 * 3);
         double Radius = 20;
+        double step = 5;
         public void Calculate()
         {
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
@@ -96,32 +97,32 @@ namespace RaschetSphery1
 
             // Apply the mesh to the geometry model.
             myGeometryModel.Geometry = myMeshGeometry3D;
-            int index = 0;
 
-            for (int i = 1; i < R.Length; i++)
+            Point3DCollection[] Discs = new Point3DCollection[Convert.ToInt32(Radius/step)];
+            for (double Z = 0; Z < Radius; Z += step)
             {
-                Points p = myFunction(i-1);
-                Points p1 = myFunction(i);
-
-
-                
-                myPositionCollection.Add(new Point3D(0, 1, 0));
-                myPositionCollection.Add(new Point3D(0, 0, 0));
-                myPositionCollection.Add(new Point3D(1, 1, 0));
-
-
-                double L1 = Math.Sqrt(Math.Pow(p.Z1 - p.Z2, 2) +
-                    Math.Pow(p.Y1 - p.Y2,2)  + Math.Pow(p.X1 - p.X2,2));
-                
-                double L2 = Math.Sqrt(Math.Pow(p1.Z1 - p1.Z2, 2) +
-                    Math.Pow(p1.Y1 - p1.Y2, 2) + Math.Pow(p1.X1 - p1.X2, 2));
-
-                double L3 = Math.Sqrt(Math.Pow(p.Z1 - p1.Z1, 2) +
-                    Math.Pow(p.Y1 - p1.Y1, 2) + Math.Pow(p.X1 - p1.X1, 2));
-
-                string s = string.Format("L1:{0:00.00}", L1);
+                Point3DCollection disc = new Point3DCollection();
+                for (double Y = -Radius; Y < Radius; Y += step)
+                {
+                    double X = Math.Sqrt(Radius * Radius - Math.Pow(Y, 2));
+                    disc.Add(new Point3D(X, Y, Z));
+                }
+                Discs[Convert.ToInt32(Z / step)] = disc;
             }
-            myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
+            for (int i = 1; i < Discs.Length; i++)
+            {
+                Point3DCollection disc1 = Discs[i - 1];
+                Point3DCollection disc2 = Discs[i];
+                for (int j = 1; j < disc1.Count; j++)
+                {
+                    Point3D p1 = disc1[j - 1];
+                    Point3D p2 = disc1[j];
+                    Point3D p3 = disc2[j];
+                    Point3D p4 = disc2[j - 1];
+                }
+            }
+
+                myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
         }
         Points myFunction(int i)
         {
