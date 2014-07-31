@@ -36,10 +36,10 @@ namespace RaschetSphery1
             PerspectiveCamera myPCamera = new PerspectiveCamera();
 
             // Specify where in the 3D scene the camera is.
-            myPCamera.Position = new Point3D(0, 0, 20);
+            myPCamera.Position = new Point3D(0, 0, -80);
 
             // Specify the direction that the camera is pointing.
-            myPCamera.LookDirection = new Vector3D(0, 0, -1);
+            myPCamera.LookDirection = new Vector3D(0, 0, 1);
 
             // Define camera's horizontal field of view in degrees.
             myPCamera.FieldOfView = 60;
@@ -49,7 +49,7 @@ namespace RaschetSphery1
             // Define the lights cast in the scene. Without light, the 3D object cannot  
             // be seen. Note: to illuminate an object from additional directions, create  
             // additional lights.
-            AmbientLight _ambLight = new AmbientLight(System.Windows.Media.Brushes.DarkBlue.Color);
+            AmbientLight _ambLight = new AmbientLight(System.Windows.Media.Brushes.LightGreen.Color);
             myModel3DGroup.Children.Add(_ambLight);
 
 
@@ -76,9 +76,6 @@ namespace RaschetSphery1
             this.Content = myViewport3D;
         }
         
-        
-        double[] R = new double[] { 20, 10, 5, 1 };
-        double gamma = Math.PI / (2 * 3);
         double Radius = 20;
         double step = 5;
         public void Calculate()
@@ -88,8 +85,6 @@ namespace RaschetSphery1
 
             // Create a collection of vertex positions for the MeshGeometry3D. 
             Point3DCollection myPositionCollection = new Point3DCollection();
-            myMeshGeometry3D.Positions = myPositionCollection;
-
 
             // Create a collection of triangle indices for the MeshGeometry3D.
             Int32Collection myTriangleIndicesCollection = new Int32Collection();
@@ -102,42 +97,47 @@ namespace RaschetSphery1
             for (double Z = 0; Z < Radius; Z += step)
             {
                 Point3DCollection disc = new Point3DCollection();
-                for (double Y = -Radius; Y < Radius; Y += step)
+                double r1 = Math.Sqrt(Radius * Radius - Math.Pow(Z, 2));
+                for (double Y = -r1; Y < r1; Y += step)
                 {
-                    double X = Math.Sqrt(Radius * Radius - Math.Pow(Y, 2));
+                    double X = Math.Sqrt(Radius * Radius - Math.Pow(Y, 2) - Math.Pow(Z, 2));
                     disc.Add(new Point3D(X, Y, Z));
                 }
+ 
                 Discs[Convert.ToInt32(Z / step)] = disc;
             }
-            for (int i = 1; i < Discs.Length; i++)
+
+            try
             {
-                Point3DCollection disc1 = Discs[i - 1];
-                Point3DCollection disc2 = Discs[i];
-                for (int j = 1; j < disc1.Count; j++)
+                for (int i = 1; i < Discs.Length; i++)
                 {
-                    Point3D p1 = disc1[j - 1];
-                    Point3D p2 = disc1[j];
-                    Point3D p3 = disc2[j];
-                    Point3D p4 = disc2[j - 1];
+                    Point3DCollection disc1 = Discs[i - 1];
+                    Point3DCollection disc2 = Discs[i];
+                    for (int j = 1; j < disc1.Count; j++)
+                    {
+                        Point3D p1 = disc1[j - 1];
+                        Point3D p2 = disc1[j];
+                        Point3D p3 = disc2[j];
+                        Point3D p4 = disc2[j - 1];
+
+                        myPositionCollection.Add(p4);
+                        myPositionCollection.Add(p3);
+                        myPositionCollection.Add(p1);
+
+                        myPositionCollection.Add(p1);
+                        myPositionCollection.Add(p3);
+                        myPositionCollection.Add(p2);
+                    }
                 }
             }
+            catch (System.Exception ex)
+            {
 
-                myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
+            }
+            myMeshGeometry3D.Positions = myPositionCollection;
+
+            myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
         }
-        Points myFunction(int i)
-        {
-            Points p = new Points();
 
-            p.X1 = R[i];
-            p.X2 = R[i] * Math.Cos(gamma);
-
-            p.Y1 = 0;
-            p.Y2 = Math.Sqrt(R[i] * R[i] - p.X1 * p.X1);
-
-            p.Z1 = Math.Sqrt(Radius * Radius - p.X1 * p.X1 - p.Y1 * p.Y1);
-            p.Z2 = Math.Sqrt(Radius * Radius - p.X2 * p.X2 - p.Y2 * p.Y2);
-
-            return p;
-        }
     }
 }
