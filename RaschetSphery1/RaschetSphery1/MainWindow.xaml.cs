@@ -93,47 +93,49 @@ namespace RaschetSphery1
             // Apply the mesh to the geometry model.
             myGeometryModel.Geometry = myMeshGeometry3D;
 
-            Point3DCollection[] Discs = new Point3DCollection[Convert.ToInt32(Radius/step)];
-            for (double Z = 0; Z < Radius; Z += step)
+            Point3DCollection[] Discs = new Point3DCollection[Convert.ToInt32(Radius/step)+1];
+            for (double Z = 0; Z <= Radius; Z += step)
             {
                 Point3DCollection disc = new Point3DCollection();
                 double r1 = Math.Sqrt(Radius * Radius - Math.Pow(Z, 2));
-                for (double Y = -r1; Y < r1; Y += step)
+                for (double alfa = 0; alfa <= 2 * Math.PI; alfa += Math.PI/10)
                 {
+                    double Y = r1 * Math.Sin(alfa);
                     double X = Math.Sqrt(Radius * Radius - Math.Pow(Y, 2) - Math.Pow(Z, 2));
+                    disc.Add(new Point3D(X, Y, Z));
+                }
+                for (double alfa = 0; alfa <= 2 * Math.PI; alfa += Math.PI / 10)
+                {
+                    double Y = r1 * Math.Sin(alfa);
+                    double X = -Math.Sqrt(Radius * Radius - Math.Pow(Y, 2) - Math.Pow(Z, 2));
                     disc.Add(new Point3D(X, Y, Z));
                 }
  
                 Discs[Convert.ToInt32(Z / step)] = disc;
             }
 
-            try
+
+            for (int i = 1; i < Discs.Length; i++)
             {
-                for (int i = 1; i < Discs.Length; i++)
+                Point3DCollection disc1 = Discs[i - 1];
+                Point3DCollection disc2 = Discs[i];
+                for (int j = 1; j < disc1.Count; j++)
                 {
-                    Point3DCollection disc1 = Discs[i - 1];
-                    Point3DCollection disc2 = Discs[i];
-                    for (int j = 1; j < disc1.Count; j++)
-                    {
-                        Point3D p1 = disc1[j - 1];
-                        Point3D p2 = disc1[j];
-                        Point3D p3 = disc2[j];
-                        Point3D p4 = disc2[j - 1];
+                    Point3D p1 = disc1[j - 1];
+                    Point3D p2 = disc1[j];
+                    Point3D p3 = disc2[j];
+                    Point3D p4 = disc2[j - 1];
 
-                        myPositionCollection.Add(p4);
-                        myPositionCollection.Add(p3);
-                        myPositionCollection.Add(p1);
+                    myPositionCollection.Add(p4);
+                    myPositionCollection.Add(p3);
+                    myPositionCollection.Add(p1);
 
-                        myPositionCollection.Add(p1);
-                        myPositionCollection.Add(p3);
-                        myPositionCollection.Add(p2);
-                    }
+                    myPositionCollection.Add(p1);
+                    myPositionCollection.Add(p3);
+                    myPositionCollection.Add(p2);
                 }
             }
-            catch (System.Exception ex)
-            {
 
-            }
             myMeshGeometry3D.Positions = myPositionCollection;
 
             myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
