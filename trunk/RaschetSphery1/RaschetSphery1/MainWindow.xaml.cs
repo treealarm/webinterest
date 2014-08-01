@@ -21,6 +21,11 @@ namespace RaschetSphery1
     public partial class MainWindow : Window
     {
         GeometryModel3D myGeometryModel = new GeometryModel3D();
+        AxisAngleRotation3D ax3d;
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            ax3d.Angle += 1;
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -42,26 +47,15 @@ namespace RaschetSphery1
             myPCamera.LookDirection = new Vector3D(0, 0, 1);
 
             // Define camera's horizontal field of view in degrees.
-            myPCamera.FieldOfView = 60;
+            myPCamera.FieldOfView = 80;
 
             // Asign the camera to the viewport
             myViewport3D.Camera = myPCamera;
             // Define the lights cast in the scene. Without light, the 3D object cannot  
             // be seen. Note: to illuminate an object from additional directions, create  
             // additional lights.
-            AmbientLight _ambLight = new AmbientLight(System.Windows.Media.Brushes.LightGreen.Color);
+            AmbientLight _ambLight = new AmbientLight(System.Windows.Media.Brushes.White.Color);
             myModel3DGroup.Children.Add(_ambLight);
-
-
-
-
-            // Create a horizontal linear gradient with four stops.   
-            SolidColorBrush myHorizontalGradient = new SolidColorBrush(Color.FromRgb(222,0,0));
-
-            // Define material and apply to the mesh geometries.
-            DiffuseMaterial myMaterial = new DiffuseMaterial(myHorizontalGradient);
-            myGeometryModel.Material = myMaterial;
-
 
             // Add the geometry model to the model group.
             myModel3DGroup.Children.Add(myGeometryModel);
@@ -74,10 +68,17 @@ namespace RaschetSphery1
 
             // Apply the viewport to the page so it will be rendered. 
             this.Content = myViewport3D;
+
+            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            dispatcherTimer.Start();
+
+            
         }
         
         double Radius = 20;
-        double step = 5;
+        double step = 4;
         public void Calculate()
         {
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
@@ -92,6 +93,10 @@ namespace RaschetSphery1
 
             // Apply the mesh to the geometry model.
             myGeometryModel.Geometry = myMeshGeometry3D;
+            
+            ax3d = new AxisAngleRotation3D(new Vector3D(0, 2, 0), 1);
+            RotateTransform3D myRotateTransform = new RotateTransform3D(ax3d);
+            myGeometryModel.Transform = myRotateTransform;
 
             Point3DCollection[] Discs = new Point3DCollection[Convert.ToInt32(Radius/step)+1];
             for (double Z = 0; Z <= Radius; Z += step)
@@ -104,16 +109,25 @@ namespace RaschetSphery1
                     double X = Math.Sqrt(Radius * Radius - Math.Pow(Y, 2) - Math.Pow(Z, 2));
                     disc.Add(new Point3D(X, Y, Z));
                 }
-                for (double alfa = 0; alfa <= 2 * Math.PI; alfa += Math.PI / 10)
-                {
-                    double Y = r1 * Math.Sin(alfa);
-                    double X = -Math.Sqrt(Radius * Radius - Math.Pow(Y, 2) - Math.Pow(Z, 2));
-                    disc.Add(new Point3D(X, Y, Z));
-                }
+
  
                 Discs[Convert.ToInt32(Z / step)] = disc;
             }
+            
+            LinearGradientBrush myHorizontalGradient = new LinearGradientBrush();
+            myHorizontalGradient.StartPoint = new Point(0, 0);
+            myHorizontalGradient.EndPoint = new Point(1, 1);
+            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.0));
+            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Green, 1.0));
 
+            DiffuseMaterial myDiffuseMaterial = new DiffuseMaterial(myHorizontalGradient);
+            MaterialGroup myMaterialGroup = new MaterialGroup();
+            myMaterialGroup.Children.Add(myDiffuseMaterial);
+
+            PointCollection myTextureCoordinatesCollection = new PointCollection();
+            
+            myMeshGeometry3D.TextureCoordinates = myTextureCoordinatesCollection;
+            myGeometryModel.Material = myMaterialGroup;
 
             for (int i = 1; i < Discs.Length; i++)
             {
@@ -125,6 +139,12 @@ namespace RaschetSphery1
                     Point3D p2 = disc1[j];
                     Point3D p3 = disc2[j];
                     Point3D p4 = disc2[j - 1];
+
+                    myTextureCoordinatesCollection.Add(new Point(p1.X, p1.Y));
+                    myTextureCoordinatesCollection.Add(new Point(p2.X, p2.Y));
+                    myTextureCoordinatesCollection.Add(new Point(p3.X, p3.Y));
+                    myTextureCoordinatesCollection.Add(new Point(p4.X, p4.Y));
+                    
 
                     myPositionCollection.Add(p4);
                     myPositionCollection.Add(p3);
