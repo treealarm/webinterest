@@ -26,6 +26,7 @@ namespace RaschetSphery1
         {
             ax3d.Angle += 1;
         }
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -71,7 +72,7 @@ namespace RaschetSphery1
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 30);
             dispatcherTimer.Start();
 
             
@@ -79,6 +80,7 @@ namespace RaschetSphery1
         
         double Radius = 20;
         double step = 4;
+        List<string> m_result = new List<string>();
         public void Calculate()
         {
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
@@ -98,7 +100,8 @@ namespace RaschetSphery1
             RotateTransform3D myRotateTransform = new RotateTransform3D(ax3d);
             myGeometryModel.Transform = myRotateTransform;
 
-            Point3DCollection[] Discs = new Point3DCollection[Convert.ToInt32(Radius/step)+1];
+            List<Point3DCollection>
+                Discs = new List<Point3DCollection>();
             for (double Z = 0; Z <= Radius; Z += step)
             {
                 Point3DCollection disc = new Point3DCollection();
@@ -111,7 +114,7 @@ namespace RaschetSphery1
                 }
 
  
-                Discs[Convert.ToInt32(Z / step)] = disc;
+                Discs.Add(disc);
             }
             
             LinearGradientBrush myHorizontalGradient = new LinearGradientBrush();
@@ -129,7 +132,9 @@ namespace RaschetSphery1
             myMeshGeometry3D.TextureCoordinates = myTextureCoordinatesCollection;
             myGeometryModel.Material = myMaterialGroup;
 
-            for (int i = 1; i < Discs.Length; i++)
+            m_result.Clear();
+
+            for (int i = 1; i < Discs.Count; i++)
             {
                 Point3DCollection disc1 = Discs[i - 1];
                 Point3DCollection disc2 = Discs[i];
@@ -139,6 +144,24 @@ namespace RaschetSphery1
                     Point3D p2 = disc1[j];
                     Point3D p3 = disc2[j];
                     Point3D p4 = disc2[j - 1];
+
+                    if (j == 1)
+                    {
+                        Vector3D v21 = p2 - p1;
+                        Double distanceBetween21 = v21.Length;
+                        
+                        Vector3D v43 = p4 - p3;
+                        Double distanceBetween43 = v43.Length;
+
+                        Vector3D v32 = p3 - p2;
+                        Double distanceBetween32 = v32.Length;
+
+                        Vector3D v41 = p4 - p1;
+                        Double distanceBetween41 = v41.Length;
+
+                        m_result.Add(string.Format("{0:00.00}|{1:00.00}|{2:00.00}", distanceBetween21, distanceBetween43, distanceBetween32));
+                    }
+                    
 
                     myTextureCoordinatesCollection.Add(new Point(p1.X, p1.Y));
                     myTextureCoordinatesCollection.Add(new Point(p2.X, p2.Y));
@@ -159,7 +182,12 @@ namespace RaschetSphery1
             myMeshGeometry3D.Positions = myPositionCollection;
 
             myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
+            string ss = string.Empty;
+            foreach (string s in m_result)
+            {
+                ss += s + "\n";
+            }
         }
-
+            
     }
 }
