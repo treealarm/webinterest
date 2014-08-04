@@ -22,6 +22,7 @@ namespace RaschetSphery1
     {
         GeometryModel3D myGeometryModel = new GeometryModel3D();
         AxisAngleRotation3D ax3d;
+        Viewport3D myViewport3D = new Viewport3D();
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             ax3d.Angle += 1;
@@ -32,7 +33,7 @@ namespace RaschetSphery1
             InitializeComponent();
             Calculate();
             // Declare scene objects.
-            Viewport3D myViewport3D = new Viewport3D();
+            
             Model3DGroup myModel3DGroup = new Model3DGroup();
             
             ModelVisual3D myModelVisual3D = new ModelVisual3D();
@@ -187,6 +188,7 @@ namespace RaschetSphery1
             {
                 ss += s + "\n";
             }
+            MessageBox.Show(ss);
         }
             
     }
