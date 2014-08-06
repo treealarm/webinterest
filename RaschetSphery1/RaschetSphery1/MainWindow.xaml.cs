@@ -160,7 +160,10 @@ namespace RaschetSphery1
                         Vector3D v41 = p4 - p1;
                         Double distanceBetween41 = v41.Length;
 
-                        m_result.Add(string.Format("{0:00.00}|{1:00.00}|{2:00.00}", distanceBetween21, distanceBetween43, distanceBetween32));
+                        Double h = (distanceBetween43 - distanceBetween21)/2;
+                        h = Math.Sqrt(Math.Pow(distanceBetween32, 2) - Math.Pow(h, 2));
+
+                        m_result.Add(string.Format("{0:00.00}|{1:00.00}|{2:00.00}|h-{3:00.00}", distanceBetween21, distanceBetween43, distanceBetween32, h));
                     }
                     
 
