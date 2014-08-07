@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
+using System.Diagnostics;
 
 namespace RaschetSphery1
 {
@@ -79,8 +80,9 @@ namespace RaschetSphery1
             
         }
         
-        double Radius = 20;
-        double step = 4;
+        double Radius = 10;
+        double step_alfa = Math.PI / 8;
+        double step_betta = Math.PI / 8;
         List<string> m_result = new List<string>();
         public void Calculate()
         {
@@ -103,11 +105,12 @@ namespace RaschetSphery1
 
             List<Point3DCollection>
                 Discs = new List<Point3DCollection>();
-            for (double Z = 0; Z <= Radius; Z += step)
+            for (double betta = 0; betta <= Math.PI/2; betta += step_betta)
             {
+                double Z = Radius * Math.Sin(betta);
                 Point3DCollection disc = new Point3DCollection();
                 double r1 = Math.Sqrt(Radius * Radius - Math.Pow(Z, 2));
-                for (double alfa = 0; alfa <= 2 * Math.PI; alfa += Math.PI/10)
+                for (double alfa = 0; alfa <= 2 * Math.PI; alfa += step_alfa)
                 {
                     double Y = r1 * Math.Sin(alfa);
                     double X = Math.Sqrt(Radius * Radius - Math.Pow(Y, 2) - Math.Pow(Z, 2));
@@ -121,8 +124,8 @@ namespace RaschetSphery1
             LinearGradientBrush myHorizontalGradient = new LinearGradientBrush();
             myHorizontalGradient.StartPoint = new Point(0, 0);
             myHorizontalGradient.EndPoint = new Point(1, 1);
-            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.0));
-            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Green, 1.0));
+            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.White, 0.0));
+            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Black, 1.0));
 
             DiffuseMaterial myDiffuseMaterial = new DiffuseMaterial(myHorizontalGradient);
             MaterialGroup myMaterialGroup = new MaterialGroup();
@@ -186,12 +189,18 @@ namespace RaschetSphery1
             myMeshGeometry3D.Positions = myPositionCollection;
 
             myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
+
+        }
+
+        private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
             string ss = string.Empty;
             foreach (string s in m_result)
             {
                 ss += s + "\n";
             }
-            MessageBox.Show(ss);
+            Debug.WriteLine(ss);
+            //MessageBox.Show(ss);
         }
             
     }
