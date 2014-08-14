@@ -113,7 +113,8 @@ namespace RaschetSphery1
                 for (double alfa = 0; alfa <= 2 * Math.PI; alfa += step_alfa)
                 {
                     double Y = r1 * Math.Sin(alfa);
-                    double X = Math.Sqrt(Radius * Radius - Math.Pow(Y, 2) - Math.Pow(Z, 2));
+                    double tempVal = Math.Max(Radius * Radius - Math.Pow(Y, 2) - Math.Pow(Z, 2), 0);
+                    double X = Math.Sqrt(tempVal);
                     disc.Add(new Point3D(X, Y, Z));
                 }
 
@@ -138,17 +139,19 @@ namespace RaschetSphery1
 
             m_result.Clear();
 
+            Triangle t1 = null;
             for (int i = 1; i < Discs.Count; i++)
             {
                 Point3DCollection disc1 = Discs[i - 1];
                 Point3DCollection disc2 = Discs[i];
+                t1 = null;
                 for (int j = 1; j < disc1.Count; j++)
                 {
                     Point3D p1 = disc1[j - 1];
                     Point3D p2 = disc1[j];
                     Point3D p3 = disc2[j];
                     Point3D p4 = disc2[j - 1];
-
+                    
                     if (j == 1)
                     {
                         Vector3D v21 = p2 - p1;
@@ -168,6 +171,15 @@ namespace RaschetSphery1
 
                         m_result.Add(string.Format("{0:00.00}|{1:00.00}|{2:00.00}|h-{3:00.00}", distanceBetween21, distanceBetween43, distanceBetween32, h));
                     }
+
+                    if (t1 != null)
+                    {
+                        Triangle t2 = new Triangle(p1, p2, p3);
+                        double angle = t2.GetAngle(t1);
+                        m_result.Add(string.Format("angle-{0:00.00}", angle));
+                    }
+                    t1 = new Triangle(p1, p2, p3);
+                    
                     
 
                     myTextureCoordinatesCollection.Add(new Point(p1.X, p1.Y));
