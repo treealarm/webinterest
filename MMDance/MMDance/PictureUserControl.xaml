@@ -25,7 +25,7 @@
               ShowsPreview="true"
               Height="5"/>
         <DataGrid Grid.Row="2" Name="ProfileDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                  CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding}" AutoGenerateColumns="False" LoadingRowDetails="ProfileDataGrid_LoadingRowDetails">
+                  CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding}" AutoGenerateColumns="False" CellEditEnding="ProfileDataGrid_CellEditEnding">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="FileName">
                     <DataGridTemplateColumn.CellEditingTemplate>
@@ -49,7 +49,7 @@
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <DockPanel Background="GhostWhite">
-                        <Image DockPanel.Dock="Left" Source="{Binding Image}" Height="64" Margin="10" />
+                        <Image DockPanel.Dock="Left" Source="{Binding FileName}" Height="64" Margin="10" />
                         <Grid Margin="0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

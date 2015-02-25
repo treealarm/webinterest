@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace MMDance
 {
@@ -20,16 +22,18 @@ namespace MMDance
     /// </summary>
     public partial class PictureUserControl : UserControl
     {
+        List<ProfileElement> m_ProfileData = new List<ProfileElement>();
         public PictureUserControl()
         {
             InitializeComponent();
-            List<ProfileElement> users = new List<ProfileElement>();
-            users.Add(new ProfileElement() { FileName = "C:\\map.bmp", Length = 10 });
-            users.Add(new ProfileElement() { FileName = "C:\\2.bmp", Length = 20 });
 
-            ProfileDataGrid.DataContext = users;
+            m_ProfileData = ProfileElementSerializer.DeserializeObject(Properties.Settings.Default.ProfileDataSource);
+            //m_ProfileData.Add(new ProfileElement() { FileName = "C:\\map.bmp", Length = 10 });
+            //m_ProfileData.Add(new ProfileElement() { FileName = "C:\\2.bmp", Length = 20 });
+
+            ProfileDataGrid.DataContext = m_ProfileData;
         }
-        
+
         public void UpdateCurrentPosition(double x1, double y1)
         {
             x_line.X1 = x1;
@@ -74,9 +78,11 @@ namespace MMDance
             }
         }
 
-        private void ProfileDataGrid_LoadingRowDetails(object sender, DataGridRowDetailsEventArgs e)
+        private void ProfileDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-
+            Properties.Settings.Default.ProfileDataSource = ProfileElementSerializer.SerializeObject(m_ProfileData);
+            Properties.Settings.Default.Save();
         }
+
     }
 }
