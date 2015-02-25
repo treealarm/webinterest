@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace MMDance
 {
@@ -22,6 +23,11 @@ namespace MMDance
         public PictureUserControl()
         {
             InitializeComponent();
+            List<ProfileElement> users = new List<ProfileElement>();
+            users.Add(new ProfileElement() { FileName = "C:\\map.bmp", Length = 10 });
+            users.Add(new ProfileElement() { FileName = "C:\\2.bmp", Length = 20 });
+
+            ProfileDataGrid.DataContext = users;
         }
         
         public void UpdateCurrentPosition(double x1, double y1)
@@ -52,6 +58,25 @@ namespace MMDance
             textBlock.Visibility = System.Windows.Visibility.Visible;
             Canvas.SetLeft(textBlock, pt.X-20);
             Canvas.SetTop(textBlock, pt.Y - 20);
+        }
+
+        private void Click_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog op = new OpenFileDialog();
+            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bmp|" +
+                "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+                "Portable Network Graphic (*.png)|*.png";
+            if (op.ShowDialog() == true)
+            {
+                var yourType = ((FrameworkElement)sender).DataContext as ProfileElement;
+                yourType.FileName = op.FileName;
+                ProfileDataGrid.CommitEdit();
+            }
+        }
+
+        private void ProfileDataGrid_LoadingRowDetails(object sender, DataGridRowDetailsEventArgs e)
+        {
+
         }
     }
 }
