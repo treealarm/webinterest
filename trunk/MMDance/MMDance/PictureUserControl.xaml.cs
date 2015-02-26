@@ -89,6 +89,35 @@ namespace MMDance
             DataTemplate temp = ProfileDataGrid.RowDetailsTemplate;
             ProfileDataGrid.RowDetailsTemplate = null;
             ProfileDataGrid.RowDetailsTemplate = temp;
+            UpdateProfileResult();
+        }
+        public void UpdateProfileResult()
+        {
+            int cur_pos = 0;
+            for (int i = 0; i < m_ProfileData.Count; i++)
+            {
+                ProfileElement cur = m_ProfileData[i];
+                cur_pos += cur.Length;
+                DrawCurProfileResult(cur_pos, cur);
+            }
+        }
+
+        public void DrawCurProfileResult(int start_pos, ProfileElement cur)
+        {
+            BitmapImage myBitmapImage = cur.Image;
+            if (myBitmapImage == null)
+            {
+                return;
+            }
+            double x = 0;
+            double y = 0;
+            double r = Math.Min(myBitmapImage.PixelWidth, myBitmapImage.PixelHeight);
+            for (int angle = 0; angle < 360; angle++)
+            {
+                double rad_angle    = Math.PI * angle / 180.0;
+                x = r * Math.Cos(rad_angle);
+                y = r * Math.Sin(rad_angle);
+            }
         }
     }
 }
