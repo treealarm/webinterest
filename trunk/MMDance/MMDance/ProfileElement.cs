@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows;
 using System.Xml.Serialization;
+using System.Collections.ObjectModel;
 
 namespace MMDance
 {
@@ -34,18 +35,22 @@ namespace MMDance
         }
 
     }
+
+    public class ProfileElementList : ObservableCollection<ProfileElement>
+    {
+    }
     public static class ProfileElementSerializer
     {
-        public static List<ProfileElement> DeserializeObject(string toDeserialize)
+        public static ProfileElementList DeserializeObject(string toDeserialize)
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ProfileElement>));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ProfileElementList));
             StringReader textReader = new StringReader(toDeserialize);
-            return xmlSerializer.Deserialize(textReader) as List<ProfileElement>;
+            return xmlSerializer.Deserialize(textReader) as ProfileElementList;
         }
 
-        public static string SerializeObject(List<ProfileElement> toSerialize)
+        public static string SerializeObject(ProfileElementList toSerialize)
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ProfileElement>));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ProfileElementList));
             StringWriter textWriter = new StringWriter();
             xmlSerializer.Serialize(textWriter, toSerialize);
             return textWriter.ToString();
