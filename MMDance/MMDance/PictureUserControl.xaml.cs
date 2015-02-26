@@ -22,12 +22,16 @@ namespace MMDance
     /// </summary>
     public partial class PictureUserControl : UserControl
     {
-        List<ProfileElement> m_ProfileData = new List<ProfileElement>();
+        ProfileElementList m_ProfileData = new ProfileElementList();
         public PictureUserControl()
         {
             InitializeComponent();
 
             m_ProfileData = ProfileElementSerializer.DeserializeObject(Properties.Settings.Default.ProfileDataSource);
+            if (m_ProfileData == null)
+            {
+                m_ProfileData = new ProfileElementList();
+            }
             //m_ProfileData.Add(new ProfileElement() { FileName = "C:\\map.bmp", Length = 10 });
             //m_ProfileData.Add(new ProfileElement() { FileName = "C:\\2.bmp", Length = 20 });
 
@@ -72,8 +76,8 @@ namespace MMDance
                 "Portable Network Graphic (*.png)|*.png";
             if (op.ShowDialog() == true)
             {
-                var yourType = ((FrameworkElement)sender).DataContext as ProfileElement;
-                yourType.FileName = op.FileName;
+                ProfileElement element = ((FrameworkElement)sender).DataContext as ProfileElement;
+                element.FileName = op.FileName;
                 ProfileDataGrid.CommitEdit();
             }
         }
@@ -82,7 +86,9 @@ namespace MMDance
         {
             Properties.Settings.Default.ProfileDataSource = ProfileElementSerializer.SerializeObject(m_ProfileData);
             Properties.Settings.Default.Save();
+            DataTemplate temp = ProfileDataGrid.RowDetailsTemplate;
+            ProfileDataGrid.RowDetailsTemplate = null;
+            ProfileDataGrid.RowDetailsTemplate = temp;
         }
-
     }
 }
