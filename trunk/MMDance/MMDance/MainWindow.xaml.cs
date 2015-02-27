@@ -70,7 +70,7 @@ namespace MMDance
             try
             {
                 BitmapImage bitmapImage = new BitmapImage(new Uri(filename));
-                
+
                 newFormatedBitmapSource = new FormatConvertedBitmap();
                 newFormatedBitmapSource.BeginInit();
                 newFormatedBitmapSource.Source = bitmapImage;
@@ -80,24 +80,24 @@ namespace MMDance
                 PictureUserControl.loaded_image.Source = newFormatedBitmapSource;
                 m_colors.Clear();
 
-               Dictionary<Color, int> ColorMap = new Dictionary<Color,int>();
+                Dictionary<Color, int> ColorMap = new Dictionary<Color, int>();
 
-               int width = newFormatedBitmapSource.PixelWidth;
-               int stride = width * 3;
-               int size = newFormatedBitmapSource.PixelHeight * stride;
-               byte[] pixels = new byte[size];
-               Array.Clear(pixels, 0, size);
-               newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
+                int width = newFormatedBitmapSource.PixelWidth;
+                int stride = width * 3;
+                int size = newFormatedBitmapSource.PixelHeight * stride;
+                byte[] pixels = new byte[size];
+                Array.Clear(pixels, 0, size);
+                newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
                 for (int y = 0; y < newFormatedBitmapSource.PixelHeight; y++)
                 {
-                    
+
                     for (int x = 0; x < newFormatedBitmapSource.PixelWidth; x++)
                     {
                         int index = y * stride + 3 * x;
                         byte red = pixels[index];
                         byte green = pixels[index + 1];
                         byte blue = pixels[index + 2];
-                        
+
                         Color cur_col = Color.FromRgb(red, green, blue);
                         int Count = 0;
                         ColorMap.TryGetValue(cur_col, out Count);

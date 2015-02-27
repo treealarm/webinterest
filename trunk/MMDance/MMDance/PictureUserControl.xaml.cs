@@ -109,15 +109,63 @@ namespace MMDance
             {
                 return;
             }
-            double x = 0;
-            double y = 0;
-            double r = Math.Min(myBitmapImage.PixelWidth, myBitmapImage.PixelHeight);
+
+            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
+            newFormatedBitmapSource.BeginInit();
+            newFormatedBitmapSource.Source = myBitmapImage;
+            newFormatedBitmapSource.DestinationFormat = PixelFormats.Rgb24;
+            newFormatedBitmapSource.EndInit();
+
+            int width = newFormatedBitmapSource.PixelWidth;
+            int stride = width * 3;
+            int size = newFormatedBitmapSource.PixelHeight * stride;
+            byte[] pixels = new byte[size];
+            Array.Clear(pixels, 0, size);
+            newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
+  
+            int x = 0;
+            int y = 0;
+            int px = -1;
+            int py = 0;
+            int r_begin = (int)Math.Min(newFormatedBitmapSource.PixelWidth/2, newFormatedBitmapSource.PixelHeight/2)-1;
             for (int angle = 0; angle < 360; angle++)
             {
-                double rad_angle    = Math.PI * angle / 180.0;
-                x = r * Math.Cos(rad_angle);
-                y = r * Math.Sin(rad_angle);
+                double rad_angle = Math.PI * angle / 180.0;
+                for (int r = r_begin; r > 0; r--)
+                {
+                    x = (int)(r * Math.Cos(rad_angle)) + r_begin;
+                    y = (int)(r * Math.Sin(rad_angle)) + r_begin;
+
+                    int index = y * stride + 3 * x;
+                    byte red = pixels[index];
+                    byte green = pixels[index + 1];
+                    byte blue = pixels[index + 2];
+
+                    Color cur_col = Color.FromRgb(red, green, blue);
+                    if (cur_col != Color.FromRgb(255, 255, 255))
+                    {
+                        Line myLine = new Line();
+                        myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+                        myLine.X1 = px;
+                        myLine.X2 = x;
+                        myLine.Y1 = py;
+                        myLine.Y2 = y;
+                        myLine.HorizontalAlignment = HorizontalAlignment.Left;
+                        myLine.VerticalAlignment = VerticalAlignment.Center;
+                        myLine.StrokeThickness = 1;
+                        if (px >= 0)
+                            image_canvas.Children.Add(myLine);
+                        px = x;
+                        py = y;
+                        break;
+                    }
+                }
             }
+        }
+
+        private void ProfileDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DrawCurProfileResult(0, ProfileDataGrid.SelectedItem as ProfileElement);
         }
     }
 }

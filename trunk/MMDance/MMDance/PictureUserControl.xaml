@@ -29,7 +29,7 @@
               ShowsPreview="true"
               Height="5"/>
         <DataGrid Grid.Row="2" Name="ProfileDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                  CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding}" AutoGenerateColumns="False" CellEditEnding="ProfileDataGrid_CellEditEnding">
+                  CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding}" AutoGenerateColumns="False" CellEditEnding="ProfileDataGrid_CellEditEnding" SelectionChanged="ProfileDataGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="FileName">
                     <DataGridTemplateColumn.CellEditingTemplate>
