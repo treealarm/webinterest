@@ -98,11 +98,12 @@ namespace MMDance
             {
                 ProfileElement cur = m_ProfileData[i];
                 cur_pos += cur.Length;
-                DrawCurProfileResult(cur_pos, cur);
+                List<Point> list = new List<Point>();
+                DrawCurProfileResult(cur_pos, cur, list);
             }
         }
 
-        public void DrawCurProfileResult(int start_pos, ProfileElement cur)
+        public void DrawCurProfileResult(int start_pos, ProfileElement cur, List<Point> list)
         {
             BitmapImage myBitmapImage = cur.Image;
             if (myBitmapImage == null)
@@ -125,8 +126,6 @@ namespace MMDance
   
             int x = 0;
             int y = 0;
-            int px = -1;
-            int py = 0;
             int r_begin = (int)Math.Min(newFormatedBitmapSource.PixelWidth/2, newFormatedBitmapSource.PixelHeight/2)-1;
             for (int angle = 0; angle < 360; angle++)
             {
@@ -144,19 +143,7 @@ namespace MMDance
                     Color cur_col = Color.FromRgb(red, green, blue);
                     if (cur_col != Color.FromRgb(255, 255, 255))
                     {
-                        Line myLine = new Line();
-                        myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-                        myLine.X1 = px;
-                        myLine.X2 = x;
-                        myLine.Y1 = py;
-                        myLine.Y2 = y;
-                        myLine.HorizontalAlignment = HorizontalAlignment.Left;
-                        myLine.VerticalAlignment = VerticalAlignment.Center;
-                        myLine.StrokeThickness = 1;
-                        if (px >= 0)
-                            image_canvas.Children.Add(myLine);
-                        px = x;
-                        py = y;
+                        list.Add(new Point(x, y));
                         break;
                     }
                 }
@@ -165,7 +152,36 @@ namespace MMDance
 
         private void ProfileDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DrawCurProfileResult(0, ProfileDataGrid.SelectedItem as ProfileElement);
+            List<UIElement> itemstoremove = new List<UIElement>();
+            foreach (UIElement ui in image_canvas.Children)
+            {
+                if (ui.Uid.StartsWith("Line"))
+                {
+                    itemstoremove.Add(ui);
+                }
+            }
+            foreach (UIElement ui in itemstoremove)
+            {
+                image_canvas.Children.Remove(ui);
+            }
+
+            List<Point> list = new List<Point>();
+            DrawCurProfileResult(0, ProfileDataGrid.SelectedItem as ProfileElement, list);
+            for (int i = 1; i < list.Count; i++ )
+            {
+                Line myLine = new Line();
+                myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+                myLine.X1 = list[i-1].X;
+                myLine.Y1 = list[i-1].Y;
+                
+                myLine.X2 = list[i].X;
+                myLine.Y2 = list[i].Y;
+                myLine.HorizontalAlignment = HorizontalAlignment.Left;
+                myLine.VerticalAlignment = VerticalAlignment.Center;
+                myLine.StrokeThickness = 1;
+                myLine.Uid = "Line" + i.ToString();
+                image_canvas.Children.Add(myLine);
+            }
         }
     }
 }
