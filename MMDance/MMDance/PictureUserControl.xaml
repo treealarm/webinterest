@@ -15,7 +15,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Canvas Grid.Row="0" Name="image_canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="image_canvas_MouseMove">
+        <c:UserControlFor3D x:Name="UserControlFor3D" Width="Auto"/>
+        <Canvas Grid.Row="0" Name="image_canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="image_canvas_MouseMove" Visibility="Collapsed">
             <Line Name="x_line" Stroke="Green" Panel.ZIndex="1"/>
             <Line Name="y_line" Stroke="Green" Panel.ZIndex="1"/>
             <TextBlock Name="textBlock" Panel.ZIndex="1"/>

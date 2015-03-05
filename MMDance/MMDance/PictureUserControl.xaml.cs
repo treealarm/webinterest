@@ -105,6 +105,10 @@ namespace MMDance
 
         public void DrawCurProfileResult(int start_pos, ProfileElement cur, List<Point> list)
         {
+            if (cur == null)
+            {
+                return;
+            }
             BitmapImage myBitmapImage = cur.Image;
             if (myBitmapImage == null)
             {
@@ -167,21 +171,22 @@ namespace MMDance
 
             List<Point> list = new List<Point>();
             DrawCurProfileResult(0, ProfileDataGrid.SelectedItem as ProfileElement, list);
-            for (int i = 1; i < list.Count; i++ )
-            {
-                Line myLine = new Line();
-                myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-                myLine.X1 = list[i-1].X;
-                myLine.Y1 = list[i-1].Y;
+            UserControlFor3D.Calculate(list);
+            //for (int i = 1; i < list.Count; i++ )
+            //{
+            //    Line myLine = new Line();
+            //    myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+            //    myLine.X1 = list[i-1].X;
+            //    myLine.Y1 = list[i-1].Y;
                 
-                myLine.X2 = list[i].X;
-                myLine.Y2 = list[i].Y;
-                myLine.HorizontalAlignment = HorizontalAlignment.Left;
-                myLine.VerticalAlignment = VerticalAlignment.Center;
-                myLine.StrokeThickness = 1;
-                myLine.Uid = "Line" + i.ToString();
-                image_canvas.Children.Add(myLine);
-            }
+            //    myLine.X2 = list[i].X;
+            //    myLine.Y2 = list[i].Y;
+            //    myLine.HorizontalAlignment = HorizontalAlignment.Left;
+            //    myLine.VerticalAlignment = VerticalAlignment.Center;
+            //    myLine.StrokeThickness = 1;
+            //    myLine.Uid = "Line" + i.ToString();
+            //    image_canvas.Children.Add(myLine);
+            //}
         }
     }
 }
