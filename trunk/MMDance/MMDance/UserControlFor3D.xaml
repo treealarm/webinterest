@@ -7,7 +7,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Viewport3D Name="myViewport3D" >
-
         </Viewport3D>
     </Grid>
 </UserControl>

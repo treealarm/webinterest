@@ -96,14 +96,15 @@ namespace MMDance
             int cur_pos = 0;
             for (int i = 0; i < m_ProfileData.Count; i++)
             {
-                ProfileElement cur = m_ProfileData[i];
-                cur_pos += cur.Length;
+                ProfileElement element = m_ProfileData[i];
                 List<Point> list = new List<Point>();
-                DrawCurProfileResult(cur_pos, cur, list);
+                DrawCurProfileResult(element, list);
+                UserControlFor3D.Calculate(list, cur_pos, element.Length);
+                cur_pos += element.Length;
             }
         }
 
-        public void DrawCurProfileResult(int start_pos, ProfileElement cur, List<Point> list)
+        public void DrawCurProfileResult(ProfileElement cur, List<Point> list)
         {
             if (cur == null)
             {
@@ -170,8 +171,10 @@ namespace MMDance
             }
 
             List<Point> list = new List<Point>();
-            DrawCurProfileResult(0, ProfileDataGrid.SelectedItem as ProfileElement, list);
-            UserControlFor3D.Calculate(list);
+            ProfileElement element = ProfileDataGrid.SelectedItem as ProfileElement;
+            DrawCurProfileResult(element, list);
+            UserControlFor3D.Calculate(list, 0, element.Length);
+
             //for (int i = 1; i < list.Count; i++ )
             //{
             //    Line myLine = new Line();
