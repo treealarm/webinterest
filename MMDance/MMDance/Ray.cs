@@ -1,8 +1,6 @@
-﻿namespace Kit3D.Math
+﻿using System.Windows.Media.Media3D;
+namespace Kit3D.Math
 {
-    using System;
-    using Kit3D.Windows.Media.Media3D;
-
     /// <summary>
     /// Represents a ray in 3D space with an origin and a direction
     /// </summary>
