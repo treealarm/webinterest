@@ -59,6 +59,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MathHelper.cs" />
+    <Compile Include="Ray.cs" />
     <Compile Include="Struct3D.cs" />
     <Compile Include="UserControlFor3D.xaml.cs">
       <DependentUpon>UserControlFor3D.xaml</DependentUpon>
