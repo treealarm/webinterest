@@ -131,14 +131,23 @@ namespace MMDance
   
             int x = 0;
             int y = 0;
-            int r_begin = (int)Math.Min(newFormatedBitmapSource.PixelWidth/2, newFormatedBitmapSource.PixelHeight/2)-1;
-            for (int angle = 0; angle < 360; angle++)
+            Point center = new Point(newFormatedBitmapSource.PixelWidth/2, newFormatedBitmapSource.PixelHeight/2);
+            int r_begin_min = (int)Math.Min(center.X, center.Y);
+            for (double angle = 0; angle < 360; angle += 0.5)
             {
                 double rad_angle = Math.PI * angle / 180.0;
+                int r_begin = (int)Math.Sqrt(2*r_begin_min * r_begin_min);
+
                 for (int r = r_begin; r > 0; r--)
                 {
-                    x = (int)(r * Math.Cos(rad_angle)) + r_begin;
-                    y = (int)(r * Math.Sin(rad_angle)) + r_begin;
+                    x = (int)(r * Math.Cos(rad_angle)) + (int)center.X;
+                    y = (int)(r * Math.Sin(rad_angle)) + (int)center.Y;
+                    if (x >= newFormatedBitmapSource.PixelWidth || 
+                        y >= newFormatedBitmapSource.PixelHeight ||
+                        x < 0 || y < 0)
+                    {
+                        continue;
+                    }
 
                     int index = y * stride + 3 * x;
                     byte red = pixels[index];
@@ -148,12 +157,20 @@ namespace MMDance
                     Color cur_col = Color.FromRgb(red, green, blue);
                     if (cur_col != Color.FromRgb(255, 255, 255))
                     {
-                        list.Add(new Point(x, y));
+                        int x_add = x - (int)center.X;
+                        int y_add = y - (int)center.Y;
+                        Point ptToAdd = new Point(x_add, y_add);
+
+                        if (list.Count == 0 || list.Last() != ptToAdd)
+                        {
+                            list.Add(ptToAdd);
+                        }
+                        
                         break;
                     }
                 }
             }
-        }
+         }
 
         private void ProfileDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -172,6 +189,10 @@ namespace MMDance
 
             List<Point> list = new List<Point>();
             ProfileElement element = ProfileDataGrid.SelectedItem as ProfileElement;
+            if (element == null)
+            {
+                return;
+            }
             DrawCurProfileResult(element, list);
             UserControlFor3D.Calculate(list, 0, element.Length);
 

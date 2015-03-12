@@ -35,8 +35,8 @@ namespace MMDance
             // Defines the camera used to view the 3D object. In order to view the 3D object, 
             // the camera must be positioned and pointed such that the object is within view  
             // of the camera.
-            OrthographicCamera myPCamera = new OrthographicCamera(new Point3D(0, 50, -200), 
-                new Vector3D(0, 0, 1), 
+            OrthographicCamera myPCamera = new OrthographicCamera(new Point3D(0, 0, -200), 
+                new Vector3D(0, -0.1, 1), 
                 new Vector3D(0, 1, 0), 600);
 
             // Asign the camera to the viewport
@@ -49,7 +49,7 @@ namespace MMDance
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 30);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             dispatcherTimer.Start();
         }
 
@@ -59,17 +59,17 @@ namespace MMDance
             // Define the lights cast in the scene. Without light, the 3D object cannot  
             // be seen. Note: to illuminate an object from additional directions, create  
             // additional lights.
-            AmbientLight _ambLight = new AmbientLight(System.Windows.Media.Brushes.White.Color);
+            AmbientLight _ambLight = new AmbientLight(System.Windows.Media.Brushes.Gray.Color);
             DirectionalLight _dirLight = new DirectionalLight();
             _dirLight.Color = System.Windows.Media.Brushes.White.Color;
-            _dirLight.Direction = new System.Windows.Media.Media3D.Vector3D(0, -1, 0);
+            _dirLight.Direction = new System.Windows.Media.Media3D.Vector3D(1, -0.2, -1);
 
-            //myModel3DGroup.Children.Add(_ambLight);
+            myModel3DGroup.Children.Add(_ambLight);
             myModel3DGroup.Children.Add(_dirLight);
 
             _dirLight = new DirectionalLight();
             _dirLight.Color = System.Windows.Media.Brushes.White.Color;
-            _dirLight.Direction = new System.Windows.Media.Media3D.Vector3D(0, 0, 1);
+            _dirLight.Direction = new System.Windows.Media.Media3D.Vector3D(-1, 0.2, 1);
             myModel3DGroup.Children.Add(_dirLight);
             return myModel3DGroup;
             
@@ -98,52 +98,57 @@ namespace MMDance
             // Apply the mesh to the geometry model.
             myGeometryModel.Geometry = myMeshGeometry3D;
 
+            double x_origin = 0;
+            double y_origin = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                x_origin += list[i].X;
+                y_origin += list[i].Y;
+            }
+            x_origin /= list.Count;
+            y_origin /= list.Count;
             List<Point3DCollection>  Discs = new List<Point3DCollection>();
+            double angle = 0;
             for (double Z = pos; Z < pos+len; Z+=1 )
             {
                 Point3DCollection disc = new Point3DCollection();
-
+                //angle += 0.01;
                 for (int i = 0; i < list.Count; i++ )
                 {
-                    double X = list[i].X;
-                    double Y = list[i].Y;
-                    disc.Add(new Point3D(X, Y, Z));
+                    double x = list[i].X;
+                    double y = list[i].Y;
+
+                    x = ((x - x_origin) * Math.Cos(angle)) - ((y_origin - y) * Math.Sin(angle)) + x_origin;
+                    y = ((y_origin - y) * Math.Cos(angle)) - ((x - x_origin) * Math.Sin(angle)) + y_origin;
+                    disc.Add(new Point3D(x, y, Z));
                 }
 
 
                 Discs.Add(disc);
             }
 
-            SolidColorBrush myHorizontalGradient = new SolidColorBrush();
-            myHorizontalGradient.Color = Color.FromRgb(127, 127, 127);
-            
+            SolidColorBrush mySolidBrush1 = new SolidColorBrush();
+            mySolidBrush1.Color = Color.FromRgb(200, 110, 110);
+            DiffuseMaterial FrontMaterial = new DiffuseMaterial(mySolidBrush1);
 
-            DiffuseMaterial myDiffuseMaterial = new DiffuseMaterial(myHorizontalGradient);
-            MaterialGroup myMaterialGroup = new MaterialGroup();
-            myMaterialGroup.Children.Add(myDiffuseMaterial);
+            SolidColorBrush mySolidBrush = new SolidColorBrush();
+            mySolidBrush.Color = Color.FromRgb(110, 200, 110);
+            DiffuseMaterial BackMaterial = new DiffuseMaterial(mySolidBrush);
 
-            myGeometryModel.Material = myMaterialGroup;
-            myGeometryModel.BackMaterial = myMaterialGroup;
+            myGeometryModel.Material = FrontMaterial;
+            myGeometryModel.BackMaterial = BackMaterial;
 
-            Triangle t1 = null;
             for (int i = 1; i < Discs.Count; i++)
             {
                 Point3DCollection disc1 = Discs[i - 1];
                 Point3DCollection disc2 = Discs[i];
-                t1 = null;
+
                 for (int j = 1; j < disc1.Count; j++)
                 {
                     Point3D p1 = disc1[j - 1];
                     Point3D p2 = disc1[j];
                     Point3D p3 = disc2[j];
                     Point3D p4 = disc2[j - 1];
-
-                    if (t1 != null)
-                    {
-                        Triangle t2 = new Triangle(p1, p2, p3);
-                        double angle = t2.GetAngle(t1);
-                    }
-                    t1 = new Triangle(p1, p2, p3);
 
                     myPositionCollection.Add(p4);
                     myPositionCollection.Add(p3);
