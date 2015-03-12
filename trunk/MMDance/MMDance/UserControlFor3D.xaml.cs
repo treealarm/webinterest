@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
+using Kit3D.Windows.Media.Media3D;
+using Kit3D.Math;
 
 namespace MMDance
 {
@@ -167,7 +169,45 @@ namespace MMDance
             myMeshGeometry3D.Positions = myPositionCollection;
 
             myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
+        }
+        private double IntersectsWithTriangle(Ray ray, Point3D p0, Point3D p1, Point3D p2)
+        {
+            Vector3D e1 = p1 - p0;
+            Vector3D e2 = p2 - p0;
+            Vector3D p = Vector3D.CrossProduct(ray.Direction, e2);
 
+            double a = Vector3D.DotProduct(e1, p);
+            if (MathHelper.IsZero(a))
+            {
+                //The ray and the triangle are parallel, they will not cross
+                return -1;
+            }
+
+            double f = 1.0 / a;
+            Vector3D s = ray.Origin - p0;
+            double u = f * Vector3D.DotProduct(s, p);
+            if ((u < 0) || (u > 1))
+            {
+                //Outside of the triangle
+                return -1;
+            }
+
+            Vector3D q = Vector3D.CrossProduct(s, e1);
+            double v = f * Vector3D.DotProduct(ray.Direction, q);
+            if ((v < 0) || (u + v > 1))
+            {
+                //Outside of the triangle
+                return -1;
+            }
+
+            //Need to check the ray intersection is in the direction of the ray
+            double t = f * Vector3D.DotProduct(e2, q);
+            if (t < 0)
+            {
+                //Outside of the triangle
+                return -1;
+            }
+            return t;
         }
     }
 }
