@@ -112,15 +112,19 @@ namespace MMDance
             for (double Z = pos; Z < pos+len; Z+=1 )
             {
                 Point3DCollection disc = new Point3DCollection();
-                //angle += 0.01;
+                angle += 1;
+
+                AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angle);
+                RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
+
                 for (int i = 0; i < list.Count; i++ )
                 {
-                    double x = list[i].X;
-                    double y = list[i].Y;
+                    double x = list[i].X - x_origin;
+                    double y = list[i].Y - y_origin;
 
-                    x = ((x - x_origin) * Math.Cos(angle)) - ((y_origin - y) * Math.Sin(angle)) + x_origin;
-                    y = ((y_origin - y) * Math.Cos(angle)) - ((x - x_origin) * Math.Sin(angle)) + y_origin;
-                    disc.Add(new Point3D(x, y, Z));
+                    Point3D newPoint = myRotateTransform.Transform(new Point3D(x, y, Z));
+                   
+                    disc.Add(newPoint);
                 }
 
 
