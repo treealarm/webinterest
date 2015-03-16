@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Xml.Serialization;
 using System.IO;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace MMDance
 {
@@ -32,8 +34,6 @@ namespace MMDance
             {
                 m_ProfileData = new ProfileElementList();
             }
-            //m_ProfileData.Add(new ProfileElement() { FileName = "C:\\map.bmp", Length = 10 });
-            //m_ProfileData.Add(new ProfileElement() { FileName = "C:\\2.bmp", Length = 20 });
 
             ProfileDataGrid.DataContext = m_ProfileData;
         }
@@ -84,12 +84,9 @@ namespace MMDance
 
         private void ProfileDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            Properties.Settings.Default.ProfileDataSource = ProfileElementSerializer.SerializeObject(m_ProfileData);
-            Properties.Settings.Default.Save();
             DataTemplate temp = ProfileDataGrid.RowDetailsTemplate;
             ProfileDataGrid.RowDetailsTemplate = null;
             ProfileDataGrid.RowDetailsTemplate = temp;
-            UpdateProfileResult();
         }
         public void UpdateProfileResult()
         {
@@ -99,7 +96,7 @@ namespace MMDance
                 ProfileElement element = m_ProfileData[i];
                 List<Point> list = new List<Point>();
                 DrawCurProfileResult(element, list);
-                UserControlFor3D.Calculate(list, cur_pos, element.Length);
+                UserControlFor3D.Calculate(list, cur_pos, element.Length, element.Angle);
                 cur_pos += element.Length;
             }
         }
@@ -189,12 +186,16 @@ namespace MMDance
 
             List<Point> list = new List<Point>();
             ProfileElement element = ProfileDataGrid.SelectedItem as ProfileElement;
-            if (element == null)
+            if (element == null || element.Length <= 0)
             {
                 return;
             }
             DrawCurProfileResult(element, list);
-            UserControlFor3D.Calculate(list, 0, element.Length);
+            if (list.Count == 0)
+            {
+                return;
+            }
+            UserControlFor3D.Calculate(list, 0, element.Length, element.Angle);
 
             //for (int i = 1; i < list.Count; i++ )
             //{
@@ -211,6 +212,13 @@ namespace MMDance
             //    myLine.Uid = "Line" + i.ToString();
             //    image_canvas.Children.Add(myLine);
             //}
+        }
+
+        private void buttonRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.ProfileDataSource = ProfileElementSerializer.SerializeObject(m_ProfileData);
+            Properties.Settings.Default.Save();
+            UpdateProfileResult();
         }
     }
 }

@@ -12,8 +12,9 @@
         <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <c:UserControlFor3D x:Name="UserControlFor3D" Width="Auto"/>
         <Canvas Grid.Row="0" Name="image_canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="image_canvas_MouseMove" Visibility="Collapsed">
@@ -30,7 +31,9 @@
               ShowsPreview="true"
               Height="5"/>
         <DataGrid Grid.Row="2" Name="ProfileDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                  CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding}" AutoGenerateColumns="False" CellEditEnding="ProfileDataGrid_CellEditEnding" SelectionChanged="ProfileDataGrid_SelectionChanged">
+                  CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding}" AutoGenerateColumns="False"
+                  CellEditEnding="ProfileDataGrid_CellEditEnding" SelectionChanged="ProfileDataGrid_SelectionChanged"
+                  >
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="FileName">
                     <DataGridTemplateColumn.CellEditingTemplate>
@@ -49,12 +52,13 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Length" Binding="{Binding Length}"/>
+                <DataGridTextColumn Header="Angle"  Binding="{Binding Angle}"/>
             </DataGrid.Columns>
 
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <DockPanel Background="GhostWhite">
-                        <Image DockPanel.Dock="Left" Source="{Binding FileName}" Height="64" Margin="10" />
+                        <!--Image DockPanel.Dock="Left" Source="{Binding FileName}" Height="64" Margin="10" /-->
                         <Grid Margin="0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -64,18 +68,21 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             
                             <TextBlock Text="FileName: " FontWeight="Bold" Grid.Row="1" />
                             <TextBlock Text="{Binding FileName}" Grid.Column="1" Grid.Row="1" />
                             <TextBlock Text="Length: " FontWeight="Bold" Grid.Row="2" />
                             <TextBlock Text="{Binding Length, StringFormat=d}" Grid.Column="1" Grid.Row="2" />
+                            <TextBlock Text="Angle: " FontWeight="Bold" Grid.Row="3" />
+                            <TextBlock Text="{Binding Angle, StringFormat=f}" Grid.Column="1" Grid.Row="3" />
 
                         </Grid>
                     </DockPanel>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
-        
+        <Button Content="Save->Refresh" Height="23" Name="buttonRefresh" Width="Auto" HorizontalAlignment="Left" Grid.Row="3" Click="buttonRefresh_Click" />
     </Grid>
 </UserControl>
