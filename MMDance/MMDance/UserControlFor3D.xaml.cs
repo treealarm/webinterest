@@ -22,12 +22,16 @@ namespace MMDance
     /// </summary>
     public partial class UserControlFor3D : UserControl
     {
-        AxisAngleRotation3D ax3d = new AxisAngleRotation3D();
+        AxisAngleRotation3D m_axA3d = new AxisAngleRotation3D();
+        AxisAngleRotation3D m_axB3d = new AxisAngleRotation3D();
+        TranslateTransform3D m_trans3d = new TranslateTransform3D();
+        
+
         ModelVisual3D myModelVisual3D = new ModelVisual3D();
         Model3DGroup m_Model3DGroup = new Model3DGroup();
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            ax3d.Angle += 1;
+            //ax3d.Angle += 1;
         }
 
         public UserControlFor3D()
@@ -82,9 +86,23 @@ namespace MMDance
             {
                 m_Model3DGroup = GetNewGroup();
                 myModelVisual3D.Content = m_Model3DGroup;
-                ax3d = new AxisAngleRotation3D(new Vector3D(0, 1, 0), 1);
-                RotateTransform3D myRotateTransform = new RotateTransform3D(ax3d);
-                m_Model3DGroup.Transform = myRotateTransform;
+
+                Transform3DGroup transGroup = new Transform3DGroup();
+                
+                m_axA3d = new AxisAngleRotation3D(new Vector3D(0, 1, 0), sliderA.Value);
+                RotateTransform3D myRotateTransform = new RotateTransform3D(m_axA3d);
+                transGroup.Children.Add(myRotateTransform);
+
+                m_axB3d = new AxisAngleRotation3D(new Vector3D(1, 0, 0), sliderB.Value);
+                myRotateTransform = new RotateTransform3D(m_axB3d);
+                transGroup.Children.Add(myRotateTransform);
+
+                
+
+                m_trans3d = new TranslateTransform3D(new Vector3D(0, 0, 0));
+                transGroup.Children.Add(m_trans3d);
+
+                m_Model3DGroup.Transform = transGroup;
             }
             GeometryModel3D myGeometryModel = new GeometryModel3D();
             m_Model3DGroup.Children.Add(myGeometryModel);
@@ -209,5 +227,20 @@ namespace MMDance
             }
             return t;
         }
+
+        private void sliderA_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            m_axA3d.Angle = sliderA.Value;
+        }
+        
+        private void sliderB_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            m_axB3d.Angle = sliderB.Value;
+        }
+
+        private void sliderX_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            m_trans3d.OffsetX = sliderX.Value;
+        }        
     }
 }

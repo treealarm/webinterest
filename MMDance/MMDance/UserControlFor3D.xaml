@@ -6,7 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Viewport3D Name="myViewport3D" >
+        <StackPanel Panel.ZIndex="0">
+            <Slider Height="23" HorizontalAlignment="Left" Name="sliderA" VerticalAlignment="Top" Width="100" Maximum="360" Value="0" Interval="1" ValueChanged="sliderA_ValueChanged" />
+            <Slider Height="23" HorizontalAlignment="Left" Name="sliderB" VerticalAlignment="Top" Width="100" Maximum="360" Value="0" Interval="1" ValueChanged="sliderB_ValueChanged" />
+            <Slider  Height="23" HorizontalAlignment="Left" Name="sliderX" VerticalAlignment="Top" Width="100" Maximum="1000" Value="0" Interval="1" ValueChanged="sliderX_ValueChanged" Minimum="-1000" />
+        </StackPanel>
+        <Viewport3D Name="myViewport3D" Panel.ZIndex="1">
         </Viewport3D>
     </Grid>
 </UserControl>
