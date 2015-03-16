@@ -129,7 +129,13 @@ namespace MMDance
             y_origin /= list.Count;
             List<Point3DCollection>  Discs = new List<Point3DCollection>();
             double cur_angle = 0;
-            for (double Z = pos; Z < pos+len; Z+=1 )
+            double ZIncrement = 1;
+            if (MathHelper.IsZero(angle))
+            {
+                ZIncrement = len;
+            }
+
+            for (double Z = pos; Z <= pos + len; Z += ZIncrement)
             {
                 Point3DCollection disc = new Point3DCollection();
                 cur_angle += angle;
