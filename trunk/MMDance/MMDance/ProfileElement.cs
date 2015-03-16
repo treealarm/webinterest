@@ -16,6 +16,7 @@ namespace MMDance
     {
         public string FileName { get; set; }
         public int Length { get; set; }
+        public double Angle { get; set; }
         
         public BitmapImage Image
         {

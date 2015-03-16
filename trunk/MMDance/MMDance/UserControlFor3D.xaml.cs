@@ -80,7 +80,7 @@ namespace MMDance
             return myModel3DGroup;
             
         }
-        public void Calculate(List<Point> list, int pos, int len)
+        public void Calculate(List<Point> list, int pos, int len, double angle)
         {
             if (pos == 0)
             {
@@ -128,13 +128,13 @@ namespace MMDance
             x_origin /= list.Count;
             y_origin /= list.Count;
             List<Point3DCollection>  Discs = new List<Point3DCollection>();
-            double angle = 0;
+            double cur_angle = 0;
             for (double Z = pos; Z < pos+len; Z+=1 )
             {
                 Point3DCollection disc = new Point3DCollection();
-                angle += 1;
+                cur_angle += angle;
 
-                AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angle);
+                AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), cur_angle);
                 RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
 
                 for (int i = 0; i < list.Count; i++ )
@@ -241,6 +241,6 @@ namespace MMDance
         private void sliderX_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             m_trans3d.OffsetX = sliderX.Value;
-        }        
+        }
     }
 }
