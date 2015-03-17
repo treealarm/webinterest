@@ -79,6 +79,7 @@ namespace MMDance
             return myModel3DGroup;
             
         }
+        
         public void Calculate(List<Point> list, int pos, int len, double angle)
         {
             if (pos == 0)
@@ -108,9 +109,9 @@ namespace MMDance
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
             // Create a collection of vertex positions for the MeshGeometry3D. 
             Point3DCollection myPositionCollection = new Point3DCollection();
-
+            
             // Create a collection of triangle indices for the MeshGeometry3D.
-            Int32Collection myTriangleIndicesCollection = new Int32Collection();
+            //Int32Collection myTriangleIndicesCollection = new Int32Collection();
 
 
             // Apply the mesh to the geometry model.
@@ -190,7 +191,7 @@ namespace MMDance
 
             myMeshGeometry3D.Positions = myPositionCollection;
 
-            myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
+            //myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
         }
         private double IntersectsWithTriangle(Ray ray, Point3D p0, Point3D p1, Point3D p2)
         {
@@ -232,9 +233,37 @@ namespace MMDance
             return t;
         }
 
+        void GetIntersection()
+        {
+            for (int i = 0; i < m_Model3DGroup.Children.Count; i++)
+            {
+                GeometryModel3D model = m_Model3DGroup.Children[i] as GeometryModel3D;
+                if (model == null)
+                {
+                    continue;
+                }
+                MeshGeometry3D geometry = model.Geometry as MeshGeometry3D;
+                if (geometry == null)
+                {
+                    continue;
+                }
+                Point3DCollection points = geometry.Positions;
+                Ray ray = new Ray(new Point3D(-200, 0, 10), new Vector3D(1, 0, 0));
+                Point3D intersection = new Point3D();
+                for (int j = 0; j < points.Count; j += 3)
+                {
+                    Plane plane = new Plane(points[j], points[j + 1], points[j + 2]);
+                    double t = IntersectsWithTriangle(ray, points[j], points[j + 1], points[j + 2]);
+                    if (t > 0)
+                    {
+                        intersection = ray.Origin + t * ray.Direction;
+                    }
+                }
+            }
+        }
         private void sliderA_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            m_axA3d.Angle = sliderA.Value;            
+            m_axA3d.Angle = sliderA.Value;
         }
         
         private void sliderB_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
