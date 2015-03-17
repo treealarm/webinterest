@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="MathHelper.cs" />
+    <Compile Include="Plane.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="Struct3D.cs" />
     <Compile Include="UserControlFor3D.xaml.cs">

@@ -12,8 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
-using Kit3D.Windows.Media.Media3D;
-using Kit3D.Math;
+using Kit3D;
 
 namespace MMDance
 {
@@ -236,7 +235,7 @@ namespace MMDance
 
         private void sliderA_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            m_axA3d.Angle = sliderA.Value;
+            m_axA3d.Angle = sliderA.Value;            
         }
         
         private void sliderB_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

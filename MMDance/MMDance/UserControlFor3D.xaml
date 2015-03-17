@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <StackPanel Panel.ZIndex="2">
-            <Slider Height="23" HorizontalAlignment="Left" Name="sliderA" VerticalAlignment="Top" Width="100" Maximum="360" Value="90" Interval="1" ValueChanged="sliderA_ValueChanged" />
+            <Slider Height="23" HorizontalAlignment="Left" Name="sliderA" VerticalAlignment="Top" Width="100" Maximum="360" Value="0" Interval="1" ValueChanged="sliderA_ValueChanged" />
             <Slider Height="23" HorizontalAlignment="Left" Name="sliderB" VerticalAlignment="Top" Width="100" Maximum="360" Value="0" Interval="1" ValueChanged="sliderB_ValueChanged" />
             <Slider  Height="23" HorizontalAlignment="Left" Name="sliderX" VerticalAlignment="Top" Width="100" Maximum="1000" Value="0" Interval="1" ValueChanged="sliderX_ValueChanged" Minimum="-1000" />
         </StackPanel>

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Media.Media3D;
-namespace Kit3D.Math
+namespace Kit3D
 {
     /// <summary>
     /// Represents a ray in 3D space with an origin and a direction

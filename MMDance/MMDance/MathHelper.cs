@@ -1,4 +1,4 @@
-﻿namespace Kit3D.Windows.Media.Media3D
+﻿namespace Kit3D
 {
     using System;
 
