@@ -40,8 +40,8 @@ namespace MMDance
             // Defines the camera used to view the 3D object. In order to view the 3D object, 
             // the camera must be positioned and pointed such that the object is within view  
             // of the camera.
-            OrthographicCamera myPCamera = new OrthographicCamera(new Point3D(0, 0, -200), 
-                new Vector3D(0, -0.1, 1), 
+            OrthographicCamera myPCamera = new OrthographicCamera(new Point3D(-200, 0, 0), 
+                new Vector3D(1, 0, 0), 
                 new Vector3D(0, 1, 0), 600);
 
             // Asign the camera to the viewport
@@ -87,16 +87,15 @@ namespace MMDance
                 myModelVisual3D.Content = m_Model3DGroup;
 
                 Transform3DGroup transGroup = new Transform3DGroup();
+
+                m_axB3d = new AxisAngleRotation3D(new Vector3D(0, 0, 1), sliderB.Value);
+                RotateTransform3D myRotateTransform = new RotateTransform3D(m_axB3d);
+                transGroup.Children.Add(myRotateTransform);
                 
                 m_axA3d = new AxisAngleRotation3D(new Vector3D(0, 1, 0), sliderA.Value);
-                RotateTransform3D myRotateTransform = new RotateTransform3D(m_axA3d);
+                myRotateTransform = new RotateTransform3D(m_axA3d);
                 transGroup.Children.Add(myRotateTransform);
 
-                m_axB3d = new AxisAngleRotation3D(new Vector3D(1, 0, 0), sliderB.Value);
-                myRotateTransform = new RotateTransform3D(m_axB3d);
-                transGroup.Children.Add(myRotateTransform);
-
-                
 
                 m_trans3d = new TranslateTransform3D(new Vector3D(0, 0, 0));
                 transGroup.Children.Add(m_trans3d);
@@ -243,9 +242,9 @@ namespace MMDance
             m_axB3d.Angle = sliderB.Value;
         }
 
-        private void sliderX_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void sliderZ_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            m_trans3d.OffsetX = sliderX.Value;
+            m_trans3d.OffsetZ = sliderZ.Value;
         }
     }
 }
