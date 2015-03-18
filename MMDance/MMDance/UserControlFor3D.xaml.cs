@@ -26,29 +26,12 @@ namespace MMDance
         TranslateTransform3D m_trans3d = new TranslateTransform3D();
         
 
-        ModelVisual3D myModelVisual3D = new ModelVisual3D();
         Model3DGroup m_Model3DGroup = new Model3DGroup();
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            //ax3d.Angle += 1;
-        }
 
         public UserControlFor3D()
         {
             InitializeComponent();
             
-            // Defines the camera used to view the 3D object. In order to view the 3D object, 
-            // the camera must be positioned and pointed such that the object is within view  
-            // of the camera.
-            OrthographicCamera myPCamera = new OrthographicCamera(new Point3D(-200, 0, 0), 
-                new Vector3D(1, 0, 0), 
-                new Vector3D(0, 1, 0), 600);
-
-            // Asign the camera to the viewport
-            myViewport3D.Camera = myPCamera;
-
-            // 
-            myViewport3D.Children.Add(myModelVisual3D);
             m_Model3DGroup = GetNewGroup();
             myModelVisual3D.Content = m_Model3DGroup;
 
@@ -105,16 +88,12 @@ namespace MMDance
             }
             GeometryModel3D myGeometryModel = new GeometryModel3D();
             m_Model3DGroup.Children.Add(myGeometryModel);
+            m_Model3DGroup.Children.Add(meshCubeModel);
 
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
-            // Create a collection of vertex positions for the MeshGeometry3D. 
+            
             Point3DCollection myPositionCollection = new Point3DCollection();
             
-            // Create a collection of triangle indices for the MeshGeometry3D.
-            //Int32Collection myTriangleIndicesCollection = new Int32Collection();
-
-
-            // Apply the mesh to the geometry model.
             myGeometryModel.Geometry = myMeshGeometry3D;
 
             double x_origin = 0;
@@ -190,8 +169,6 @@ namespace MMDance
             }
 
             myMeshGeometry3D.Positions = myPositionCollection;
-
-            //myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
         }
         private double IntersectsWithTriangle(Ray ray, Point3D p0, Point3D p1, Point3D p2)
         {
@@ -233,12 +210,52 @@ namespace MMDance
             return t;
         }
 
-        void GetIntersection()
+        double m_CurAngle = 0;
+        double m_CurZ = 0;
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
+            Point3D intersection = new Point3D();
+            if (!GetIntersection(m_CurAngle, m_CurZ, out intersection))
+            {
+                m_CurAngle = 0;
+                m_CurZ = 0;
+                return;
+            }
+
+            Point3DCollection millPositionCollection = new Point3DCollection();
+
+           
+            AxisAngleRotation3D axB3d = new AxisAngleRotation3D(new Vector3D(0, 0, 1), m_CurAngle);
+            RotateTransform3D myRotateTransform = new RotateTransform3D(axB3d);
+            Point3D p2 = myRotateTransform.Transform(new Point3D(-100, -10, intersection.Z));
+            Point3D p3 = myRotateTransform.Transform(new Point3D(-100, 10, intersection.Z));
+            millPositionCollection.Add(intersection);
+            millPositionCollection.Add(p2);
+            millPositionCollection.Add(p3);
+
+            meshCube.Positions = millPositionCollection;
+
+            m_CurAngle += 1;
+            if(m_CurAngle >= 360.0)
+            {
+                m_CurZ += 10;
+                m_CurAngle = 0;
+            }
+        }
+
+        bool GetIntersection(double angle, double Z, out Point3D intersection)
+        {
+            AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angle);
+            RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
+            
+            Point3D newPoint = myRotateTransform.Transform(new Point3D(-100, 0, Z));
+
+            Ray ray = new Ray(newPoint, new Vector3D(-newPoint.X, -newPoint.Y, -newPoint.Z));
+
             for (int i = 0; i < m_Model3DGroup.Children.Count; i++)
             {
                 GeometryModel3D model = m_Model3DGroup.Children[i] as GeometryModel3D;
-                if (model == null)
+                if (model == null || model == meshCubeModel)
                 {
                     continue;
                 }
@@ -248,8 +265,7 @@ namespace MMDance
                     continue;
                 }
                 Point3DCollection points = geometry.Positions;
-                Ray ray = new Ray(new Point3D(-200, 0, 10), new Vector3D(1, 0, 0));
-                Point3D intersection = new Point3D();
+                
                 for (int j = 0; j < points.Count; j += 3)
                 {
                     Plane plane = new Plane(points[j], points[j + 1], points[j + 2]);
@@ -257,9 +273,12 @@ namespace MMDance
                     if (t > 0)
                     {
                         intersection = ray.Origin + t * ray.Direction;
+                        return true;
                     }
                 }
             }
+            intersection = new Point3D();
+            return false;
         }
         private void sliderA_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
