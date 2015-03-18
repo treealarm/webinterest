@@ -7,11 +7,40 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <StackPanel Panel.ZIndex="2">
-            <Slider Height="23" HorizontalAlignment="Left" Name="sliderA" VerticalAlignment="Top" Width="100" Maximum="360" Value="0" Interval="1" ValueChanged="sliderA_ValueChanged" />
-            <Slider Height="23" HorizontalAlignment="Left" Name="sliderB" VerticalAlignment="Top" Width="100" Maximum="360" Value="0" Interval="1" ValueChanged="sliderB_ValueChanged" />
+            <Slider Height="23" HorizontalAlignment="Left" Name="sliderA" VerticalAlignment="Top" Width="100" Maximum="360" Value="88" Interval="1" ValueChanged="sliderA_ValueChanged" />
+            <Slider Height="23" HorizontalAlignment="Left" Name="sliderB" VerticalAlignment="Top" Width="100" Maximum="360" Value="1" Interval="1" ValueChanged="sliderB_ValueChanged" />
             <Slider  Height="23" HorizontalAlignment="Left" Name="sliderZ" VerticalAlignment="Top" Width="100" Maximum="1000" Value="0" Interval="1" ValueChanged="sliderZ_ValueChanged" Minimum="-1000" />
         </StackPanel>
         <Viewport3D Name="myViewport3D" Panel.ZIndex="1">
+            <Viewport3D.Camera>
+                <OrthographicCamera x:Name="myPCamera" Position="-200,0,0" UpDirection="0,1,0" LookDirection="1,0,0"  Width="600">
+                </OrthographicCamera>
+            </Viewport3D.Camera>
+            <ModelVisual3D x:Name="myModelVisual3D">
+                <ModelVisual3D.Content>
+                    <GeometryModel3D x:Name="meshCubeModel" x:Uid="meshCubeModel">
+                        <GeometryModel3D.Geometry>
+                            <MeshGeometry3D x:Name="meshCube"
+                                Positions = "0 0 0  -100 -10 0  -100 10 0">
+                            </MeshGeometry3D>
+                        </GeometryModel3D.Geometry>
+                        <GeometryModel3D.Material>
+                            <DiffuseMaterial x:Name="matDiffuseMain">
+                                <DiffuseMaterial.Brush>
+                                    <SolidColorBrush Color="Red"/>
+                                </DiffuseMaterial.Brush>
+                            </DiffuseMaterial>
+                        </GeometryModel3D.Material>
+                        <GeometryModel3D.BackMaterial>
+                            <DiffuseMaterial x:Name="matDiffuseBack">
+                                <DiffuseMaterial.Brush>
+                                    <SolidColorBrush Color="Red"/>
+                                </DiffuseMaterial.Brush>
+                            </DiffuseMaterial>
+                        </GeometryModel3D.BackMaterial>
+                    </GeometryModel3D>
+                </ModelVisual3D.Content>
+            </ModelVisual3D>
         </Viewport3D>
     </Grid>
 </UserControl>
