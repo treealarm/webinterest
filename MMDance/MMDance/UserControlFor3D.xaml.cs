@@ -211,14 +211,14 @@ namespace MMDance
         }
 
         double m_CurAngle = 0;
-        double m_CurZ = 0;
+        double m_CurZ = 0.0001;
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             Point3D intersection = new Point3D();
             if (!GetIntersection(m_CurAngle, m_CurZ, out intersection))
             {
                 m_CurAngle = 0;
-                m_CurZ = 0;
+                m_CurZ = 0.0001;
                 return;
             }
 
