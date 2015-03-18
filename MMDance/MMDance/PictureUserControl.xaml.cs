@@ -28,8 +28,13 @@ namespace MMDance
         public PictureUserControl()
         {
             InitializeComponent();
-
-            m_ProfileData = ProfileElementSerializer.DeserializeObject(Properties.Settings.Default.ProfileDataSource);
+            try
+            {
+                m_ProfileData = ProfileElementSerializer.DeserializeObject(Properties.Settings.Default.ProfileDataSource);
+            }
+            catch (Exception e)
+            {
+            }
             if (m_ProfileData == null)
             {
                 m_ProfileData = new ProfileElementList();
