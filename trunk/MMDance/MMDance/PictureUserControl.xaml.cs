@@ -73,7 +73,7 @@ namespace MMDance
             Canvas.SetTop(textBlock, pt.Y - 20);
         }
 
-        private void Click_Click(object sender, RoutedEventArgs e)
+        private void Click_FileName(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
             op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bmp|" +
@@ -83,6 +83,20 @@ namespace MMDance
             {
                 ProfileElement element = ((FrameworkElement)sender).DataContext as ProfileElement;
                 element.FileName = op.FileName;
+                ProfileDataGrid.CommitEdit();
+            }
+        }
+
+        private void Click_FileNameCurve(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog op = new OpenFileDialog();
+            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bmp|" +
+                "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+                "Portable Network Graphic (*.png)|*.png";
+            if (op.ShowDialog() == true)
+            {
+                ProfileElement element = ((FrameworkElement)sender).DataContext as ProfileElement;
+                element.FileNameCurve = op.FileName;
                 ProfileDataGrid.CommitEdit();
             }
         }
@@ -112,7 +126,7 @@ namespace MMDance
             {
                 return;
             }
-            BitmapImage myBitmapImage = cur.Image;
+            BitmapImage myBitmapImage = cur.GetImage(cur.FileName);
             if (myBitmapImage == null)
             {
                 return;

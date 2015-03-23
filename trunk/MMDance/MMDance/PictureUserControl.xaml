@@ -40,7 +40,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <TextBox MinWidth="100" Text="{Binding FileName}" ></TextBox>
-                                <Button Name="Click" Click="Click_Click">...</Button>
+                                <Button Name="Click" Click="Click_FileName">...</Button>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
@@ -51,6 +51,23 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Curve">
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox MinWidth="100" Text="{Binding FileNameCurve}" ></TextBox>
+                                <Button Name="Click" Click="Click_FileNameCurve">...</Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding FileNameCurve}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
                 <DataGridTextColumn Header="Length" Binding="{Binding Length}"/>
                 <DataGridTextColumn Header="Angle"  Binding="{Binding Angle}"/>
             </DataGrid.Columns>
@@ -73,10 +90,12 @@
                             
                             <TextBlock Text="FileName: " FontWeight="Bold" Grid.Row="1" />
                             <TextBlock Text="{Binding FileName}" Grid.Column="1" Grid.Row="1" />
-                            <TextBlock Text="Length: " FontWeight="Bold" Grid.Row="2" />
-                            <TextBlock Text="{Binding Length, StringFormat=d}" Grid.Column="1" Grid.Row="2" />
-                            <TextBlock Text="Angle: " FontWeight="Bold" Grid.Row="3" />
-                            <TextBlock Text="{Binding Angle, StringFormat=f}" Grid.Column="1" Grid.Row="3" />
+                            <TextBlock Text="FileNameCurve: " FontWeight="Bold" Grid.Row="2" />
+                            <TextBlock Text="{Binding FileNameCurve}" Grid.Column="1" Grid.Row="2" />
+                            <TextBlock Text="Length: " FontWeight="Bold" Grid.Row="3" />
+                            <TextBlock Text="{Binding Length, StringFormat=d}" Grid.Column="1" Grid.Row="3" />
+                            <TextBlock Text="Angle: " FontWeight="Bold" Grid.Row="4" />
+                            <TextBlock Text="{Binding Angle, StringFormat=f}" Grid.Column="1" Grid.Row="4" />
 
                         </Grid>
                     </DockPanel>
