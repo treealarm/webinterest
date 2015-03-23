@@ -17,24 +17,21 @@ namespace MMDance
         public string FileName { get; set; }
         public int Length { get; set; }
         public double Angle { get; set; }
-        
-        public BitmapImage Image
-        {
-            get
-            {
-                if (!File.Exists(FileName))
-                {
-                    return null;
-                }
-                BitmapImage image = new BitmapImage();
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.BeginInit();
-                image.UriSource = new Uri(FileName, UriKind.RelativeOrAbsolute); 
-                image.EndInit();
-                return image;
-            }
-        }
+        public string FileNameCurve { get; set; }
 
+        public BitmapImage GetImage(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                return null;
+            }
+            BitmapImage image = new BitmapImage();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.BeginInit();
+            image.UriSource = new Uri(FileName, UriKind.RelativeOrAbsolute);
+            image.EndInit();
+            return image;
+        }
     }
 
     public class ProfileElementList : ObservableCollection<ProfileElement>
