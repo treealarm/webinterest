@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Xml.Serialization;
 using System.Collections.ObjectModel;
+using System.Windows.Data;
 
 namespace MMDance
 {
@@ -28,7 +29,7 @@ namespace MMDance
             BitmapImage image = new BitmapImage();
             image.CacheOption = BitmapCacheOption.OnLoad;
             image.BeginInit();
-            image.UriSource = new Uri(FileName, UriKind.RelativeOrAbsolute);
+            image.UriSource = new Uri(fileName, UriKind.RelativeOrAbsolute);
             image.EndInit();
             return image;
         }
@@ -52,6 +53,23 @@ namespace MMDance
             StringWriter textWriter = new StringWriter();
             xmlSerializer.Serialize(textWriter, toSerialize);
             return textWriter.ToString();
+        }
+    }
+
+    public class PathValueConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null)
+            {
+                return string.Empty;
+            }
+            return Path.GetFileName(value.ToString());
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value;
         }
     }
 }

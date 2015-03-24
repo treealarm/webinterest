@@ -8,8 +8,10 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <c:ProfileElementList x:Key="m_ProfileData"/>
+        <c:PathValueConverter x:Key="PathValueConverter" />
     </UserControl.Resources>
-        <Grid>
+    
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
@@ -39,7 +41,7 @@
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBox MinWidth="100" Text="{Binding FileName}" ></TextBox>
+                                <TextBox MinWidth="100" Text="{Binding FileName, Converter={StaticResource PathValueConverter}}" ></TextBox>
                                 <Button Name="Click" Click="Click_FileName">...</Button>
                             </StackPanel>
                         </DataTemplate>
@@ -47,7 +49,7 @@
 
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding FileName}" />
+                            <TextBlock Text="{Binding FileName, Converter={StaticResource PathValueConverter}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -55,7 +57,7 @@
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBox MinWidth="100" Text="{Binding FileNameCurve}" ></TextBox>
+                                <TextBox MinWidth="100" Text="{Binding FileNameCurve, Converter={StaticResource PathValueConverter}}" ></TextBox>
                                 <Button Name="Click" Click="Click_FileNameCurve">...</Button>
                             </StackPanel>
                         </DataTemplate>
@@ -63,7 +65,7 @@
 
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding FileNameCurve}" />
+                            <TextBlock Text="{Binding FileNameCurve, Converter={StaticResource PathValueConverter}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -86,14 +88,18 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             
                             <TextBlock Text="FileName: " FontWeight="Bold" Grid.Row="1" />
                             <TextBlock Text="{Binding FileName}" Grid.Column="1" Grid.Row="1" />
+                            
                             <TextBlock Text="FileNameCurve: " FontWeight="Bold" Grid.Row="2" />
                             <TextBlock Text="{Binding FileNameCurve}" Grid.Column="1" Grid.Row="2" />
+                            
                             <TextBlock Text="Length: " FontWeight="Bold" Grid.Row="3" />
                             <TextBlock Text="{Binding Length, StringFormat=d}" Grid.Column="1" Grid.Row="3" />
+                            
                             <TextBlock Text="Angle: " FontWeight="Bold" Grid.Row="4" />
                             <TextBlock Text="{Binding Angle, StringFormat=f}" Grid.Column="1" Grid.Row="4" />
 

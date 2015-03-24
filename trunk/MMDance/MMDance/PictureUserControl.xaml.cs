@@ -16,6 +16,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using Kit3D;
 
 namespace MMDance
 {
@@ -114,13 +115,18 @@ namespace MMDance
             {
                 ProfileElement element = m_ProfileData[i];
                 List<Point> list = new List<Point>();
-                DrawCurProfileResult(element, list);
-                UserControlFor3D.Calculate(list, cur_pos, element.Length, element.Angle);
+                
+                GetCrossSectionProfile(element, list);
+
+                List<double> listLong = new List<double>();
+                GetLongitudinalSectionProfile(element, listLong);
+
+                UserControlFor3D.Calculate(list, listLong, cur_pos, element.Length, element.Angle);
                 cur_pos += element.Length;
             }
         }
 
-        public void DrawCurProfileResult(ProfileElement cur, List<Point> list)
+        public void GetCrossSectionProfile(ProfileElement cur, List<Point> list)
         {
             if (cur == null)
             {
@@ -147,8 +153,10 @@ namespace MMDance
   
             int x = 0;
             int y = 0;
-            Point center = new Point(newFormatedBitmapSource.PixelWidth/2, newFormatedBitmapSource.PixelHeight/2);
-            int r_begin_min = (int)Math.Min(center.X, center.Y);
+            Point ptCenter = new Point();
+            ptCenter.X = newFormatedBitmapSource.PixelWidth / 2;
+            ptCenter.Y = newFormatedBitmapSource.PixelHeight / 2;
+            int r_begin_min = (int)Math.Min(ptCenter.X, ptCenter.Y);
             for (double angle = 0; angle < 360; angle += 0.5)
             {
                 double rad_angle = Math.PI * angle / 180.0;
@@ -156,8 +164,8 @@ namespace MMDance
 
                 for (int r = r_begin; r > 0; r--)
                 {
-                    x = (int)(r * Math.Cos(rad_angle)) + (int)center.X;
-                    y = (int)(r * Math.Sin(rad_angle)) + (int)center.Y;
+                    x = (int)(r * Math.Cos(rad_angle)) + (int)ptCenter.X;
+                    y = (int)(r * Math.Sin(rad_angle)) + (int)ptCenter.Y;
                     if (x >= newFormatedBitmapSource.PixelWidth || 
                         y >= newFormatedBitmapSource.PixelHeight ||
                         x < 0 || y < 0)
@@ -173,8 +181,8 @@ namespace MMDance
                     Color cur_col = Color.FromRgb(red, green, blue);
                     if (cur_col != Color.FromRgb(255, 255, 255))
                     {
-                        int x_add = x - (int)center.X;
-                        int y_add = y - (int)center.Y;
+                        int x_add = x - (int)ptCenter.X;
+                        int y_add = y - (int)ptCenter.Y;
                         Point ptToAdd = new Point(x_add, y_add);
 
                         if (list.Count == 0 || list.Last() != ptToAdd)
@@ -188,6 +196,71 @@ namespace MMDance
             }
          }
 
+        public void GetLongitudinalSectionProfile(ProfileElement cur, List<double> list)
+        {
+            if (cur == null)
+            {
+                return;
+            }
+            BitmapImage myBitmapImage = cur.GetImage(cur.FileNameCurve);
+            if (myBitmapImage == null)
+            {
+                return;
+            }
+
+            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
+            newFormatedBitmapSource.BeginInit();
+            newFormatedBitmapSource.Source = myBitmapImage;
+            newFormatedBitmapSource.DestinationFormat = PixelFormats.Rgb24;
+            newFormatedBitmapSource.EndInit();
+
+            int width = newFormatedBitmapSource.PixelWidth;
+            int height = newFormatedBitmapSource.PixelHeight;
+            int stride = width * 3;
+            int size = newFormatedBitmapSource.PixelHeight * stride;
+            byte[] pixels = new byte[size];
+            Array.Clear(pixels, 0, size);
+            newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
+
+            int x = 0;
+            int y = 0;
+            for (x = 0; x < width; x++ )
+            {
+                for (y = 0; y < height; y++)
+                {
+                    int index = y * stride + 3 * x;
+                    byte red = pixels[index];
+                    byte green = pixels[index + 1];
+                    byte blue = pixels[index + 2];
+
+                    Color cur_col = Color.FromRgb(red, green, blue);
+                    if (cur_col != Color.FromRgb(255, 255, 255))
+                    {
+                        list.Add(height - y);
+                        break;
+                    }
+                }
+            }
+            double base_point = 0;
+            if (list.Count > 0)
+            {
+                base_point = list[0];
+                if (MathHelper.IsZero(base_point))
+                {
+                    base_point = MathHelper.Epsilon;
+                }
+            }
+            for (x = 0; x < list.Count; x++)
+            {
+                double cur_point = list[x];
+                if (MathHelper.IsZero(cur_point))
+                {
+                    cur_point = MathHelper.Epsilon;
+                }
+                double factor = cur_point / base_point;
+                list[x] = factor;
+            }
+        }
         private void ProfileDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             List<UIElement> itemstoremove = new List<UIElement>();
@@ -209,12 +282,15 @@ namespace MMDance
             {
                 return;
             }
-            DrawCurProfileResult(element, list);
+            
+            GetCrossSectionProfile(element, list);
             if (list.Count == 0)
             {
                 return;
             }
-            UserControlFor3D.Calculate(list, 0, element.Length, element.Angle);
+            List<double> listLong = new List<double>();
+            GetLongitudinalSectionProfile(element, listLong);
+            UserControlFor3D.Calculate(list, listLong, 0, element.Length, element.Angle);
 
             //for (int i = 1; i < list.Count; i++ )
             //{
