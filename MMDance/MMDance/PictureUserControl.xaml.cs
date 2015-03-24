@@ -157,12 +157,12 @@ namespace MMDance
             ptCenter.X = newFormatedBitmapSource.PixelWidth / 2;
             ptCenter.Y = newFormatedBitmapSource.PixelHeight / 2;
             int r_begin_min = (int)Math.Min(ptCenter.X, ptCenter.Y);
-            for (double angle = 0; angle < 360; angle += 0.5)
+            for (double angle = 0; angle < 360; angle += 0.9)
             {
                 double rad_angle = Math.PI * angle / 180.0;
                 int r_begin = (int)Math.Sqrt(2*r_begin_min * r_begin_min);
 
-                for (int r = r_begin; r > 0; r--)
+                for (double r = r_begin; r > 0; r--)
                 {
                     x = (int)(r * Math.Cos(rad_angle)) + (int)ptCenter.X;
                     y = (int)(r * Math.Sin(rad_angle)) + (int)ptCenter.Y;
@@ -195,6 +195,7 @@ namespace MMDance
                 }
             }
          }
+
 
         public void GetLongitudinalSectionProfile(ProfileElement cur, List<double> list)
         {
