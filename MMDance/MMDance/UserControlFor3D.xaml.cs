@@ -62,8 +62,16 @@ namespace MMDance
             return myModel3DGroup;
             
         }
-        
-        public void Calculate(List<Point> list, int pos, int len, double angle)
+        double GetZoomTransform(int Z, List<double> listLong, int len)
+        {
+            if (listLong.Count == 0)
+            {
+                return 1;
+            }
+            int pos = Z * (listLong.Count-1) / len;
+            return listLong[pos];
+        }
+        public void Calculate(List<Point> listCross, List<double> listLong, int pos, int len, double angle)
         {
             if (pos == 0)
             {
@@ -96,19 +104,10 @@ namespace MMDance
             
             myGeometryModel.Geometry = myMeshGeometry3D;
 
-            double x_origin = 0;
-            double y_origin = 0;
-            for (int i = 0; i < list.Count; i++)
-            {
-                x_origin += list[i].X;
-                y_origin += list[i].Y;
-            }
-            x_origin /= list.Count;
-            y_origin /= list.Count;
             List<Point3DCollection>  Discs = new List<Point3DCollection>();
             double cur_angle = 0;
             double ZIncrement = 1;
-            if (MathHelper.IsZero(angle))
+            if (MathHelper.IsZero(angle) && listLong.Count == 0)
             {
                 ZIncrement = len;
             }
@@ -121,12 +120,16 @@ namespace MMDance
                 AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), cur_angle);
                 RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
 
-                for (int i = 0; i < list.Count; i++ )
+                double Zoom = GetZoomTransform((int)(Z - pos), listLong, len);
+                ScaleTransform3D ScaleTrans = new ScaleTransform3D(new Vector3D(Zoom, Zoom, 0), new Point3D(0, 0, Z));
+                
+                for (int i = 0; i < listCross.Count; i++ )
                 {
-                    double x = list[i].X - x_origin;
-                    double y = list[i].Y - y_origin;
+                    double x = listCross[i].X;
+                    double y = listCross[i].Y;
 
                     Point3D newPoint = myRotateTransform.Transform(new Point3D(x, y, Z));
+                    newPoint = ScaleTrans.Transform(newPoint);
                    
                     disc.Add(newPoint);
                 }
