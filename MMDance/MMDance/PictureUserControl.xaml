@@ -72,6 +72,7 @@
                 
                 <DataGridTextColumn Header="Length" Binding="{Binding Length}"/>
                 <DataGridTextColumn Header="Angle"  Binding="{Binding Angle}"/>
+                <DataGridTextColumn Header="InitialScale" Binding="{Binding InitialScale}"/>
             </DataGrid.Columns>
 
             <DataGrid.RowDetailsTemplate>
