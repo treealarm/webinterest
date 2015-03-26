@@ -157,6 +157,13 @@ namespace MMDance
             ptCenter.X = newFormatedBitmapSource.PixelWidth / 2;
             ptCenter.Y = newFormatedBitmapSource.PixelHeight / 2;
             int r_begin_min = (int)Math.Min(ptCenter.X, ptCenter.Y);
+
+            ScaleTransform scaleTransform = null;
+            if (!MathHelper.IsZero(cur.InitialScale))
+            {
+                scaleTransform = new ScaleTransform(cur.InitialScale, cur.InitialScale, 0, 0);
+            }
+
             for (double angle = 0; angle < 360; angle += 0.9)
             {
                 double rad_angle = Math.PI * angle / 180.0;
@@ -184,6 +191,7 @@ namespace MMDance
                         int x_add = x - (int)ptCenter.X;
                         int y_add = y - (int)ptCenter.Y;
                         Point ptToAdd = new Point(x_add, y_add);
+ 
 
                         if (list.Count == 0 || list.Last() != ptToAdd)
                         {
@@ -193,6 +201,14 @@ namespace MMDance
                         break;
                     }
                 }
+            }
+            if (scaleTransform != null)
+            {
+                for (int i = 0; i < list.Count; i++ )
+                {
+                    list[i] = scaleTransform.Transform(list[i]);
+                }
+                
             }
          }
 
