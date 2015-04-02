@@ -21,7 +21,7 @@ namespace MMDance
         public string FileNameCurve { get; set; }
         public double InitialScale { get; set; }
 
-        public BitmapImage GetImage(string fileName)
+        public static BitmapImage GetImage(string fileName)
         {
             if (!File.Exists(fileName))
             {
@@ -54,6 +54,34 @@ namespace MMDance
             StringWriter textWriter = new StringWriter();
             xmlSerializer.Serialize(textWriter, toSerialize);
             return textWriter.ToString();
+        }
+    }
+
+    public static class ListPoint
+    {
+        public static List<Point> DeserializeObject(string fileName)
+        {
+            try
+            {
+                using (var stream = System.IO.File.OpenRead(fileName))
+                {
+                    var serializer = new XmlSerializer(typeof(List<Point>));
+                    return serializer.Deserialize(stream) as List<Point>;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new List<Point>();	
+            }            
+        }
+
+        public static void SerializeObject(List<Point> toSerialize, string fileName)
+        {
+            using (var writer = new System.IO.StreamWriter(fileName))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Point>));
+                xmlSerializer.Serialize(writer, toSerialize);
+            }            
         }
     }
 
