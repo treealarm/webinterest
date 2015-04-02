@@ -17,6 +17,7 @@ using System.IO;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using Kit3D;
+using System.Xml;
 
 namespace MMDance
 {
@@ -77,9 +78,7 @@ namespace MMDance
         private void Click_FileName(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
-            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bmp|" +
-                "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-                "Portable Network Graphic (*.png)|*.png";
+            op.Filter = "xml|*.xml;";
             if (op.ShowDialog() == true)
             {
                 ProfileElement element = ((FrameworkElement)sender).DataContext as ProfileElement;
@@ -114,9 +113,9 @@ namespace MMDance
             for (int i = 0; i < m_ProfileData.Count; i++)
             {
                 ProfileElement element = m_ProfileData[i];
-                List<Point> list = new List<Point>();
-                
-                GetCrossSectionProfile(element, list);
+                List<Point> list = ListPoint.DeserializeObject(element.FileName);
+                //GetCrossSectionProfile(element, list, "d:\\1.bmp");
+                //ListPoint.SerializeObject(list, "d:\\1.xml");
 
                 List<double> listLong = new List<double>();
                 GetLongitudinalSectionProfile(element, listLong);
@@ -126,13 +125,9 @@ namespace MMDance
             }
         }
 
-        public void GetCrossSectionProfile(ProfileElement cur, List<Point> list)
+        public void GetCrossSectionProfile(List<Point> list, string fileName)
         {
-            if (cur == null)
-            {
-                return;
-            }
-            BitmapImage myBitmapImage = cur.GetImage(cur.FileName);
+            BitmapImage myBitmapImage = ProfileElement.GetImage(fileName);
             if (myBitmapImage == null)
             {
                 return;
@@ -159,10 +154,6 @@ namespace MMDance
             int r_begin_min = (int)Math.Min(ptCenter.X, ptCenter.Y);
 
             ScaleTransform scaleTransform = null;
-            if (!MathHelper.IsZero(cur.InitialScale))
-            {
-                scaleTransform = new ScaleTransform(cur.InitialScale, cur.InitialScale, 0, 0);
-            }
 
             for (double angle = 0; angle < 360; angle += 0.9)
             {
@@ -219,7 +210,7 @@ namespace MMDance
             {
                 return;
             }
-            BitmapImage myBitmapImage = cur.GetImage(cur.FileNameCurve);
+            BitmapImage myBitmapImage = ProfileElement.GetImage(cur.FileNameCurve);
             if (myBitmapImage == null)
             {
                 return;
@@ -293,14 +284,14 @@ namespace MMDance
                 image_canvas.Children.Remove(ui);
             }
 
-            List<Point> list = new List<Point>();
+            
             ProfileElement element = ProfileDataGrid.SelectedItem as ProfileElement;
             if (element == null || element.Length <= 0)
             {
                 return;
             }
-            
-            GetCrossSectionProfile(element, list);
+            List<Point> list = ListPoint.DeserializeObject(element.FileName);
+            //GetCrossSectionProfile(element, list);
             if (list.Count == 0)
             {
                 return;
@@ -331,6 +322,25 @@ namespace MMDance
             Properties.Settings.Default.ProfileDataSource = ProfileElementSerializer.SerializeObject(m_ProfileData);
             Properties.Settings.Default.Save();
             UpdateProfileResult();
+        }
+
+        private void buttonExport_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog op = new OpenFileDialog();
+            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bmp|" +
+                "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+                "Portable Network Graphic (*.png)|*.png";
+            if (op.ShowDialog() == true)
+            {
+                SaveFileDialog op1 = new SaveFileDialog();
+                op1.Filter = "xml|*.xml;";
+                if (op1.ShowDialog() == true)
+                {
+                    List<Point> list = new List<Point>();
+                    GetCrossSectionProfile(list, op.FileName);
+                    ListPoint.SerializeObject(list, op1.FileName);
+                }
+            }
         }
     }
 }

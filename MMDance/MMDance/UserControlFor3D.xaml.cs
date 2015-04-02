@@ -122,7 +122,12 @@ namespace MMDance
 
                 double Zoom = GetZoomTransform((int)(Z - pos), listLong, len);
                 ScaleTransform3D ScaleTrans = new ScaleTransform3D(new Vector3D(Zoom, Zoom, 0), new Point3D(0, 0, Z));
-                
+
+                if (listCross.First() != listCross.Last())
+                {//make closed loop
+                    listCross.Add(listCross.First());
+                }
+
                 for (int i = 0; i < listCross.Count; i++ )
                 {
                     double x = listCross[i].X;
