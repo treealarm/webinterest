@@ -302,5 +302,10 @@ namespace MMDance
         {
             m_trans3d.OffsetZ = sliderZ.Value;
         }
+
+        private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            m_axB3d.Angle += e.Delta/12;
+        }
     }
 }
