@@ -222,6 +222,7 @@ namespace MMDance
         double m_CurZ = 0.0001;
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
+            return;
             Point3D intersection = new Point3D();
             if (!GetIntersection(m_CurAngle, m_CurZ, out intersection))
             {
@@ -230,18 +231,7 @@ namespace MMDance
                 return;
             }
 
-            Point3DCollection millPositionCollection = new Point3DCollection();
-
-           
-            AxisAngleRotation3D axB3d = new AxisAngleRotation3D(new Vector3D(0, 0, 1), m_CurAngle);
-            RotateTransform3D myRotateTransform = new RotateTransform3D(axB3d);
-            Point3D p2 = myRotateTransform.Transform(new Point3D(-100, -10, intersection.Z));
-            Point3D p3 = myRotateTransform.Transform(new Point3D(-100, 10, intersection.Z));
-            millPositionCollection.Add(intersection);
-            millPositionCollection.Add(p2);
-            millPositionCollection.Add(p3);
-
-            meshCube.Positions = millPositionCollection;
+            UpdatePosition(intersection, m_CurAngle);
 
             m_CurAngle += 1;
             if(m_CurAngle >= 360.0)
@@ -251,7 +241,22 @@ namespace MMDance
             }
         }
 
-        bool GetIntersection(double angle, double Z, out Point3D intersection)
+        public void UpdatePosition(Point3D intersection, double CurAngle)
+        {
+            Point3DCollection millPositionCollection = new Point3DCollection();
+            AxisAngleRotation3D axB3d = new AxisAngleRotation3D(new Vector3D(0, 0, 1), CurAngle);
+            RotateTransform3D myRotateTransform = new RotateTransform3D(axB3d);
+            Point3D p2 = myRotateTransform.Transform(new Point3D(-100, -10, intersection.Z));
+            Point3D p3 = myRotateTransform.Transform(new Point3D(-100, 10, intersection.Z));
+            millPositionCollection.Add(intersection);
+            millPositionCollection.Add(p2);
+            millPositionCollection.Add(p3);
+
+            meshCube.Positions = millPositionCollection;
+        }
+
+
+        public bool GetIntersection(double angle, double Z, out Point3D intersection)
         {
             AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angle);
             RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);

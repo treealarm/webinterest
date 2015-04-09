@@ -82,7 +82,6 @@
       <DependentUpon>ControlUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ControlWrapper.cs" />
-    <Compile Include="DistanceComparer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -97,7 +96,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PictureColors.cs" />
     <Compile Include="PictureUserControl.xaml.cs">
       <DependentUpon>PictureUserControl.xaml</DependentUpon>
     </Compile>
