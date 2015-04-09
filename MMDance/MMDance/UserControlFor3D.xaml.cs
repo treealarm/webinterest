@@ -261,9 +261,11 @@ namespace MMDance
             AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angle);
             RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
             
-            Point3D newPoint = myRotateTransform.Transform(new Point3D(-100, 0, Z));
-
+            Point3D newPoint = myRotateTransform.Transform(new Point3D(-100, -1.5, Z));
             Ray ray = new Ray(newPoint, new Vector3D(-newPoint.X, -newPoint.Y, -newPoint.Z));
+            
+            newPoint = myRotateTransform.Transform(new Point3D(-100, 1.5, Z));
+            Ray ray1 = new Ray(newPoint, new Vector3D(-newPoint.X, -newPoint.Y, -newPoint.Z));
 
             for (int i = 0; i < m_Model3DGroup.Children.Count; i++)
             {
@@ -283,11 +285,20 @@ namespace MMDance
                 {
                     Plane plane = new Plane(points[j], points[j + 1], points[j + 2]);
                     double t = IntersectsWithTriangle(ray, points[j], points[j + 1], points[j + 2]);
-                    if (t > 0)
+                    double t1 = IntersectsWithTriangle(ray1, points[j], points[j + 1], points[j + 2]);
+                    if (t > 0 || t1 > 0)
                     {
-                        intersection = ray.Origin + t * ray.Direction;
+                        if (t > t1)
+                        {
+                            intersection = ray.Origin + t * ray.Direction;
+                        }
+                        else
+                        {
+                            intersection = ray1.Origin + t1 * ray1.Direction;
+                        }
                         return true;
                     }
+
                 }
             }
             intersection = new Point3D();
