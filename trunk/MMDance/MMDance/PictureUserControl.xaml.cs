@@ -45,36 +45,6 @@ namespace MMDance
             ProfileDataGrid.DataContext = m_ProfileData;
         }
 
-        public void UpdateCurrentPosition(double x1, double y1)
-        {
-            x_line.X1 = x1;
-            x_line.X2 = x1;
-            x_line.Y1 = 0;
-            x_line.Y2 = image_canvas.ActualHeight;
-
-            y_line.Y1 = y1;
-            y_line.Y2 = y1;
-            y_line.X1 = 0;
-            y_line.X2 = image_canvas.ActualWidth;
-        }
-
-        private void loaded_image_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            MainWindow.GetMainWnd().UpdateCurrentPosition();
-        }
-
-        private void image_canvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point pt = e.GetPosition(image_canvas);
-            double xratio = MainWindow.GetMainWnd().GetImageSize().Width / image_canvas.ActualWidth;
-            double yratio = MainWindow.GetMainWnd().GetImageSize().Height / image_canvas.ActualHeight;
-            textBlock.Text = string.Format("{0}:{1}", Convert.ToInt32(pt.X * xratio),
-                MainWindow.GetMainWnd().GetImageSize().Height-Convert.ToInt32(pt.Y * yratio));
-            textBlock.Visibility = System.Windows.Visibility.Visible;
-            Canvas.SetLeft(textBlock, pt.X-20);
-            Canvas.SetTop(textBlock, pt.Y - 20);
-        }
-
         private void Click_FileName(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
@@ -120,7 +90,7 @@ namespace MMDance
                 List<double> listLong = new List<double>();
                 GetLongitudinalSectionProfile(element, listLong);
 
-                UserControlFor3D.Calculate(list, listLong, cur_pos, element.Length, element.Angle);
+                m_UserControlFor3D.Calculate(list, listLong, cur_pos, element.Length, element.Angle);
                 cur_pos += element.Length;
             }
         }
@@ -271,20 +241,6 @@ namespace MMDance
         }
         private void ProfileDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            List<UIElement> itemstoremove = new List<UIElement>();
-            foreach (UIElement ui in image_canvas.Children)
-            {
-                if (ui.Uid.StartsWith("Line"))
-                {
-                    itemstoremove.Add(ui);
-                }
-            }
-            foreach (UIElement ui in itemstoremove)
-            {
-                image_canvas.Children.Remove(ui);
-            }
-
-            
             ProfileElement element = ProfileDataGrid.SelectedItem as ProfileElement;
             if (element == null || element.Length <= 0)
             {
@@ -298,23 +254,7 @@ namespace MMDance
             }
             List<double> listLong = new List<double>();
             GetLongitudinalSectionProfile(element, listLong);
-            UserControlFor3D.Calculate(list, listLong, 0, element.Length, element.Angle);
-
-            //for (int i = 1; i < list.Count; i++ )
-            //{
-            //    Line myLine = new Line();
-            //    myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-            //    myLine.X1 = list[i-1].X;
-            //    myLine.Y1 = list[i-1].Y;
-                
-            //    myLine.X2 = list[i].X;
-            //    myLine.Y2 = list[i].Y;
-            //    myLine.HorizontalAlignment = HorizontalAlignment.Left;
-            //    myLine.VerticalAlignment = VerticalAlignment.Center;
-            //    myLine.StrokeThickness = 1;
-            //    myLine.Uid = "Line" + i.ToString();
-            //    image_canvas.Children.Add(myLine);
-            //}
+            m_UserControlFor3D.Calculate(list, listLong, 0, element.Length, element.Angle);
         }
 
         private void buttonRefresh_Click(object sender, RoutedEventArgs e)
