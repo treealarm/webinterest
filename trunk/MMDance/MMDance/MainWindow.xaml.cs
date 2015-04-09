@@ -228,6 +228,10 @@ namespace MMDance
             ControlWrapper.StructureToByteArray(cm, OutputPacketBuffer, 2);
             AddCommand(OutputPacketBuffer);
         }
+        public void InitCurBPos()
+        {
+            m_cur_pos.b = 0;
+        }
         public void SetStepsToController(do_steps steps, bool update_pos = true)
         {
 	        if(
@@ -314,7 +318,10 @@ namespace MMDance
         {
             Point3D intersection;
             double angle = GetAngleFromStep(cur_coords.b);
-            PictureUserControl.m_UserControlFor3D.GetIntersection(angle, cur_coords.x, out intersection);
+            if (!PictureUserControl.m_UserControlFor3D.GetIntersection(angle, cur_coords.x, out intersection))
+            {
+                return false;
+            }
             PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
             cur_coords.y = (int)intersection.Y;
             return true;
@@ -338,11 +345,12 @@ namespace MMDance
                 if (DoEngraving(ref m_CurTask))
                 {
                     GoToXY(m_CurTask.x, m_CurTask.y, m_CurTask.b);
-                    m_CurTask.b += m_CurTask.dir;
+                    m_CurTask.b += 1;
                     double angle = GetAngleFromStep(m_CurTask.b);
-                    if (angle > 360 || angle < 0)
+                    if (angle >= 360)
                     {
-                        m_CurTask.dir = -m_CurTask.dir;
+                        m_CurTask.b = 0;
+                        InitCurBPos();
                         m_CurTask.x++;
                     }
                     m_counter++;
