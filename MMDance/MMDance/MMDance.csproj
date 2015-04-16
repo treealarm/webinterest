@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ListSerializator.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Ray.cs" />
