@@ -23,5 +23,10 @@ namespace CreateFigure
         {
             InitializeComponent();
         }
+
+        private void buttonCreateCircle_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
