@@ -125,7 +125,7 @@ namespace MMDance
                 RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
 
                 double Zoom = GetZoomTransform((int)(Z - pos), listLong, len);
-                ScaleTransform3D ScaleTrans = new ScaleTransform3D(new Vector3D(Zoom, Zoom, 0), new Point3D(0, 0, Z));
+                //ScaleTransform3D ScaleTrans = new ScaleTransform3D(new Vector3D(Zoom, Zoom, 0), new Point3D(0, 0, Z));
 
                 if (listCross.First() != listCross.Last())
                 {//make closed loop
@@ -137,8 +137,13 @@ namespace MMDance
                     double x = listCross[i].X;
                     double y = listCross[i].Y;
 
-                    Point3D newPoint = myRotateTransform.Transform(new Point3D(x, y, Z));
-                    newPoint = ScaleTrans.Transform(newPoint);
+                    Vector3D vec = new Vector3D(x, y, 0);
+                    vec.Normalize();
+                    vec = vec * Zoom;
+                    vec = new Vector3D(x, y, Z) + vec;
+
+                    Point3D newPoint = (Point3D)myRotateTransform.Transform(vec);
+                    //newPoint = ScaleTrans.Transform(newPoint);
                    
                     disc.Add(newPoint);
                 }

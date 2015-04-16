@@ -3,13 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <StackPanel>
-        <Button Content="Create Circle" Height="23" HorizontalAlignment="Left" Name="buttonCreateCircle" VerticalAlignment="Top" Width="75" Click="buttonCreateCircle_Click" />
-        <Label Content="Diameter (mm):" Height="28" Name="labelDiameter" />
-        <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxDiameter" VerticalAlignment="Top" Width="120" Text="50" />
+        <StackPanel Orientation="Horizontal">
+            <StackPanel>
+                <Button Content="Create Circle" Height="23" HorizontalAlignment="Left" Name="buttonCreateCircle" VerticalAlignment="Top" Width="75" Click="buttonCreateCircle_Click" />
+                <Label Content="Diameter (mm):" Height="28" Name="labelDiameter" />
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxDiameter" VerticalAlignment="Top" Width="120" Text="50" />
 
-            <Label Content="Points number:" Height="28" Name="labelCount" />
-            <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxPoints" VerticalAlignment="Top" Width="120" Text="360" />
+                <Label Content="Points number:" Height="28" Name="labelCount" />
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxPoints" VerticalAlignment="Top" Width="120" Text="360" />
+            </StackPanel>
+            <StackPanel>
+                <Button Content="Create Braid" Height="23" HorizontalAlignment="Left" Name="buttonCreateBraid" VerticalAlignment="Top" Width="75" Click="buttonCreateBraid_Click" />
+                
+                <Label Content="Base Diameter (mm):" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxBaseDiameter" VerticalAlignment="Top" Width="120" Text="50" />
+
+                <Label Content="Number of threads:" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxThreadsNumber" VerticalAlignment="Top" Width="120" Text="5" />
+
+                <Label Content="Thread Diameter (mm):" Height="28" Name="labelThreadDiameter" />
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxThreadDiameter" VerticalAlignment="Top" Width="120" Text="10" />
+
+                <Label Content="Points In Thread:" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxPointsInThread" VerticalAlignment="Top" Width="120" Text="360" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

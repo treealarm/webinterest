@@ -223,25 +223,25 @@ namespace MMDance
                     }
                 }
             }
-            double base_point = 0;
-            if (list.Count > 0)
-            {
-                base_point = list[0];
-                if (MathHelper.IsZero(base_point))
-                {
-                    base_point = MathHelper.Epsilon;
-                }
-            }
-            for (x = 0; x < list.Count; x++)
-            {
-                double cur_point = list[x];
-                if (MathHelper.IsZero(cur_point))
-                {
-                    cur_point = MathHelper.Epsilon;
-                }
-                double factor = cur_point / base_point;
-                list[x] = factor;
-            }
+            //double base_point = 0;
+            //if (list.Count > 0)
+            //{
+            //    base_point = list[0];
+            //    if (MathHelper.IsZero(base_point))
+            //    {
+            //        base_point = MathHelper.Epsilon;
+            //    }
+            //}
+            //for (x = 0; x < list.Count; x++)
+            //{
+            //    double cur_point = list[x];
+            //    if (MathHelper.IsZero(cur_point))
+            //    {
+            //        cur_point = MathHelper.Epsilon;
+            //    }
+            //    double factor = cur_point / base_point;
+            //    list[x] = factor;
+            //}
         }
         private void ProfileDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
