@@ -83,6 +83,10 @@ namespace MMDance
             for (int i = 0; i < m_ProfileData.Count; i++)
             {
                 ProfileElement element = m_ProfileData[i];
+                if (element.Length <= 0)
+                {
+                    continue;
+                }
                 List<Point> list = ListPoint.DeserializeObject(element.FileName);
                 //GetCrossSectionProfile(element, list, "d:\\1.bmp");
                 //ListPoint.SerializeObject(list, "d:\\1.xml");

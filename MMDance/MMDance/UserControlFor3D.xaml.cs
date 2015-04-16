@@ -73,6 +73,10 @@ namespace MMDance
         }
         public void Calculate(List<Point> listCross, List<double> listLong, int pos, int len, double angle)
         {
+            if (len <= 0)
+            {
+                return;
+            }
             if (pos == 0)
             {
                 m_Model3DGroup = GetNewGroup();
