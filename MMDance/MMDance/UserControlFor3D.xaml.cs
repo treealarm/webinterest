@@ -64,7 +64,7 @@ namespace MMDance
         }
         double GetZoomTransform(int Z, List<double> listLong, int len)
         {
-            if (listLong.Count == 0)
+            if (listLong == null || listLong.Count == 0)
             {
                 return 1;
             }
@@ -111,7 +111,7 @@ namespace MMDance
             List<Point3DCollection>  Discs = new List<Point3DCollection>();
             double cur_angle = 0;
             double ZIncrement = 1;
-            if (MathHelper.IsZero(angle) && listLong.Count == 0)
+            if (MathHelper.IsZero(angle) && (listLong == null || listLong.Count == 0))
             {
                 ZIncrement = len;
             }
@@ -231,23 +231,22 @@ namespace MMDance
         double m_CurZ = 0.0001;
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            return;
-            Point3D intersection = new Point3D();
-            if (!GetIntersection(m_CurAngle, m_CurZ, out intersection))
-            {
-                m_CurAngle = 0;
-                m_CurZ = 0.0001;
-                return;
-            }
+            //Point3D intersection = new Point3D();
+            //if (!GetIntersection(m_CurAngle, m_CurZ, out intersection))
+            //{
+            //    m_CurAngle = 0;
+            //    m_CurZ = 0.0001;
+            //    return;
+            //}
 
-            UpdatePosition(intersection, m_CurAngle);
+            //UpdatePosition(intersection, m_CurAngle);
 
-            m_CurAngle += 1;
-            if(m_CurAngle >= 360.0)
-            {
-                m_CurZ += 10;
-                m_CurAngle = 0;
-            }
+            //m_CurAngle += 1;
+            //if(m_CurAngle >= 360.0)
+            //{
+            //    m_CurZ += 10;
+            //    m_CurAngle = 0;
+            //}
         }
 
         public void UpdatePosition(Point3D intersection, double CurAngle)
