@@ -13,19 +13,19 @@
                 <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxPoints" VerticalAlignment="Top" Width="120" Text="360" />
             </StackPanel>
             <StackPanel>
-                <Button Content="Create Braid" Height="23" HorizontalAlignment="Left" Name="buttonCreateBraid" VerticalAlignment="Top" Width="75" Click="buttonCreateBraid_Click" />
+                <Button Content="Create Figure" Height="23" HorizontalAlignment="Left" Name="buttonCreateFigure" VerticalAlignment="Top" Width="75" Click="buttonCreateFigure_Click" />
                 
-                <Label Content="Base Diameter (mm):" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxBaseDiameter" VerticalAlignment="Top" Width="120" Text="50" />
+                <Label Content="OnePoint Width (mm):" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxPointSize" VerticalAlignment="Top" Width="120" Text="1" />
+                <Label Content="Points In Figure:" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxPointsInFigure" VerticalAlignment="Top" Width="120" Text="360" />
+            </StackPanel>
 
-                <Label Content="Number of threads:" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxThreadsNumber" VerticalAlignment="Top" Width="120" Text="5" />
+            <StackPanel>
+                <Button Content="Create Curve" Height="23" HorizontalAlignment="Left" Name="buttonCreateCurve" VerticalAlignment="Top" Width="75" Click="buttonCreateCurve_Click" />
 
-                <Label Content="Thread Diameter (mm):" Height="28" Name="labelThreadDiameter" />
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxThreadDiameter" VerticalAlignment="Top" Width="120" Text="10" />
-
-                <Label Content="Points In Thread:" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxPointsInThread" VerticalAlignment="Top" Width="120" Text="360" />
+                <Label Content="Height of OnePoint (mm):" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxCurvePointHeight" VerticalAlignment="Top" Width="120" Text="1" />
             </StackPanel>
         </StackPanel>
     </Grid>

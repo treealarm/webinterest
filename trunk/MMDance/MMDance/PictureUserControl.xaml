@@ -104,7 +104,6 @@
         </DataGrid>
         <StackPanel Grid.Row="3" Orientation="Horizontal">
             <Button Content="Save->Refresh" Height="23" Name="buttonRefresh" Width="Auto" HorizontalAlignment="Left"  Click="buttonRefresh_Click" />
-            <Button Content="ExportImage" Height="23" Name="buttonExport" Width="Auto" HorizontalAlignment="Left" Click="buttonExport_Click" />
         </StackPanel>
     </Grid>
 </UserControl>
