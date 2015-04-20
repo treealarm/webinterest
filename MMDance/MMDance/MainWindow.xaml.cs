@@ -106,7 +106,6 @@ namespace MMDance
             public int y = 0;//ход шпинделя
             public int b = 0;//угол
             public int w = 0;
-            public int dir = 1;
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 1 * ControlWrapper.MOTORS_COUNT), Serializable]
@@ -322,8 +321,10 @@ namespace MMDance
             {
                 return false;
             }
+
+            Vector3D vec = (Vector3D)intersection;
             PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
-            cur_coords.y = (int)intersection.Y;
+            cur_coords.y = (int)vec.Length;
             return true;
         }
 
