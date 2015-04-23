@@ -249,5 +249,71 @@ namespace CreateFigure
             }
         }
 
+        public static BitmapSource CreateBitmap(int width, int height, double dpi, Action<DrawingContext> render)
+        {
+            DrawingVisual drawingVisual = new DrawingVisual();
+            using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+            {
+                render(drawingContext);
+            }
+            RenderTargetBitmap bitmap = new RenderTargetBitmap(
+                width, height, dpi, dpi, PixelFormats.Default);
+            bitmap.Render(drawingVisual);
+
+            return bitmap;
+        }
+
+        private void buttonCreateBride_Click(object sender, RoutedEventArgs e)
+        {
+
+            SaveFileDialog op1 = new SaveFileDialog();
+            op1.Filter = "bmp|*.bmp;";
+            if (op1.ShowDialog() == true)
+            {
+                List<Point> list = new List<Point>();
+                double R = Convert.ToDouble(textBoxCenterCircleDiameter.Text) / 2;
+                double RThr = Convert.ToDouble(textBoxCirclesDiameter.Text) / 2;
+                int nPoints = Convert.ToInt32(textBoxCirclesNumber.Text);
+
+                double shift = (RThr + R);
+                double TotalWidth = shift * 2;
+                DrawingVisual drawingVisual = new DrawingVisual();
+                DrawingContext drawingContext = drawingVisual.RenderOpen();
+                Pen pen = new Pen();
+                pen.Brush = Brushes.White;
+
+                double fAngleDelta = ConvertToRadians(360 / nPoints);
+
+                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromRgb(255, 255, 255)), pen, new Rect(0, 0, TotalWidth, TotalWidth));
+
+                pen = new Pen();
+                pen.Brush = Brushes.Black;
+                for (double angle = 0; angle < Math.PI * 2; angle += fAngleDelta)
+                {
+                    double y = R * Math.Sin(angle) + shift;
+                    double x = R * Math.Cos(angle) + shift;
+
+                    drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)), pen, new Point(x, y), RThr, RThr);
+                }
+
+
+                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromRgb(255, 255, 255)), pen, new Rect(shift-1, shift-1, 2, 2));
+
+                drawingContext.Close();
+
+                RenderTargetBitmap bmp = new RenderTargetBitmap((int)TotalWidth, (int)TotalWidth, 96, 96, PixelFormats.Pbgra32);
+                bmp.Render(drawingVisual);
+
+                BitmapEncoder encoder = new BmpBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bmp));
+
+                using (Stream stm = File.Create(op1.FileName))
+                {
+                    encoder.Save(stm);
+                }
+            }
+
+        }
+
     }
 }
