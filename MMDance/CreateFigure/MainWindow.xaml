@@ -27,6 +27,19 @@
                 <Label Content="Height of OnePoint (mm):" Height="28"/>
                 <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxCurvePointHeight" VerticalAlignment="Top" Width="120" Text="1" />
             </StackPanel>
+
+            <StackPanel>
+                <Button Content="Create Bride Image" Height="23" HorizontalAlignment="Left" Name="buttonCreateBride" VerticalAlignment="Top" Width="Auto" Click="buttonCreateBride_Click" />
+
+                <Label Content="Center Circle Diameter:" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxCenterCircleDiameter" VerticalAlignment="Top" Width="120" Text="50" />
+
+                <Label Content="Circles Diameter:" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxCirclesDiameter" VerticalAlignment="Top" Width="120" Text="50" />
+
+                <Label Content="Circles Number:" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxCirclesNumber" VerticalAlignment="Top" Width="120" Text="5" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>
