@@ -28,6 +28,8 @@ namespace MMDance
 
         Model3DGroup m_Model3DGroup = new Model3DGroup();
 
+        public List<Point> m_listLimits = new List<Point>();
+
         public UserControlFor3D()
         {
             InitializeComponent();
@@ -62,6 +64,25 @@ namespace MMDance
             return myModel3DGroup;
             
         }
+        double GetRadiusLimit(double Z)
+        {
+            double yMax = 10000;
+            for (int i = 0; i < m_listLimits.Count; i++)
+            {
+                Point pt2 = m_listLimits[i];
+                if (pt2.X >= Z)
+                {
+                    if (i == 0)
+                    {
+                        return pt2.Y;
+                    }
+                    Point pt1 = m_listLimits[i - 1];
+                    yMax=(-(pt1.X*pt2.Y-pt2.X*pt1.Y)-(pt1.Y-pt2.Y)*Z)/(pt2.X-pt1.X);
+                    break;
+                }
+            }
+            return yMax;
+        }
         double GetZoomTransform(int Z, List<double> listLong, int len)
         {
             if (listLong == null || listLong.Count == 0)
@@ -71,6 +92,7 @@ namespace MMDance
             int pos = Z * (listLong.Count-1) / len;
             return listLong[pos];
         }
+        
         public void Calculate(List<Point> listCross, List<double> listLong, int pos, int len, double angle)
         {
             if (len <= 0)
@@ -126,7 +148,7 @@ namespace MMDance
 
                 double Zoom = GetZoomTransform((int)(Z - pos), listLong, len);
                 //ScaleTransform3D ScaleTrans = new ScaleTransform3D(new Vector3D(Zoom, Zoom, 0), new Point3D(0, 0, Z));
-
+                double RadLimit = GetRadiusLimit(Z);
                 if (listCross.First() != listCross.Last())
                 {//make closed loop
                     listCross.Add(listCross.First());
@@ -137,11 +159,24 @@ namespace MMDance
                     double x = listCross[i].X;
                     double y = listCross[i].Y;
 
-                    Vector3D vec = new Vector3D(x, y, 0);
-                    vec.Normalize();
-                    vec = vec * Zoom;
-                    vec = new Vector3D(x, y, Z) + vec;
+                    Vector3D vec = new Vector3D(x, y, Z);
+                    if (!MathHelper.IsZero(1 - Zoom))
+                    {
+                        Vector3D vecNorm = new Vector3D(x, y, Z);
+                        vecNorm.Normalize();
+                        Vector3D vecZoom = vecNorm * Zoom;
+                        vec += vecZoom;
+                    }
 
+                    Vector3D vecTest = new Vector3D(x, y, 0);
+                    if (vecTest.Length > RadLimit)
+                    {
+                        Vector3D vecNorm = new Vector3D(x, y, 0);
+                        vecNorm.Normalize();
+                        vec = vecNorm * RadLimit;
+                        vec.Z = Z;
+                    }
+     
                     Point3D newPoint = (Point3D)myRotateTransform.Transform(vec);
                     //newPoint = ScaleTrans.Transform(newPoint);
                    
