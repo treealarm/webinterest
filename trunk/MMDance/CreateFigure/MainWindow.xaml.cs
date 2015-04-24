@@ -288,16 +288,17 @@ namespace CreateFigure
 
                 pen = new Pen();
                 pen.Brush = Brushes.Black;
+                
                 for (double angle = 0; angle < Math.PI * 2; angle += fAngleDelta)
                 {
                     double y = R * Math.Sin(angle) + shift;
                     double x = R * Math.Cos(angle) + shift;
 
-                    drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)), pen, new Point(x, y), RThr, RThr);
+                    drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)), null, new Point(x, y), RThr, RThr);
                 }
 
 
-                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromRgb(255, 255, 255)), pen, new Rect(shift-1, shift-1, 2, 2));
+                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromRgb(0, 0, 0)), null, new Rect(shift-1, shift-1, 2, 2));
 
                 drawingContext.Close();
 
