@@ -75,8 +75,37 @@ namespace MMDance
             ProfileDataGrid.RowDetailsTemplate = null;
             ProfileDataGrid.RowDetailsTemplate = temp;
         }
+
+        List<Point> GetBezierApproximation(Point[] controlPoints, int outputSegmentCount)
+        {
+            List<Point> points = new List<Point>();
+            for (int i = 0; i <= outputSegmentCount; i++)
+            {
+                double t = (double)i / outputSegmentCount;
+                Point pt = GetBezierPoint(t, controlPoints, 0, controlPoints.Length);
+                points.Add(pt);
+            }
+            return points;
+        }
+
+        Point GetBezierPoint(double t, Point[] controlPoints, int index, int count)
+        {
+            if (count == 1)
+                return controlPoints[index];
+            var P0 = GetBezierPoint(t, controlPoints, index, count - 1);
+            var P1 = GetBezierPoint(t, controlPoints, index + 1, count - 1);
+            return new Point((1 - t) * P0.X + t * P1.X, (1 - t) * P0.Y + t * P1.Y);
+        }
+
         public void UpdateProfileResult()
         {
+            Point[] points = new[] { 
+            new Point(0, 30),
+            new Point(100, 70),
+            new Point(200, 30)
+        };
+            m_UserControlFor3D.m_listLimits = GetBezierApproximation(points, 200);
+
             int cur_pos = 0;
             for (int i = 0; i < m_ProfileData.Count; i++)
             {
