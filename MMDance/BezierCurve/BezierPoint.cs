@@ -10,28 +10,31 @@ namespace BezierCurve
 
     public class BezierPoint
     {
-        public BezierPoint(double x, double y)
+        public BezierPoint()
         {
-            X = x;
-            Y = y;
+
+        }
+        public BezierPoint(Point pt)
+        {
+            X = pt.X;
+            Y = pt.Y;
         }
         public double X { get; set; }
         public double Y { get; set; }
     }
     public class BezierSegment
     {
-        public IList<BezierPoint> Points { get; set; }
+        public List<BezierPoint> Points { get; set; }
+        public string Number { get; set; }
         public BezierSegment()
         {
             Points = new List<BezierPoint>();
-            Points.Add(new BezierPoint(10, 10));
-        }
-        public string Number { get; set; }
+        }        
     }
 
     public class BezierViewModel : DependencyObject
     {
-        public List<BezierSegment> Segments { get; set; }
+        public IList<BezierSegment> Segments { get; set; }
 
         public BezierViewModel()
         {

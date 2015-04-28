@@ -37,9 +37,7 @@
               ShowsPreview="true"
               Width="5"/>
             <DataGrid  AutoGenerateColumns="False" Grid.Column="2" Height="Auto" Name="dataGridPoints" Width="Auto"
-                       ItemsSource="{Binding Segments/Points}" IsSynchronizedWithCurrentItem="True" 
-                       CanUserAddRows ="True"
-                       >
+                       ItemsSource="{Binding Segments/Points}" IsSynchronizedWithCurrentItem="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="X" Binding="{Binding X}"/>
                     <DataGridTextColumn Header="Y" Binding="{Binding Y}"/>

@@ -28,7 +28,7 @@ namespace BezierCurve
             
             Segment = new BezierSegment();
             Segment.Number = "Test2";
-            Segment.Points.Add(new BezierPoint(100, 8));
+            
             m_Segments.Segments.Add(Segment);
             DataContext = m_Segments;
         }
