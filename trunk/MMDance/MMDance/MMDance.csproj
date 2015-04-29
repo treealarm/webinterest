@@ -59,11 +59,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ListSerializator.cs" />
+    <Compile Include="..\Common\ListSerializator.cs">
+      <Link>ListSerializator.cs</Link>
+    </Compile>
+    <Compile Include="BezierPoint.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="Struct3D.cs" />
+    <Compile Include="UserControlEditBezier.xaml.cs">
+      <DependentUpon>UserControlEditBezier.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControlFor3D.xaml.cs">
       <DependentUpon>UserControlFor3D.xaml</DependentUpon>
     </Compile>
@@ -90,6 +96,10 @@
     <Page Include="PictureUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControlEditBezier.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControlFor3D.xaml">
       <SubType>Designer</SubType>
