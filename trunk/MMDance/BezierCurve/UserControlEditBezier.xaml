@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Canvas Background="Gainsboro" Loaded="Grid_Loaded">
+        <Canvas Background="Gainsboro" Loaded="Grid_Loaded" Name="m_Canvas" PreviewMouseLeftButtonDown="m_Canvas_PreviewMouseLeftButtonDown">
         </Canvas>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" 
               VerticalAlignment="Center"
@@ -26,7 +26,7 @@
             </Grid.ColumnDefinitions>
                          
             <DataGrid  AutoGenerateColumns="False" Height="Auto" Name="dataGridSegments" Width="Auto"
-                       ItemsSource="{Binding Segments}" IsSynchronizedWithCurrentItem="True" SelectionChanged="dataGridSegments_SelectionChanged">
+                       ItemsSource="{Binding Segments}" IsSynchronizedWithCurrentItem="True" CellEditEnding="dataGridSegments_CellEditEnding">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Number" Binding="{Binding Number}"/>
                 </DataGrid.Columns>
@@ -37,12 +37,13 @@
               ShowsPreview="true"
               Width="5"/>
             <DataGrid  AutoGenerateColumns="False" Grid.Column="2" Height="Auto" Name="dataGridPoints" Width="Auto"
-                       ItemsSource="{Binding Segments/Points}" IsSynchronizedWithCurrentItem="True">
+                       ItemsSource="{Binding Segments/Points}" IsSynchronizedWithCurrentItem="True" CellEditEnding="dataGridPoints_CellEditEnding">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="X" Binding="{Binding X}"/>
                     <DataGridTextColumn Header="Y" Binding="{Binding Y}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
+        
     </Grid>
 </UserControl>
