@@ -44,6 +44,10 @@ namespace MMDance
     {
         public static List<double> DeserializeObject(string fileName)
         {
+            if (fileName == string.Empty)
+            {
+                return null;
+            }
             try
             {
                 using (var stream = System.IO.File.OpenRead(fileName))
@@ -54,7 +58,7 @@ namespace MMDance
             }
             catch (Exception ex)
             {
-                return new List<double>();
+                return null;
             }
         }
 
