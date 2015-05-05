@@ -332,7 +332,7 @@ namespace MMDance
         double GetAngleFromStep(int step)
         {
             double angle = step;
-            angle *= 1.8;
+            angle *= 0.225;
             return angle;
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
