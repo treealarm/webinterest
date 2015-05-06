@@ -38,24 +38,24 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public byte TimerMultiplierX {
+        public byte TimerMultiplierZ {
             get {
-                return ((byte)(this["TimerMultiplierX"]));
+                return ((byte)(this["TimerMultiplierZ"]));
             }
             set {
-                this["TimerMultiplierX"] = value;
+                this["TimerMultiplierZ"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public byte TimerMultiplierY {
+        public byte TimerMultiplierX {
             get {
-                return ((byte)(this["TimerMultiplierY"]));
+                return ((byte)(this["TimerMultiplierX"]));
             }
             set {
-                this["TimerMultiplierY"] = value;
+                this["TimerMultiplierX"] = value;
             }
         }
         
@@ -74,12 +74,12 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public ushort StepMultiplierX {
+        public ushort StepMultiplierZ {
             get {
-                return ((ushort)(this["StepMultiplierX"]));
+                return ((ushort)(this["StepMultiplierZ"]));
             }
             set {
-                this["StepMultiplierX"] = value;
+                this["StepMultiplierZ"] = value;
             }
         }
         
@@ -200,6 +200,42 @@ namespace MMDance.Properties {
             }
             set {
                 this["ProfileDataSource"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double StepXmm {
+            get {
+                return ((double)(this["StepXmm"]));
+            }
+            set {
+                this["StepXmm"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double StepYmm {
+            get {
+                return ((double)(this["StepYmm"]));
+            }
+            set {
+                this["StepYmm"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.225")]
+        public double StepBgrad {
+            get {
+                return ((double)(this["StepBgrad"]));
+            }
+            set {
+                this["StepBgrad"] = value;
             }
         }
     }

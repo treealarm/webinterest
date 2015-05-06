@@ -324,8 +324,17 @@ namespace MMDance
             Ray ray = new Ray(pt1, dir);
             return ray;
         }
-        public bool GetIntersection(double angle, double Z, out Point3D intersection)
+        
+        public enum IntersectionType : int
         {
+            E_NOTHING,
+            E_INTERSECTION,
+            E_OUT
+        };
+
+        public IntersectionType GetIntersection(double angle, double Z, out Point3D intersection)
+        {
+            IntersectionType ret = IntersectionType.E_OUT;
             intersection = new Point3D();
             AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angle);
             RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
@@ -369,6 +378,7 @@ namespace MMDance
                 {
                     continue;
                 }
+                ret = IntersectionType.E_NOTHING;
                 Point3DCollection points = geometry.Positions;
 
                 for (int j = 0; j < points.Count; j += 3)
@@ -400,10 +410,10 @@ namespace MMDance
             if (dist >= 0)
             {
                 intersection = ray_base.Origin + dist * ray_base.Direction;
-                return true;
+                return IntersectionType.E_INTERSECTION;
             }
 
-            return false;
+            return ret;
         }
         private void sliderA_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {

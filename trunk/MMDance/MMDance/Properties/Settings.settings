@@ -5,16 +5,16 @@
     <Setting Name="TimerRes" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="TimerMultiplierX" Type="System.Byte" Scope="User">
+    <Setting Name="TimerMultiplierZ" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="TimerMultiplierY" Type="System.Byte" Scope="User">
+    <Setting Name="TimerMultiplierX" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="TimerMultiplierB" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="StepMultiplierX" Type="System.UInt16" Scope="User">
+    <Setting Name="StepMultiplierZ" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="StepMultiplierY" Type="System.UInt16" Scope="User">
@@ -46,6 +46,15 @@
     </Setting>
     <Setting Name="ProfileDataSource" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="StepXmm" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="StepYmm" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="StepBgrad" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.225</Value>
     </Setting>
   </Settings>
 </SettingsFile>
