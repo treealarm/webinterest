@@ -41,16 +41,16 @@ namespace MMDance
             }
             MainWindow wnd = MainWindow.GetMainWnd();
 
+            byte TimerMultiplierZ = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierZ :
+                            Properties.Settings.Default.TimerMultiplierZ*5);
             byte TimerMultiplierX = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierX :
-                            Properties.Settings.Default.TimerMultiplierX*5);
-            byte TimerMultiplierY = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierY :
-                            Properties.Settings.Default.TimerMultiplierY * 5);
+                            Properties.Settings.Default.TimerMultiplierX * 5);
             wnd.SetTimerSettings(
                 Properties.Settings.Default.TimerRes, 
                 Properties.Settings.Default.TimerStrike,
                 new byte[]{
+                TimerMultiplierZ,
                 TimerMultiplierX,
-                TimerMultiplierY,
                 Properties.Settings.Default.TimerMultiplierB,
                 Properties.Settings.Default.TimerMultiplierW});
 
@@ -67,8 +67,8 @@ namespace MMDance
 
             SetControlSettings();
             
-            wnd.m_step_mult.m_uMult[MainWindow.X_POS] = Properties.Settings.Default.StepMultiplierX;
-            wnd.m_step_mult.m_uMult[MainWindow.Y_POS] = Properties.Settings.Default.StepMultiplierY;
+            wnd.m_step_mult.m_uMult[MainWindow.Z_POS] = Properties.Settings.Default.StepMultiplierZ;
+            wnd.m_step_mult.m_uMult[MainWindow.X_POS] = Properties.Settings.Default.StepMultiplierY;
             wnd.m_step_mult.m_uMult[MainWindow.B_POS] = Properties.Settings.Default.StepMultiplierB;
             wnd.m_step_mult.m_uMult[MainWindow.W_POS] = Properties.Settings.Default.StepMultiplierW;
 
@@ -85,29 +85,29 @@ namespace MMDance
         {
             MainWindow wnd = MainWindow.GetMainWnd();
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
-            var_do_steps.m_uSteps[MainWindow.X_POS] = x;
-            var_do_steps.m_uSteps[MainWindow.Y_POS] = y;
+            var_do_steps.m_uSteps[MainWindow.Z_POS] = x;
+            var_do_steps.m_uSteps[MainWindow.X_POS] = y;
             var_do_steps.m_uSteps[MainWindow.B_POS] = b;
             var_do_steps.m_uSteps[MainWindow.W_POS] = w;
             wnd.SetStepsToController(var_do_steps, update_pos);
         }
  
-        private void X_Plus_Click(object sender, RoutedEventArgs e)
+        private void Z_Plus_Click(object sender, RoutedEventArgs e)
         {
             PassSteps(Convert.ToInt32(XShift.Text));
         }
 
-        private void X_Minus_Click(object sender, RoutedEventArgs e)
+        private void Z_Minus_Click(object sender, RoutedEventArgs e)
         {
             PassSteps(-Convert.ToInt32(XShift.Text));
         }
 
-        private void Y_Plus_Click(object sender, RoutedEventArgs e)
+        private void X_Plus_Click(object sender, RoutedEventArgs e)
         {
             PassSteps(0, Convert.ToInt32(YShift.Text));
         }
 
-        private void Y_Minus_Click(object sender, RoutedEventArgs e)
+        private void X_Minus_Click(object sender, RoutedEventArgs e)
         {
             PassSteps(0, -Convert.ToInt32(YShift.Text));
         }
@@ -142,10 +142,10 @@ namespace MMDance
             SetControlSettings();
         }
 
-        private void GoToXY_Click(object sender, RoutedEventArgs e)
+        private void GoToZY_Click(object sender, RoutedEventArgs e)
         {
             MainWindow wnd = MainWindow.GetMainWnd();
-            wnd.GoToXY(Convert.ToInt32(GoToXEdit.Text), Convert.ToInt32(GoToYEdit.Text));
+            wnd.GoToZX(Convert.ToInt32(GoToXEdit.Text), Convert.ToInt32(GoToYEdit.Text));
         }
 
         private void GoToBW_Click(object sender, RoutedEventArgs e)

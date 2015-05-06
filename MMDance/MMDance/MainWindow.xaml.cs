@@ -100,10 +100,10 @@ namespace MMDance
             }
         }
 
-        internal class xyz_coord
+        internal class stanok_coord
         {
-            public int x = 0;//между бабок
-            public int y = 0;//ход шпинделя
+            public int z = 0;//между бабок
+            public int x = 0;//ход шпинделя
             public int b = 0;//угол
             public int w = 0;
         }
@@ -150,11 +150,11 @@ namespace MMDance
         }
         
         public do_steps_multiplier m_step_mult = new do_steps_multiplier();
-        xyz_coord m_cur_pos = new xyz_coord();
-        xyz_coord m_cur_task = new xyz_coord();//Последняя отправленная на обработку координата
+        stanok_coord m_cur_pos = new stanok_coord();
+        stanok_coord m_cur_task = new stanok_coord();//Последняя отправленная на обработку координата
                                     //steps max x8 x16
-        public const int X_POS = 2; //2225 //1150 - x16
-        public const int Y_POS = 1; //1900 //950  -x16
+        public const int Z_POS = 2; //2225 //1150 - x16
+        public const int X_POS = 1; //1900 //950  -x16
         public const int B_POS = 3; //12000 
         public const int W_POS = 0; //12000 
         //~0.38 мм на шаг x16 0.76 mm
@@ -219,7 +219,7 @@ namespace MMDance
             cm.m_signal_on_zero = 0;
             for (int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
             {
-                cm.m_is_cruiser[motor] = Convert.ToByte(motor == X_POS || motor == Y_POS);
+                cm.m_is_cruiser[motor] = Convert.ToByte(motor == Z_POS || motor == X_POS);
             }
             byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
             OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
@@ -234,8 +234,8 @@ namespace MMDance
         public void SetStepsToController(do_steps steps, bool update_pos = true)
         {
 	        if(
+		        steps.m_uSteps[Z_POS] == 0 &&
 		        steps.m_uSteps[X_POS] == 0 &&
-		        steps.m_uSteps[Y_POS] == 0 &&
                 steps.m_uSteps[B_POS] == 0 &&
 		        steps.m_uSteps[W_POS] == 0)
 	        {
@@ -243,8 +243,8 @@ namespace MMDance
 	        }
             if (update_pos)
             {
-                m_cur_pos.y += steps.m_uSteps[Y_POS];
                 m_cur_pos.x += steps.m_uSteps[X_POS];
+                m_cur_pos.z += steps.m_uSteps[Z_POS];
                 m_cur_pos.b += steps.m_uSteps[B_POS];
                 m_cur_pos.w += steps.m_uSteps[W_POS];
             }
@@ -261,14 +261,14 @@ namespace MMDance
         }
 
         int m_nTimerCounter = 0;
-        public void GoToXY(int x, int y, int b = -1, int w = -1)
+        public void GoToZX(int z, int y, int b = -1, int w = -1)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
             
-            var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
-            var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
+            var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
+            var_do_steps.m_uSteps[X_POS] = y - m_cur_pos.x;
 
-            if (Math.Abs(var_do_steps.m_uSteps[X_POS]) > 10 || Math.Abs(var_do_steps.m_uSteps[Y_POS]) > 10)
+            if (Math.Abs(var_do_steps.m_uSteps[Z_POS]) > 10 || Math.Abs(var_do_steps.m_uSteps[X_POS]) > 10)
             {
                 ControlUserControl.SetTimerSetting(1);
                 m_nTimerCounter = 0;
@@ -313,32 +313,48 @@ namespace MMDance
             dispatcherTimer.Start(); 
         }
 
-        private bool DoEngraving(ref xyz_coord cur_coords)
+        private bool DoEngraving(ref stanok_coord cur_coords)
         {
             Point3D intersection;
             double angle = GetAngleFromStep(cur_coords.b);
-            bool bIntersected = PictureUserControl.m_UserControlFor3D.GetIntersection(angle, cur_coords.x, out intersection);
+            double Z = GetZFromStep(cur_coords.z);
+            UserControlFor3D.IntersectionType ret = PictureUserControl.m_UserControlFor3D.GetIntersection(angle, Z, out intersection);
 
             Vector3D vec = (Vector3D)intersection;
-            if(bIntersected)
+            if (UserControlFor3D.IntersectionType.E_INTERSECTION == ret)
             {
                 PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
-                cur_coords.y = (int)vec.Length;
+                cur_coords.x = GetStepFromY(vec.Length);
+            }
+            else if (UserControlFor3D.IntersectionType.E_OUT == ret)
+            {
+                return false;
             }
             else
             {
-                cur_coords.y = (int)100;
+                cur_coords.x = GetStepFromY(UserControlFor3D.max_x);
             }
             
             return true;
         }
 
-        xyz_coord m_CurTask = new xyz_coord();
+        stanok_coord m_CurTask = new stanok_coord();
         double GetAngleFromStep(int step)
         {
             double angle = step;
-            angle *= 0.225;
+            angle *= Properties.Settings.Default.StepBgrad;
             return angle;
+        }
+        double GetZFromStep(int step)
+        {
+            double angle = step;
+            angle *= Properties.Settings.Default.StepXmm;
+            return angle;
+        }
+        int GetStepFromY(double Y)
+        {
+            double ret = Y/Properties.Settings.Default.StepYmm;
+            return (int)ret;
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
@@ -350,14 +366,14 @@ namespace MMDance
             {
                 if (DoEngraving(ref m_CurTask))
                 {
-                    GoToXY(m_CurTask.x, m_CurTask.y, m_CurTask.b);
+                    GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
                     m_CurTask.b += 1;
                     double angle = GetAngleFromStep(m_CurTask.b);
                     if (angle >= 360)
                     {
                         m_CurTask.b = 0;
                         InitCurBPos();
-                        m_CurTask.x++;
+                        m_CurTask.z++;
                     }
                     m_counter++;
                     ControlUserControl.textBlockCounter.Text = m_counter.ToString();
@@ -366,9 +382,9 @@ namespace MMDance
                 {
                     SetInk(true);
                     Thread.Sleep(1000);
-                    GoToXY(0, 0);
+                    GoToZX(0, 0);
                     //GoToBW(0, 0);
-                    m_CurTask = new xyz_coord();
+                    m_CurTask = new stanok_coord();
                     ControlUserControl.checkBoxPauseSoft.IsChecked = true;
                     dispatcherTimer.Stop();
                     //ControlUserControl.checkBoxOutpusEnergy.IsChecked = false;
