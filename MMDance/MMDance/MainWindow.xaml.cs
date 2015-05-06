@@ -317,14 +317,19 @@ namespace MMDance
         {
             Point3D intersection;
             double angle = GetAngleFromStep(cur_coords.b);
-            if (!PictureUserControl.m_UserControlFor3D.GetIntersection(angle, cur_coords.x, out intersection))
-            {
-                return false;
-            }
+            bool bIntersected = PictureUserControl.m_UserControlFor3D.GetIntersection(angle, cur_coords.x, out intersection);
 
             Vector3D vec = (Vector3D)intersection;
-            PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
-            cur_coords.y = (int)vec.Length;
+            if(bIntersected)
+            {
+                PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
+                cur_coords.y = (int)vec.Length;
+            }
+            else
+            {
+                cur_coords.y = (int)100;
+            }
+            
             return true;
         }
 

@@ -289,30 +289,72 @@ namespace MMDance
             Point3DCollection millPositionCollection = new Point3DCollection();
             AxisAngleRotation3D axB3d = new AxisAngleRotation3D(new Vector3D(0, 0, 1), CurAngle);
             RotateTransform3D myRotateTransform = new RotateTransform3D(axB3d);
-            Point3D p2 = myRotateTransform.Transform(new Point3D(-100, -10, intersection.Z));
-            Point3D p3 = myRotateTransform.Transform(new Point3D(-100, 10, intersection.Z));
-            millPositionCollection.Add(intersection);
-            millPositionCollection.Add(p2);
-            millPositionCollection.Add(p3);
+            const double w = 3;
+            {
+                Point3D p2 = myRotateTransform.Transform(new Point3D(-max_x, -w, intersection.Z));
+                Point3D p3 = myRotateTransform.Transform(new Point3D(-max_x, w, intersection.Z));
+                millPositionCollection.Add(intersection);
+                millPositionCollection.Add(p2);
+                millPositionCollection.Add(p3);
+            }
+
+            {
+                Point3D p2 = myRotateTransform.Transform(new Point3D(-max_x, 0, intersection.Z - w));
+                Point3D p3 = myRotateTransform.Transform(new Point3D(-max_x, 0, intersection.Z + w));
+                millPositionCollection.Add(intersection);
+                millPositionCollection.Add(p2);
+                millPositionCollection.Add(p3);
+            }
+            
 
             meshCube.Positions = millPositionCollection;
         }
 
+        public const double max_x = 100;
 
-        public bool GetIntersection(double angle, double Z, out Point3D intersection)
+        public Ray GetRay(double angle, double Z, Vector3D offset)
         {
             AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angle);
             RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
+
+            Point3D pt1 = myRotateTransform.Transform(new Point3D(-max_x, 0, Z) + offset);
+            Point3D pt2 = myRotateTransform.Transform(new Point3D(0, 0, Z) + offset);
+            Vector3D dir = pt2 - pt1;
+
+            Ray ray = new Ray(pt1, dir);
+            return ray;
+        }
+        public bool GetIntersection(double angle, double Z, out Point3D intersection)
+        {
+            intersection = new Point3D();
+            AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angle);
+            RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
+
             
-            Point3D newPoint = myRotateTransform.Transform(new Point3D(-100, -1.5, Z));
-            Ray ray = new Ray(newPoint, new Vector3D(-newPoint.X, -newPoint.Y, -newPoint.Z));
+            Ray[] rays = new Ray[4];
+
+            Vector3D offset = new Vector3D(0, -1.5, 0);
+            rays[0] = GetRay(angle, Z, offset);
+
+            offset = new Vector3D(0, 1.5, 0);
+            rays[1] = GetRay(angle, Z, offset);
+
+            offset = new Vector3D(0, 0, -1.5);
+            rays[2] = GetRay(angle, Z, offset);
+
+            offset = new Vector3D(0, 0, 1.5);
+            rays[3] = GetRay(angle, Z, offset);
+
+            offset = new Vector3D(0, 0, 0);
+            Ray ray_base = GetRay(angle, Z, offset);
             
-            newPoint = myRotateTransform.Transform(new Point3D(-100, 1.5, Z));
-            Ray ray1 = new Ray(newPoint, new Vector3D(-newPoint.X, -newPoint.Y, -newPoint.Z));
+
+            double dist = -1;
 
             for (int i = 0; i < m_Model3DGroup.Children.Count; i++)
             {
                 GeometryModel3D model = m_Model3DGroup.Children[i] as GeometryModel3D;
+
                 if (model == null || model == meshCubeModel)
                 {
                     continue;
@@ -322,29 +364,45 @@ namespace MMDance
                 {
                     continue;
                 }
+
+                if (!model.Bounds.Contains(new Point3D(0, 0, Z)))
+                {
+                    continue;
+                }
                 Point3DCollection points = geometry.Positions;
-                
+
                 for (int j = 0; j < points.Count; j += 3)
                 {
-                    Plane plane = new Plane(points[j], points[j + 1], points[j + 2]);
-                    double t = IntersectsWithTriangle(ray, points[j], points[j + 1], points[j + 2]);
-                    double t1 = IntersectsWithTriangle(ray1, points[j], points[j + 1], points[j + 2]);
-                    if (t > 0 || t1 > 0)
+                    if (points[j].Z > (Z+3) && points[j + 1].Z > (Z+3) && points[j + 2].Z > (Z+3))
                     {
-                        if (t > t1)
-                        {
-                            intersection = ray.Origin + t * ray.Direction;
-                        }
-                        else
-                        {
-                            intersection = ray1.Origin + t1 * ray1.Direction;
-                        }
-                        return true;
+                        break;
                     }
-
+                    if (points[j].Z < (Z - 3) && points[j + 1].Z < (Z - 3) && points[j + 2].Z < (Z - 3))
+                    {
+                        continue;
+                    }
+                    
+                    for (int k = 0; k < rays.Length; k++)
+                    {
+                        double t = IntersectsWithTriangle(rays[k], points[j], points[j + 1], points[j + 2]);
+                        if (t < 0)
+                        {
+                            continue;
+                        }
+                        if (t > dist && t < max_x)
+                        {
+                            dist = t;
+                        }
+                    }
                 }
             }
-            intersection = new Point3D();
+
+            if (dist >= 0)
+            {
+                intersection = ray_base.Origin + dist * ray_base.Direction;
+                return true;
+            }
+
             return false;
         }
         private void sliderA_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
