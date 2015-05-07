@@ -238,5 +238,29 @@ namespace MMDance.Properties {
                 this["StepBgrad"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BezierCurve {
+            get {
+                return ((string)(this["BezierCurve"]));
+            }
+            set {
+                this["BezierCurve"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BezierCurveLimit {
+            get {
+                return ((string)(this["BezierCurveLimit"]));
+            }
+            set {
+                this["BezierCurveLimit"] = value;
+            }
+        }
     }
 }
