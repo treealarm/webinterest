@@ -47,7 +47,6 @@ namespace MMDance
         }
 
 
-
         Thread WorkingThread = null;
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 
@@ -409,6 +408,10 @@ namespace MMDance
         static public MainWindow GetMainWnd()
         {
             return (MainWindow)System.Windows.Application.Current.Windows[0];
+        }
+        public List<Point> GetLongProfileCurvePoints()
+        {
+            return m_BezierProfileUserControl.GetCurvePoints();
         }
     }
 }
