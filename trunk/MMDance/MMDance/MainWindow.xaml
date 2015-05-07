@@ -5,7 +5,9 @@
         xmlns:my="clr-namespace:MMDance" 
         xmlns:bezier="clr-namespace:BezierCurve" 
         >
-
+    <Window.Resources>
+        <bezier:BezierViewModelConverter x:Key="BezierViewModelConverter" />
+    </Window.Resources>
     <Grid>
         <TabControl  x:Uid="tabControl1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="tabControl1">
             <TabItem Header="Управление" Name="tabItemControl">
@@ -18,6 +20,7 @@
                 <bezier:UserControlEditBezier x:Name="m_BezierProfileUserControl" Width="Auto"/>
             </TabItem>
             <TabItem Header="Ограничение профиля" Name="tabItemProfileLimit">
+                <bezier:UserControlEditBezier x:Name="m_BezierProfileLimitUserControl" Width="Auto"/>
             </TabItem>
         </TabControl>
     </Grid>

@@ -37,7 +37,10 @@ namespace MMDance
             {
                 m_step_mult.m_uMult[motor] = 1;
             }
-            
+
+            m_BezierProfileUserControl.SetCurve(Properties.Settings.Default.BezierCurve);
+            m_BezierProfileLimitUserControl.SetCurve(Properties.Settings.Default.BezierCurveLimit);
+
             WorkingThread = new Thread(new ThreadStart(ProcessCommand));
             WorkingThread.SetApartmentState(ApartmentState.STA);
             WorkingThread.Start();
@@ -393,7 +396,9 @@ namespace MMDance
         } 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //Properties.Settings.Default.TimerRes = "50";
+            Properties.Settings.Default.BezierCurve = m_BezierProfileUserControl.GetCurve();
+            Properties.Settings.Default.BezierCurveLimit = m_BezierProfileLimitUserControl.GetCurve();
+
             Properties.Settings.Default.Save();
             StopThread = true;
             if (WorkingThread != null)

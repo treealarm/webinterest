@@ -56,5 +56,11 @@
     <Setting Name="StepBgrad" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.225</Value>
     </Setting>
+    <Setting Name="BezierCurve" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BezierCurveLimit" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

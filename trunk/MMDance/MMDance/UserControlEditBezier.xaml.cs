@@ -22,32 +22,22 @@ namespace BezierCurve
         public UserControlEditBezier()
         {
             InitializeComponent();
-            BezierSegment Segment = new BezierSegment();
-            DataContext = m_Segments;
         }
 
+        public void SetCurve(string sCurve)
+        {
+            m_Segments = BezierViewModelSerializer.DeserializeObject(sCurve);
+            DataContext = m_Segments;
+        }
+        public string GetCurve()
+        {
+            return BezierViewModelSerializer.SerializeObject(m_Segments);
+        }
         public BezierViewModel m_Segments = new BezierViewModel();
+
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-                Point[] points = new[] { 
-                new Point(0, 50),
-                new Point(100, 100),
-                new Point(200, 100),
-                new Point(300, 100),
-                new Point(400, 50)
-            };
-                List<Point> b = GetBezierApproximation(points.ToList(), 256);
-                for (int i = 1; i < b.Count; i++)
-                {
-                    Line l = new Line();
-                    l.X1 = b[i - 1].X;
-                    l.Y1 = b[i - 1].Y;
-                    l.X2 = b[i].X;
-                    l.Y2 = b[i].Y;
-                    l.Stroke = new SolidColorBrush(Color.FromRgb(0,200,0));
-                    ((Canvas)sender).Children.Add(l);
-                }
         }
 
         List<Point> GetBezierApproximation(List<Point> controlPoints, int outputSegmentCount)
@@ -101,14 +91,14 @@ namespace BezierCurve
         }
         private void dataGridSegments_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            //RedrawLines();
+            RedrawLines();
             //return;
             //int newVal = Convert.ToInt32(((TextBox)e.EditingElement).Text);
         }
 
         private void dataGridPoints_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            //RedrawLines();
+            RedrawLines();
         }
 
         private void m_Canvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
