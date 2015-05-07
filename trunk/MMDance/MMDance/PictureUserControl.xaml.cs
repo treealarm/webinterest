@@ -99,12 +99,9 @@ namespace MMDance
 
         public void UpdateProfileResult()
         {
-            Point[] points = new[] { 
-            new Point(0, 30),
-            new Point(100, 70),
-            new Point(200, 30)
-        };
-            m_UserControlFor3D.m_listLimits = GetBezierApproximation(points, 200);
+
+            MainWindow wnd = MainWindow.GetMainWnd();
+            m_UserControlFor3D.m_listLimits = wnd.GetLongProfileCurvePoints();
 
             int cur_pos = 0;
             for (int i = 0; i < m_ProfileData.Count; i++)
@@ -115,8 +112,8 @@ namespace MMDance
                     continue;
                 }
                 List<Point> list = ListPoint.DeserializeObject(element.FileName);
-                List<double> listLong = ListDouble.DeserializeObject(element.FileNameCurve);
-                m_UserControlFor3D.Calculate(list, listLong, cur_pos, element.Length, element.Angle);
+                
+                m_UserControlFor3D.Calculate(list, cur_pos, element.Length, element.Angle);
                 cur_pos += element.Length;
             }
         }
@@ -134,9 +131,8 @@ namespace MMDance
             {
                 return;
             }
-            List<double> listLong = ListDouble.DeserializeObject(element.FileNameCurve);
-            
-            m_UserControlFor3D.Calculate(list, listLong, 0, element.Length, element.Angle);
+            m_UserControlFor3D.m_listLimits = null;
+            m_UserControlFor3D.Calculate(list, 0, element.Length, element.Angle);
         }
 
         private void buttonRefresh_Click(object sender, RoutedEventArgs e)

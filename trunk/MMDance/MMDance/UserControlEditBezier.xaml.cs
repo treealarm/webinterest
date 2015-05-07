@@ -65,10 +65,39 @@ namespace BezierCurve
             return new Point((1 - t) * P0.X + t * P1.X, (1 - t) * P0.Y + t * P1.Y);
         }
 
+        public List<Point> GetCurvePoints()
+        {
+            List<Point> ret = new List<Point>();
+            List<BezierSegment> SortedList = m_Segments.Segments.OrderBy(o => o.Number).ToList();
+            for (int k = 0; k < SortedList.Count; k++)
+            {
+                BezierSegment seg = SortedList[k];
+                List<Point> b = seg.GetPoints();
+                ret.AddRange(b);
+            }
+            return ret;
+        }
         void RedrawLines()
         {
             List<BezierSegment> SortedList = m_Segments.Segments.OrderBy(o => o.Number).ToList();
             m_Canvas.Children.Clear();
+
+            for (int k = 0; k < SortedList.Count; k++)
+            {
+                BezierSegment seg = SortedList[k];
+                List<Point> b = seg.GetPoints();
+                for (int i = 1; i < b.Count; i++)
+                {
+                    Line l = new Line();
+                    l.X1 = b[i - 1].X;
+                    l.Y1 = b[i - 1].Y;
+                    l.X2 = b[i].X;
+                    l.Y2 = b[i].Y;
+                    l.Stroke = new SolidColorBrush(Color.FromArgb(100,200, 0, 0));
+                    m_Canvas.Children.Add(l);
+                }
+            }
+
             for (int k = 0; k < SortedList.Count; k++)
             {
                 BezierSegment seg = SortedList[k];
@@ -88,6 +117,8 @@ namespace BezierCurve
                     m_Canvas.Children.Add(l);
                 }
             }
+
+
         }
         private void dataGridSegments_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {

@@ -67,33 +67,28 @@ namespace MMDance
         double GetRadiusLimit(double Z)
         {
             double yMax = 10000;
-            for (int i = 0; i < m_listLimits.Count; i++)
+            if (m_listLimits != null)
             {
-                Point pt2 = m_listLimits[i];
-                if (pt2.X >= Z)
+                for (int i = 0; i < m_listLimits.Count; i++)
                 {
-                    if (i == 0)
+                    Point pt2 = m_listLimits[i];
+                    if (pt2.X >= Z)
                     {
-                        return pt2.Y;
+                        if (i == 0)
+                        {
+                            return pt2.Y;
+                        }
+                        Point pt1 = m_listLimits[i - 1];
+                        yMax = (-(pt1.X * pt2.Y - pt2.X * pt1.Y) - (pt1.Y - pt2.Y) * Z) / (pt2.X - pt1.X);
+                        break;
                     }
-                    Point pt1 = m_listLimits[i - 1];
-                    yMax=(-(pt1.X*pt2.Y-pt2.X*pt1.Y)-(pt1.Y-pt2.Y)*Z)/(pt2.X-pt1.X);
-                    break;
                 }
             }
+            
             return yMax;
         }
-        double GetZoomTransform(int Z, List<double> listLong, int len)
-        {
-            if (listLong == null || listLong.Count == 0)
-            {
-                return 1;
-            }
-            int pos = Z * (listLong.Count-1) / len;
-            return listLong[pos];
-        }
-        
-        public void Calculate(List<Point> listCross, List<double> listLong, int pos, int len, double angle)
+         
+        public void Calculate(List<Point> listCross, int pos, int len, double angle)
         {
             if (len <= 0)
             {
@@ -133,7 +128,7 @@ namespace MMDance
             List<Point3DCollection>  Discs = new List<Point3DCollection>();
             double cur_angle = 0;
             double ZIncrement = 1;
-            if (MathHelper.IsZero(angle) && (listLong == null || listLong.Count == 0))
+            if (MathHelper.IsZero(angle))
             {
                 ZIncrement = len;
             }
@@ -146,7 +141,6 @@ namespace MMDance
                 AxisAngleRotation3D myRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), cur_angle);
                 RotateTransform3D myRotateTransform = new RotateTransform3D(myRotation);
 
-                double Zoom = GetZoomTransform((int)(Z - pos), listLong, len);
                 //ScaleTransform3D ScaleTrans = new ScaleTransform3D(new Vector3D(Zoom, Zoom, 0), new Point3D(0, 0, Z));
                 double RadLimit = GetRadiusLimit(Z);
                 if (listCross.First() != listCross.Last())
@@ -160,13 +154,6 @@ namespace MMDance
                     double y = listCross[i].Y;
 
                     Vector3D vec = new Vector3D(x, y, Z);
-                    if (!MathHelper.IsZero(1 - Zoom))
-                    {
-                        Vector3D vecNorm = new Vector3D(x, y, Z);
-                        vecNorm.Normalize();
-                        Vector3D vecZoom = vecNorm * Zoom;
-                        vec += vecZoom;
-                    }
 
                     Vector3D vecTest = new Vector3D(x, y, 0);
                     if (vecTest.Length > RadLimit)
