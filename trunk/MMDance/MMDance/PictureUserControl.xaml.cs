@@ -101,7 +101,8 @@ namespace MMDance
         {
 
             MainWindow wnd = MainWindow.GetMainWnd();
-            m_UserControlFor3D.m_listLimits = wnd.GetLongProfileCurvePoints();
+            m_UserControlFor3D.m_listLimits = wnd.GetLimitProfileCurvePoints();
+            m_UserControlFor3D.m_listCurve = wnd.GetLongProfileCurvePoints();
 
             int cur_pos = 0;
             for (int i = 0; i < m_ProfileData.Count; i++)
