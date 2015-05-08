@@ -413,5 +413,9 @@ namespace MMDance
         {
             return m_BezierProfileUserControl.GetCurvePoints();
         }
+        public List<Point> GetLimitProfileCurvePoints()
+        {
+            return m_BezierProfileLimitUserControl.GetCurvePoints();
+        }
     }
 }

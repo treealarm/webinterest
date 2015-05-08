@@ -72,7 +72,11 @@ namespace BezierCurve
             for (int k = 0; k < SortedList.Count; k++)
             {
                 BezierSegment seg = SortedList[k];
-                List<Point> b = seg.GetPoints();
+                List<Point> b = GetBezierApproximation(seg.GetPoints(), 256);
+                if (b == null)
+                {
+                    continue;
+                }
                 ret.AddRange(b);
             }
             return ret;
