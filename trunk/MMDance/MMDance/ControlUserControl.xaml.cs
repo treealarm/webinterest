@@ -27,24 +27,17 @@ namespace MMDance
 
         private void buttonStartWork_Click(object sender, RoutedEventArgs e)
         {
-            m_nFastMode = -1;
             MainWindow wnd = MainWindow.GetMainWnd();
             wnd.Start();
         }
 
-        int m_nFastMode = -1;
-        public void SetTimerSetting(int nFastMode = 1)
+        
+        public void SetTimerSetting()
         {
-            if(m_nFastMode == nFastMode)
-            {
-                return;
-            }
             MainWindow wnd = MainWindow.GetMainWnd();
 
-            byte TimerMultiplierZ = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierZ :
-                            Properties.Settings.Default.TimerMultiplierZ*5);
-            byte TimerMultiplierX = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierX :
-                            Properties.Settings.Default.TimerMultiplierX * 5);
+            byte TimerMultiplierZ = Convert.ToByte(Properties.Settings.Default.TimerMultiplierZ);
+            byte TimerMultiplierX = Convert.ToByte(Properties.Settings.Default.TimerMultiplierX);
             wnd.SetTimerSettings(
                 Properties.Settings.Default.TimerRes, 
                 Properties.Settings.Default.TimerStrike,
@@ -57,7 +50,6 @@ namespace MMDance
         }
         private void buttonOpenDevice_Click(object sender, RoutedEventArgs e)
         {
-            m_nFastMode = -1;
             MainWindow wnd = MainWindow.GetMainWnd();
             if (!wnd.m_ControlWrapper.Connect())
             {

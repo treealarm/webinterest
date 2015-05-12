@@ -206,12 +206,12 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public double StepXmm {
+        public double StepZmm {
             get {
-                return ((double)(this["StepXmm"]));
+                return ((double)(this["StepZmm"]));
             }
             set {
-                this["StepXmm"] = value;
+                this["StepZmm"] = value;
             }
         }
         
@@ -260,6 +260,18 @@ namespace MMDance.Properties {
             }
             set {
                 this["BezierCurveLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int YStart {
+            get {
+                return ((int)(this["YStart"]));
+            }
+            set {
+                this["YStart"] = value;
             }
         }
     }

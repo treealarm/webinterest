@@ -46,26 +46,9 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Curve">
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBox MinWidth="100" Text="{Binding FileNameCurve, Converter={StaticResource PathValueConverter}}" ></TextBox>
-                                <Button Name="Click" Click="Click_FileNameCurve">...</Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding FileNameCurve, Converter={StaticResource PathValueConverter}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
                 
                 <DataGridTextColumn Header="Length" Binding="{Binding Length}"/>
                 <DataGridTextColumn Header="Angle"  Binding="{Binding Angle}"/>
-                <DataGridTextColumn Header="InitialScale" Binding="{Binding InitialScale}"/>
             </DataGrid.Columns>
 
             <DataGrid.RowDetailsTemplate>

@@ -57,18 +57,7 @@ namespace MMDance
             }
         }
 
-        private void Click_FileNameCurve(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog op = new OpenFileDialog();
-            op.Filter = "xml|*.xml;";
-            if (op.ShowDialog() == true)
-            {
-                ProfileElement element = ((FrameworkElement)sender).DataContext as ProfileElement;
-                element.FileNameCurve = op.FileName;
-                ProfileDataGrid.CommitEdit();
-            }
-        }
-
+        
         private void ProfileDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             DataTemplate temp = ProfileDataGrid.RowDetailsTemplate;

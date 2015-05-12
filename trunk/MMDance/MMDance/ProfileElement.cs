@@ -18,8 +18,6 @@ namespace MMDance
         public string FileName { get; set; }
         public int Length { get; set; }
         public double Angle { get; set; }
-        public string FileNameCurve { get; set; }
-        public double InitialScale { get; set; }
 
         public static BitmapImage GetImage(string fileName)
         {
