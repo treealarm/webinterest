@@ -47,7 +47,7 @@
     <Setting Name="ProfileDataSource" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="StepXmm" Type="System.Double" Scope="User">
+    <Setting Name="StepZmm" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="StepYmm" Type="System.Double" Scope="User">
@@ -61,6 +61,9 @@
     </Setting>
     <Setting Name="BezierCurveLimit" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="YStart" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
     </Setting>
   </Settings>
 </SettingsFile>

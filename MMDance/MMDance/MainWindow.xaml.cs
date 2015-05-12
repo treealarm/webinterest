@@ -262,26 +262,12 @@ namespace MMDance
 	        AddCommand(OutputPacketBuffer);
         }
 
-        int m_nTimerCounter = 0;
-        public void GoToZX(int z, int y, int b = -1, int w = -1)
+        public void GoToZX(int z, int x, int b = -1, int w = -1)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
             
             var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
-            var_do_steps.m_uSteps[X_POS] = y - m_cur_pos.x;
-
-            if (Math.Abs(var_do_steps.m_uSteps[Z_POS]) > 10 || Math.Abs(var_do_steps.m_uSteps[X_POS]) > 10)
-            {
-                ControlUserControl.SetTimerSetting(1);
-                m_nTimerCounter = 0;
-            }
-            m_nTimerCounter++;
-            if (m_nTimerCounter > 2)
-            {
-                ControlUserControl.SetTimerSetting(0);
-                m_nTimerCounter = 0;
-            }
-            
+            var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
             
             if (b >= 0)
             {
@@ -310,9 +296,17 @@ namespace MMDance
             m_counter = 0;
 
             PictureUserControl.UpdateProfileResult();
+
+            InitStartYPos();
+
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
             dispatcherTimer.Start(); 
+        }
+
+        void InitStartYPos()
+        {
+            m_cur_pos.x = GetStepFromY(Properties.Settings.Default.YStart);
         }
 
         private bool DoEngraving(ref stanok_coord cur_coords)
@@ -350,7 +344,7 @@ namespace MMDance
         double GetZFromStep(int step)
         {
             double angle = step;
-            angle *= Properties.Settings.Default.StepXmm;
+            angle *= Properties.Settings.Default.StepZmm;
             return angle;
         }
         int GetStepFromY(double Y)
