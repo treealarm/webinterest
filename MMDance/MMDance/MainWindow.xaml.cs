@@ -360,8 +360,14 @@ namespace MMDance
             }
             //if (GetQueueLen() < 10)
             {
-                if (DoEngraving(ref m_CurTask))
+                bool ret = true;
+                for (int i = 0; i < 100; i++)
                 {
+                    ret = DoEngraving(ref m_CurTask);
+                    if (!ret)
+                    {
+                        break;
+                    }
                     GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
                     m_CurTask.b += 1;
                     double angle = GetAngleFromStep(m_CurTask.b);
@@ -372,9 +378,11 @@ namespace MMDance
                         m_CurTask.z++;
                     }
                     m_counter++;
-                    ControlUserControl.textBlockCounter.Text = m_counter.ToString();
                 }
-                else
+                
+                ControlUserControl.textBlockCounter.Text = m_counter.ToString();
+                
+                if(!ret)
                 {
                     SetInk(true);
                     Thread.Sleep(1000);
