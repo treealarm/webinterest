@@ -63,6 +63,7 @@
       <Link>ListSerializator.cs</Link>
     </Compile>
     <Compile Include="BezierPoint.cs" />
+    <Compile Include="CRCHelper.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Ray.cs" />
