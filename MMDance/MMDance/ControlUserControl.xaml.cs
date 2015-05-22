@@ -94,12 +94,12 @@ namespace MMDance
             PassSteps(-Convert.ToInt32(XShift.Text));
         }
 
-        private void X_Plus_Click(object sender, RoutedEventArgs e)
+        private void Y_Plus_Click(object sender, RoutedEventArgs e)
         {
             PassSteps(0, Convert.ToInt32(YShift.Text));
         }
 
-        private void X_Minus_Click(object sender, RoutedEventArgs e)
+        private void Y_Minus_Click(object sender, RoutedEventArgs e)
         {
             PassSteps(0, -Convert.ToInt32(YShift.Text));
         }

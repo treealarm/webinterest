@@ -18,6 +18,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Media3D;
+using System.Diagnostics;
 
 
 namespace MMDance
@@ -93,7 +94,10 @@ namespace MMDance
                         else
                         {
                             Byte[] buf = m_out_list.Dequeue();
-                            m_ControlWrapper.WriteCommandToController(buf);
+                            if (!m_ControlWrapper.WriteCommandToController(buf))
+                            {
+                                MessageBox.Show("Unable To write");
+                            }
                         }
                     }
                 }
@@ -277,6 +281,13 @@ namespace MMDance
             {
                 var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
             }
+            string s;
+            s = String.Format("Z:{0},X:{1},B:{2}",
+                var_do_steps.m_uSteps[Z_POS],
+                var_do_steps.m_uSteps[X_POS],
+                var_do_steps.m_uSteps[B_POS]);
+            Debug.WriteLine(s);
+
             SetStepsToController(var_do_steps);
         }
 
@@ -352,16 +363,21 @@ namespace MMDance
             double ret = Y/Properties.Settings.Default.StepYmm;
             return (int)ret;
         }
+        int GetStepFromZ(double Z)
+        {
+            double ret = Z / Properties.Settings.Default.StepZmm;
+            return (int)ret;
+        }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (m_bPauseSoft)
             {
                 return;
             }
-            //if (GetQueueLen() < 10)
+            if (GetQueueLen() < 10)
             {
                 bool ret = true;
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     ret = DoEngraving(ref m_CurTask);
                     if (!ret)
@@ -375,7 +391,7 @@ namespace MMDance
                     {
                         m_CurTask.b = 0;
                         InitCurBPos();
-                        m_CurTask.z++;
+                        m_CurTask.z += GetStepFromZ(3);
                     }
                     m_counter++;
                 }

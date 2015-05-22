@@ -173,9 +173,9 @@
                     <Button  Content="Z-" Name ="Z_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Z_Minus_Click" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="X+" Name ="X_Plus" Height="28"  HorizontalAlignment="Stretch" Click="X_Plus_Click" />
+                    <Button Content="Y+" Name ="Y_Plus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Plus_Click" />
                     <TextBox Name ="YShift" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-                    <Button Content="X-" Name ="X_Minus" Height="28"  HorizontalAlignment="Stretch" Click="X_Minus_Click" />
+                    <Button Content="Y-" Name ="Y_Minus" Height="28"  HorizontalAlignment="Stretch" Click="Y_Minus_Click" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button  Content="B+" Name ="B_Plus" Height="28"  HorizontalAlignment="Stretch" Click="B_Plus_Click" />
