@@ -48,10 +48,10 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="StepZmm" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">0.0461</Value>
     </Setting>
     <Setting Name="StepYmm" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">0.00505</Value>
     </Setting>
     <Setting Name="StepBgrad" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.225</Value>
