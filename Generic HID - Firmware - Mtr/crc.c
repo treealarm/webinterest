@@ -46,6 +46,9 @@
 *  3.1   5/28/2010    yfy       MiWi DE 3.1
 *  4.1   6/3/2011     yfy       MAL v2011-06
 ********************************************************************/
+#define CRC_LOOKUP_TABLE
+#define SOFTWARE_CRC
+
 #if defined(SOFTWARE_CRC)
     #include "GenericTypeDefs.h"
 

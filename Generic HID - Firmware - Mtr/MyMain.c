@@ -7,6 +7,7 @@
 #include "./USB/usb.h"
 #include "HardwareProfile.h"
 #include "./USB/usb_function_hid.h"
+#include "crc.h"
 #include <delays.h >
 
 extern unsigned char ReceivedDataBuffer[64];
@@ -265,6 +266,29 @@ void MyProcessIO(void)
  switch(ReceivedDataBuffer[0])
  {
     INT32 i = 0; 
+    WORD received_crc = 0;
+    WORD cur_crc = 0;
+	//get crc16 from last 2 bytes;
+	memcpy(
+		(void*)(&ReceivedDataBuffer[sizeof(ReceivedDataBuffer) - 2]),
+		(void*)(&received_crc),
+		sizeof(received_crc) );
+
+	cur_crc = CRC16(ReceivedDataBuffer, sizeof(ReceivedDataBuffer) - 2, 0);
+
+
+	ToSendDataBuffer[0] = 0;
+    if(received_crc != cur_crc)
+	{//error
+		memcpy(
+		(void*)(ToSendDataBuffer),
+		(void*)(ReceivedDataBuffer),
+		sizeof(ReceivedDataBuffer) );
+
+		ToSendDataBuffer[0] = COMMAND_ERRORS;
+		break;
+	}
+
 	case COMMAND_TOGGLE_LED:  //Toggle LEDs
 		led_main = 1;
 		up_impuls = ToSendDataBuffer[1];
@@ -294,14 +318,7 @@ void MyProcessIO(void)
 		(void*)(&ToSendDataBuffer[2])+sizeof(m_do_cur_steps),
 		(void*)(&m_timer_ink_impuls),
 		sizeof(m_timer_ink_impuls) );
-
-		if(!HIDTxHandleBusy(USBInHandle))
-		{
-			USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
-		}
-		break;
-
-
+	break;
 	case COMMAND_SET_CRUISERS:
 	{
 		memcpy(
@@ -351,7 +368,11 @@ void MyProcessIO(void)
     }
 	break;
  }
-  
+ 	if(!HIDTxHandleBusy(USBInHandle))
+	{
+		USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
+	}
+
 }//end MyProcessIO
 
 void MyUserInit(void)
