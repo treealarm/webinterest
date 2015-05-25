@@ -16,6 +16,7 @@
 #define COMMAND_SET_PAUSE  0x86
 #define COMMAND_SET_INK  0x87
 #define COMMAND_SET_CRUISERS  0x88
+#define COMMAND_ERRORS  0x89
 
 
 
