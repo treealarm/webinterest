@@ -34,6 +34,7 @@ namespace MMDance
         public MainWindow()
         {
             InitializeComponent();
+
             for (int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
             {
                 m_step_mult.m_uMult[motor] = 1;
@@ -65,7 +66,10 @@ namespace MMDance
         }
         public void AddCommand(Byte[] command)
         {
-            
+            ushort crc16 = CRCHelper.crc16_ccitt(command, command.Length - 2);
+            byte[] byteArray = BitConverter.GetBytes(crc16);
+            command[command.Length - 2] = byteArray[0];
+            command[command.Length - 1] = byteArray[1];
             lock (m_out_list)
             {
                 m_out_list.Enqueue(command);
@@ -76,7 +80,7 @@ namespace MMDance
         {
             while (!StopThread)
             {
-                int SleepVal = 10;
+                int SleepVal = 1;
                 if (m_ControlWrapper.IsControllerAvailable())
                 {
                     lock (m_out_list)
