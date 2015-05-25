@@ -90,6 +90,7 @@ using System.Text;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows;
 
 
 public class ControlWrapper
@@ -104,6 +105,7 @@ public class ControlWrapper
     public const byte COMMAND_SET_PAUSE = 0x86;
     public const byte COMMAND_SET_INK = 0x87;
     public const byte COMMAND_SET_CRUISERS = 0x88;
+    public const byte COMMAND_ERRORS = 0x89;
     
 
     UInt16 m_timer_ink_impuls;
@@ -135,6 +137,10 @@ public class ControlWrapper
         Marshal.Copy(ptr, bytearray, position, len);
 
         Marshal.FreeHGlobal(ptr);
+        if (position + len > bytearray.Length - 2)
+        {
+            MessageBox.Show("too long data");
+        }
     }
 
     public static void ByteArrayToStructure<T>(byte[] bytearray, ref T structureObj, int position)
@@ -177,6 +183,34 @@ public class ControlWrapper
         }
         return false;
     }
+
+    public bool IsError()
+    {
+        if (!IsOpen())
+        {
+            return true;
+        }
+
+        Byte[] INBuffer = new byte[LEN_OF_PACKET];		//Allocate a memory buffer equal to the IN endpoint size + 1
+        
+        uint BytesRead = 0;
+        INBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
+        //Now get the response packet from the firmware.
+        if (ReadFileManagedBuffer(ReadHandleToUSBDevice, INBuffer, 65, ref BytesRead, IntPtr.Zero))		//Blocking function, unless an "overlapped" structure is used	
+        {
+            if (INBuffer[1] == COMMAND_ERRORS)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     public bool WriteCommandToController(Byte[] OUTBuffer)
     {
         if (!IsOpen())
@@ -185,8 +219,14 @@ public class ControlWrapper
         }
         
         uint BytesWritten = 0;
-        
-        return WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero);
+
+        bool bOk = WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero);
+        while (IsError() && bOk)
+        {
+            Thread.Sleep(1);
+            bOk = WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero);
+        }
+        return bOk;
     }
 
     public bool IsOpen()

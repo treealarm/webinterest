@@ -42,10 +42,10 @@ namespace MMDance
          0x6e17,0x7e36,0x4e55,0x5e74,0x2e93,0x3eb2,0x0ed1,0x1ef0
       };
 
-        public static ushort crc16_ccitt(byte[] buf)
+        public static ushort crc16_ccitt(byte[] buf, int len)
         {
             ushort crc = 0;
-            for (int counter = 0; counter < buf.Length; counter++)
+            for (int counter = 0; counter < len; counter++)
             {
                 crc = (ushort)((crc << 8) ^ crc16tab[((crc >> 8) ^ buf[counter]) & 0x00FF]);
             }
