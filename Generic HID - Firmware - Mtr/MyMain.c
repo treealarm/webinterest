@@ -70,7 +70,7 @@ void CopyBufferToMotor(void)
 		(void*)(&m_do_cur_steps),
 		(void*)(&m_do_cur_steps_buf),
 		sizeof(m_do_cur_steps_buf) );
-	memset(&m_do_cur_steps_buf,0,sizeof(m_do_cur_steps_buf));
+	memset((void*)&m_do_cur_steps_buf,0,sizeof(m_do_cur_steps_buf));
 
 
 	SetupDirs();
@@ -81,7 +81,7 @@ int CheckIfMotorsOnZero(void)
 	int i = 0;
 	for(i = 0;i < MOTORS_COUNT;i++)
 	{
-		if(m_cruise_motors.is_cruiser[i] != 0 && m_do_cur_steps.m_uSteps[i] != 0)
+		if(m_do_cur_steps.m_uSteps[i] != 0)
 		{
 			return 0;
 		}
@@ -257,6 +257,8 @@ void SetupCtrlSignals(void)
 void MyProcessIO(void)
 {   
     INT32 i = 0; 
+	do_steps* pSteps = 0;
+
     WORD received_crc = 0;
     WORD cur_crc = 0;
 	//get crc16 from last 2 bytes;
@@ -268,7 +270,7 @@ void MyProcessIO(void)
 
 	cur_crc = CRC16(ReceivedDataBuffer, datalen - 2, 0);
 
-	memset(ToSendDataBuffer,0,sizeof(ToSendDataBuffer));
+	memset((void*)ToSendDataBuffer,0,sizeof(ToSendDataBuffer));
 
     if(received_crc != cur_crc)
 	{//error
@@ -330,21 +332,22 @@ void MyProcessIO(void)
 		sizeof(m_timer_ink_impuls) );
 
 	break;
-	case COMMAND_SET_CRUISERS:
-	{
-		memcpy(
-       			(void*)(&m_cruise_motors),
-       			(void*)(&ReceivedDataBuffer[1]),
-       			sizeof(m_cruise_motors) );
 
-	}
-	break;
 	case COMMAND_SET_STEPS:
 	{
-		memcpy(
+		if(!CheckIfBufferOnZero())
+		{
+			break;
+		}
+		pSteps = (do_steps*)&ReceivedDataBuffer[1];
+		for(i = 0; i < MOTORS_COUNT; i++)
+		{
+			m_do_cur_steps_buf.m_uSteps[i] = pSteps->m_uSteps[i];
+		}
+		/*memcpy(
        			(void*)(&m_do_cur_steps_buf),
        			(void*)(&ReceivedDataBuffer[1]),
-       			sizeof(m_do_cur_steps_buf) );
+       			sizeof(m_do_cur_steps_buf) );*/
 
 	}
 	break;
@@ -395,10 +398,7 @@ void MyUserInit(void)
 // Timer0 should = 65536 - 46875 = 18661 or 0x48E5
 	int i = 0 ;
 
-	memset(&m_do_timer_set,0,sizeof(m_do_timer_set));
-	memset(&m_cruise_motors,1,sizeof(m_cruise_motors));
-
-	
+	memset((void*)&m_do_timer_set,0,sizeof(m_do_timer_set));
 
 	m_do_timer_set.m_timer_res.tmr16.lo   =      0xE5;
 	m_do_timer_set.m_timer_res.tmr16.hi   =      0x48;
@@ -409,9 +409,9 @@ void MyUserInit(void)
 	TMR0H = m_do_timer_set.m_timer_res.tmr16.hi;
 	TMR0L = m_do_timer_set.m_timer_res.tmr16.lo;
 
-    memset(&m_do_cur_steps,0,sizeof(m_do_cur_steps));
-	memset(&m_do_cur_steps_buf,0,sizeof(m_do_cur_steps_buf));
-	memset(&m_do_control_signals,0,sizeof(m_do_control_signals));
+    memset((void*)&m_do_cur_steps,0,sizeof(m_do_cur_steps));
+	memset((void*)&m_do_cur_steps_buf,0,sizeof(m_do_cur_steps_buf));
+	memset((void*)&m_do_control_signals,0,sizeof(m_do_control_signals));
 
 	
 ///////////////////////////////////.TRIS////////////////
@@ -486,12 +486,12 @@ void ProcessInkImpuls(int new_impuls)
 
 	if(m_timer_ink_impuls < m_do_timer_set.m_ink_impuls)
 	{
-		ink_impuls = m_cruise_motors.ink_signal;
+		ink_impuls = 1;
 		m_timer_ink_impuls += 1;
 	}
 	else
 	{
-		ink_impuls = !m_cruise_motors.ink_signal;
+		ink_impuls = 0;
 	}
 	led_3 = ink_impuls;//ink_sensor;
 }
