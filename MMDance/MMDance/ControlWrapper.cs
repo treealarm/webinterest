@@ -91,6 +91,8 @@ using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
+using System.Diagnostics;
+using MMDance;
 
 
 public class ControlWrapper
@@ -120,6 +122,10 @@ public class ControlWrapper
 
     public string GetCurText()
     {
+        if (m_cur_steps.m_uSteps == null)
+        {
+            return string.Empty;
+        }
         string ret;
         ret = string.Format("{0},{1},{2},{3},{4}",
             m_cur_steps.m_uSteps[0], m_cur_steps.m_uSteps[1], m_cur_steps.m_uSteps[2], m_cur_steps.m_uSteps[3],
@@ -164,7 +170,12 @@ public class ControlWrapper
         uint BytesRead = 0;
         INBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
         OUTBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-        OUTBuffer[1] = COMMAND_IS_AVAILABLE;			
+        OUTBuffer[1] = COMMAND_IS_AVAILABLE;
+
+        ushort crc16 = CRCHelper.crc16_ccitt(OUTBuffer, OUTBuffer.Length - 2);
+        byte[] byteArray = BitConverter.GetBytes(crc16);
+        OUTBuffer[OUTBuffer.Length - 2] = byteArray[0];
+        OUTBuffer[OUTBuffer.Length - 1] = byteArray[1];
 
         if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
         {
@@ -172,8 +183,22 @@ public class ControlWrapper
             //Now get the response packet from the firmware.
             if (ReadFileManagedBuffer(ReadHandleToUSBDevice, INBuffer, 65, ref BytesRead, IntPtr.Zero))		//Blocking function, unless an "overlapped" structure is used	
             {
+                do_steps buf = new do_steps();
                 ByteArrayToStructure(INBuffer , ref m_cur_steps, 3);
-                ByteArrayToStructure(INBuffer, ref m_timer_ink_impuls, 3 + Marshal.SizeOf(m_cur_steps));
+                ByteArrayToStructure(INBuffer, ref buf, 3 + Marshal.SizeOf(m_cur_steps));
+                ByteArrayToStructure(INBuffer, ref m_timer_ink_impuls, 3 + Marshal.SizeOf(m_cur_steps)*2);
+
+                for (int i = 0; i < MOTORS_COUNT; i++)
+                {
+                    if (Math.Abs(buf.m_uSteps[i]) > 1000000)
+                    {
+                        Debug.WriteLine("Something wrong");
+                    }
+                    if (Math.Abs(m_cur_steps.m_uSteps[i]) > 100000)
+                    {
+                        Debug.WriteLine("Something wrong");
+                    }
+                }
 
                 if (INBuffer[2] == 0x01)
                 {
@@ -200,6 +225,8 @@ public class ControlWrapper
         {
             if (INBuffer[1] == COMMAND_ERRORS)
             {
+                ushort received_crc = BitConverter.ToUInt16(INBuffer, LEN_OF_PACKET - 4);
+                ushort cur_crc = BitConverter.ToUInt16(INBuffer, LEN_OF_PACKET - 2);
                 return true;
             }
             else
@@ -221,6 +248,10 @@ public class ControlWrapper
         uint BytesWritten = 0;
 
         bool bOk = WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero);
+        if (BytesWritten < LEN_OF_PACKET)
+        {
+            Debug.WriteLine("wrong len");
+        }
         while (IsError() && bOk)
         {
             Thread.Sleep(1);
