@@ -78,9 +78,19 @@ namespace MMDance
 
         private void ProcessCommand()
         {
+            int check_counter = 100;
             while (!StopThread)
             {
                 int SleepVal = 1;
+                check_counter++;
+                if (check_counter > 100 && ControlUserControl != null && m_ControlWrapper.IsOpen())
+                {
+                    check_counter = 0;
+                    ControlUserControl.textBlockInfo.Dispatcher.BeginInvoke(new Action(delegate()
+                    {
+                        ControlUserControl.textBlockInfo.Text = m_ControlWrapper.GetCurText(); //where item is the item to be added and listbox is the control being updated.
+                    }));
+                }
                 if (m_ControlWrapper.IsControllerAvailable())
                 {
                     lock (m_out_list)
@@ -88,12 +98,6 @@ namespace MMDance
                         if (m_out_list.Count <= 0)
                         {
                             SleepVal = 100;
-
-                            ControlUserControl.textBlockInfo.Dispatcher.BeginInvoke(new Action(delegate()
-                            {
-                                ControlUserControl.textBlockInfo.Text = m_ControlWrapper.GetCurText(); //where item is the item to be added and listbox is the control being updated.
-                            }));
-            
                         }
                         else
                         {
@@ -267,6 +271,17 @@ namespace MMDance
 	        OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
 	        OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_STEPS;
             ControlWrapper.StructureToByteArray(steps, OutputPacketBuffer, 2);
+
+            ControlWrapper.ByteArrayToStructure(OutputPacketBuffer, ref steps, 2);
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (Math.Abs(steps.m_uSteps[i]) > 100000)
+                {
+                    Debug.WriteLine("Something wrong");
+                }
+            }
+
 	        AddCommand(OutputPacketBuffer);
         }
 
