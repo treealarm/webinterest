@@ -9,6 +9,7 @@
 #include "./USB/usb_function_hid.h"
 #include "crc.h"
 #include <delays.h >
+#include <string.h>
 
 extern unsigned char ReceivedDataBuffer[64];
 extern unsigned char ToSendDataBuffer[64];
@@ -111,15 +112,7 @@ void ProcessSteps(void)
 
 	if(btn_1 == 0)
 	{
-		enable_0 = 0; 
-		m_do_timer_set.m_timer_res.u16 = 65536 - 16;
-		RestartTimer();
-		for(i = 0;i < MOTORS_COUNT;i++)
-		{
-			m_do_timer_set.m_multiplier[i] = 1;
-			m_do_cur_steps_buf.m_uSteps[i] = 32*200;
-			m_do_cur_steps.m_uSteps[i] = -32*200;
-		}
+
 	}
 
 	if(m_b_Pause)
@@ -263,35 +256,46 @@ void SetupCtrlSignals(void)
 
 void MyProcessIO(void)
 {   
- switch(ReceivedDataBuffer[0])
- {
     INT32 i = 0; 
     WORD received_crc = 0;
     WORD cur_crc = 0;
 	//get crc16 from last 2 bytes;
+	int datalen = sizeof(ReceivedDataBuffer);
 	memcpy(
-		(void*)(&ReceivedDataBuffer[sizeof(ReceivedDataBuffer) - 2]),
+		(void*)(&received_crc),
+		(void*)(&ReceivedDataBuffer[datalen - 2]),
+		sizeof(received_crc) );
+
+	cur_crc = CRC16(ReceivedDataBuffer, datalen - 2, 0);
+
+	memset(ToSendDataBuffer,0,sizeof(ToSendDataBuffer));
+
+    if(received_crc != cur_crc)
+	{//error
+		ToSendDataBuffer[0] = COMMAND_ERRORS;
+
+		memcpy(
+		(void*)(&ToSendDataBuffer[datalen - 4]),
 		(void*)(&received_crc),
 		sizeof(received_crc) );
 
-	cur_crc = CRC16(ReceivedDataBuffer, sizeof(ReceivedDataBuffer) - 2, 0);
-
-
-	ToSendDataBuffer[0] = 0;
-    if(received_crc != cur_crc)
-	{//error
 		memcpy(
-		(void*)(ToSendDataBuffer),
-		(void*)(ReceivedDataBuffer),
-		sizeof(ReceivedDataBuffer) );
+		(void*)(&ToSendDataBuffer[datalen - 2]),
+		(void*)(&cur_crc),
+		sizeof(cur_crc) );
 
-		ToSendDataBuffer[0] = COMMAND_ERRORS;
-		break;
+	 	if(!HIDTxHandleBusy(USBInHandle))
+		{
+			USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
+		}
+		return;
 	}
 
+ switch(ReceivedDataBuffer[0])
+ {
 	case COMMAND_TOGGLE_LED:  //Toggle LEDs
 		led_main = 1;
-		up_impuls = ToSendDataBuffer[1];
+		up_impuls = ReceivedDataBuffer[1];
 	break;
 	case COMMAND_IS_AVAILABLE:  //Get push button state (available state)
 		ToSendDataBuffer[0] = COMMAND_IS_AVAILABLE;				//Echo back to the host PC the command we are fulfilling in the first byte.  In this case, the Get Pushbutton State command.
@@ -315,9 +319,16 @@ void MyProcessIO(void)
 		sizeof(m_do_cur_steps) );
 
 		memcpy(
-		(void*)(&ToSendDataBuffer[2])+sizeof(m_do_cur_steps),
+		(void*)(&ToSendDataBuffer[2])+sizeof(m_do_cur_steps_buf),
+		(void*)(&m_do_cur_steps_buf),
+		sizeof(m_do_cur_steps_buf) );
+
+
+		memcpy(
+		(void*)(&ToSendDataBuffer[2])+sizeof(m_do_cur_steps)*2,
 		(void*)(&m_timer_ink_impuls),
 		sizeof(m_timer_ink_impuls) );
+
 	break;
 	case COMMAND_SET_CRUISERS:
 	{
@@ -461,14 +472,6 @@ void MyUserInit(void)
 
 	INTCON2bits.NOT_RBPU = 0;
 
-	//for(i = 0;i < MOTORS_COUNT;i++)
-	{
-		//m_do_timer_set.m_multiplier[i] = 1;
-		//m_do_cur_steps_buf.m_uSteps[i] = 32*500;
-		//m_do_cur_steps.m_uSteps[i] = -32*500;
-	}
-	//CopyBufferToMotor();
-	//SetupDirs();
 	RestartTimer();
 
 }//end MyUserInit
