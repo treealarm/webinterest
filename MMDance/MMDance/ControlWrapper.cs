@@ -195,7 +195,7 @@ public class ControlWrapper
                     }
                     if (Math.Abs(m_cur_steps.m_uSteps[i]) > 100000)
                     {
-                        Debug.WriteLine("Something wrong");
+                         Debug.WriteLine("Something wrong");
                     }
                 }
 
