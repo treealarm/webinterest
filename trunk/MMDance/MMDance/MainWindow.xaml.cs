@@ -122,15 +122,6 @@ namespace MMDance
             public int w = 0;
         }
 
-        [StructLayout(LayoutKind.Sequential, Size = 1 * ControlWrapper.MOTORS_COUNT), Serializable]
-        public class cruise_motors
-        {
-            [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ControlWrapper.MOTORS_COUNT)]
-            public byte[] m_is_cruiser = new byte[ControlWrapper.MOTORS_COUNT];
-            [MarshalAs(UnmanagedType.I1)]
-            public byte m_signal_on_zero;
-        }
-
         [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
         public class do_steps
         {
@@ -227,20 +218,6 @@ namespace MMDance
             AddCommand(OutputPacketBuffer);
         }
 
-        public void SetCruisersToController()
-        {
-            cruise_motors cm = new cruise_motors();
-            cm.m_signal_on_zero = 0;
-            for (int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
-            {
-                cm.m_is_cruiser[motor] = Convert.ToByte(motor == Z_POS || motor == X_POS);
-            }
-            byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
-            OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
-            OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_CRUISERS;
-            ControlWrapper.StructureToByteArray(cm, OutputPacketBuffer, 2);
-            AddCommand(OutputPacketBuffer);
-        }
         public void InitCurBPos()
         {
             m_cur_pos.b = 0;
@@ -266,22 +243,16 @@ namespace MMDance
 	       	for(int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
 	        {
 		        steps.m_uSteps[motor] = steps.m_uSteps[motor]*m_step_mult.m_uMult[motor];
+                //steps.m_uSteps[motor] = -1;
 	        }
+            //steps.m_uSteps[X_POS] = -1;
+            //steps.m_uSteps[Z_POS] = 0;
+            //steps.m_uSteps[B_POS] = 0;
+
 	        byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	        OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
 	        OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_STEPS;
             ControlWrapper.StructureToByteArray(steps, OutputPacketBuffer, 2);
-
-            ControlWrapper.ByteArrayToStructure(OutputPacketBuffer, ref steps, 2);
-
-            for (int i = 0; i < 4; i++)
-            {
-                if (Math.Abs(steps.m_uSteps[i]) > 100000)
-                {
-                    Debug.WriteLine("Something wrong");
-                }
-            }
-
 	        AddCommand(OutputPacketBuffer);
         }
 

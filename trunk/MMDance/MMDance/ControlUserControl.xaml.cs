@@ -63,8 +63,6 @@ namespace MMDance
             wnd.m_step_mult.m_uMult[MainWindow.X_POS] = Properties.Settings.Default.StepMultiplierY;
             wnd.m_step_mult.m_uMult[MainWindow.B_POS] = Properties.Settings.Default.StepMultiplierB;
             wnd.m_step_mult.m_uMult[MainWindow.W_POS] = Properties.Settings.Default.StepMultiplierW;
-
-            wnd.SetCruisersToController();
         }
 
         private void SetControlSettings()
