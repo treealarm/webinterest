@@ -46,7 +46,8 @@ typedef struct
     BYTE m_multiplier[MOTORS_COUNT];
 }
 do_timer_set;
-do_timer_set m_do_timer_set;
+
+volatile do_timer_set m_do_timer_set;
 
 struct do_control_signals
 {
