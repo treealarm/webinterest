@@ -15,13 +15,13 @@ extern unsigned char ReceivedDataBuffer[64];
 extern unsigned char ToSendDataBuffer[64];
 extern USB_HANDLE USBInHandle;
 
-do_steps m_do_cur_steps;
-do_steps m_do_cur_steps_buf;
+volatile do_steps m_do_cur_steps;
+volatile do_steps m_do_cur_steps_buf;
 
-BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0,0};
-UINT16 m_timer_ink_impuls = 0;
-BYTE m_b_Pause = FALSE;
-BYTE m_b_InkOn = FALSE;
+volatile BYTE m_timer_cnt[MOTORS_COUNT] = {0,0,0,0};
+volatile UINT16 m_timer_ink_impuls = 0;
+volatile BYTE m_b_Pause = FALSE;
+volatile BYTE m_b_InkOn = FALSE;
 //sr should be 0, it's active mode, so shottky not required
 
 
@@ -257,7 +257,6 @@ void SetupCtrlSignals(void)
 void MyProcessIO(void)
 {   
     INT32 i = 0; 
-	do_steps* pSteps = 0;
 
     WORD received_crc = 0;
     WORD cur_crc = 0;
@@ -293,6 +292,7 @@ void MyProcessIO(void)
 		return;
 	}
 
+	INTCONbits.GIEL = 0;
  switch(ReceivedDataBuffer[0])
  {
 	case COMMAND_TOGGLE_LED:  //Toggle LEDs
@@ -330,25 +330,14 @@ void MyProcessIO(void)
 		(void*)(&ToSendDataBuffer[2])+sizeof(m_do_cur_steps)*2,
 		(void*)(&m_timer_ink_impuls),
 		sizeof(m_timer_ink_impuls) );
-
 	break;
 
 	case COMMAND_SET_STEPS:
 	{
-		if(!CheckIfBufferOnZero())
-		{
-			break;
-		}
-		pSteps = (do_steps*)&ReceivedDataBuffer[1];
-		for(i = 0; i < MOTORS_COUNT; i++)
-		{
-			m_do_cur_steps_buf.m_uSteps[i] = pSteps->m_uSteps[i];
-		}
-		/*memcpy(
+		memcpy(
        			(void*)(&m_do_cur_steps_buf),
        			(void*)(&ReceivedDataBuffer[1]),
-       			sizeof(m_do_cur_steps_buf) );*/
-
+       			sizeof(m_do_cur_steps_buf) );
 	}
 	break;
 	
@@ -382,6 +371,7 @@ void MyProcessIO(void)
     }
 	break;
  }
+INTCONbits.GIEL = 1;
  	if(!HIDTxHandleBusy(USBInHandle))
 	{
 		USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
