@@ -251,11 +251,11 @@ public class ControlWrapper
         {
             Debug.WriteLine("wrong len");
         }
-        while (IsError() && bOk)
-        {
-            Thread.Sleep(1);
-            bOk = WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero);
-        }
+        //while (IsError() && bOk)
+        //{
+        //    Thread.Sleep(1);
+        //    bOk = WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero);
+        //}
         return bOk;
     }
 
