@@ -243,11 +243,7 @@ namespace MMDance
 	       	for(int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
 	        {
 		        steps.m_uSteps[motor] = steps.m_uSteps[motor]*m_step_mult.m_uMult[motor];
-                //steps.m_uSteps[motor] = -1;
 	        }
-            //steps.m_uSteps[X_POS] = -1;
-            //steps.m_uSteps[Z_POS] = 0;
-            //steps.m_uSteps[B_POS] = 0;
 
 	        byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];	//Allocate a memory buffer equal to our endpoint size + 1
 	        OutputPacketBuffer[0] = 0;				//The first byte is the "Report ID" and does not get transmitted over the USB bus.  Always set = 0.
@@ -318,6 +314,7 @@ namespace MMDance
             UserControlFor3D.IntersectionType ret = PictureUserControl.m_UserControlFor3D.GetIntersection(angle, Z, out intersection);
 
             Vector3D vec = (Vector3D)intersection;
+            vec.Z = 0;
             if (UserControlFor3D.IntersectionType.E_INTERSECTION == ret)
             {
                 PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
