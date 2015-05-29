@@ -258,10 +258,11 @@ void MyProcessIO(void)
 {   
     INT32 i = 0; 
 
+	int datalen = sizeof(ReceivedDataBuffer);
+	/*
     WORD received_crc = 0;
     WORD cur_crc = 0;
 	//get crc16 from last 2 bytes;
-	int datalen = sizeof(ReceivedDataBuffer);
 	memcpy(
 		(void*)(&received_crc),
 		(void*)(&ReceivedDataBuffer[datalen - 2]),
@@ -290,7 +291,7 @@ void MyProcessIO(void)
 			USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
 		}
 		return;
-	}
+	}*/
 
 	INTCONbits.GIEL = 0;
  switch(ReceivedDataBuffer[0])
@@ -330,6 +331,11 @@ void MyProcessIO(void)
 		(void*)(&ToSendDataBuffer[2])+sizeof(m_do_cur_steps)*2,
 		(void*)(&m_timer_ink_impuls),
 		sizeof(m_timer_ink_impuls) );
+
+	 	if(!HIDTxHandleBusy(USBInHandle))
+		{
+			USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
+		}
 	break;
 
 	case COMMAND_SET_STEPS:
@@ -372,10 +378,6 @@ void MyProcessIO(void)
 	break;
  }
 INTCONbits.GIEL = 1;
- 	if(!HIDTxHandleBusy(USBInHandle))
-	{
-		USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer,64);
-	}
 
 }//end MyProcessIO
 
