@@ -258,15 +258,9 @@ namespace MMDance
             
             var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
             var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
-            
-            if (b >= 0)
-            {
-                var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
-            }
-            if (w >= 0)
-            {
-                var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
-            }
+            var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
+            var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
+
             string s;
             s = String.Format("Z:{0},X:{1},B:{2}",
                 var_do_steps.m_uSteps[Z_POS],
@@ -311,7 +305,8 @@ namespace MMDance
             Point3D intersection;
             double angle = GetAngleFromStep(cur_coords.b);
             double Z = GetZFromStep(cur_coords.z);
-            UserControlFor3D.IntersectionType ret = PictureUserControl.m_UserControlFor3D.GetIntersection(angle, Z, out intersection);
+            UserControlFor3D.IntersectionType ret = PictureUserControl.
+                m_UserControlFor3D.GetIntersection(angle, Z, out intersection);
 
             Vector3D vec = (Vector3D)intersection;
             vec.Z = 0;
@@ -333,6 +328,10 @@ namespace MMDance
         }
 
         stanok_coord m_CurTask = new stanok_coord();
+        int Get360GradSteps()
+        {
+            return (int)(360/ Properties.Settings.Default.StepBgrad);
+        }
         double GetAngleFromStep(int step)
         {
             double angle = step;
@@ -371,10 +370,11 @@ namespace MMDance
                     {
                         break;
                     }
+
                     GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
                     m_CurTask.b += 1;
                     double angle = GetAngleFromStep(m_CurTask.b);
-                    if (angle >= 360)
+                    if (m_CurTask.b > Get360GradSteps())
                     {
                         m_CurTask.b = 0;
                         InitCurBPos();
@@ -387,12 +387,11 @@ namespace MMDance
                 
                 if(!ret)
                 {
-                    SetInk(true);
                     Thread.Sleep(1000);
-                    GoToZX(0, 0);
+                    GoToZX(0, GetStepFromY(Properties.Settings.Default.YStart));
                     //GoToBW(0, 0);
                     m_CurTask = new stanok_coord();
-                    ControlUserControl.checkBoxPauseSoft.IsChecked = true;
+                    //ControlUserControl.checkBoxPauseSoft.IsChecked = true;
                     dispatcherTimer.Stop();
                     //ControlUserControl.checkBoxOutpusEnergy.IsChecked = false;
                 }
