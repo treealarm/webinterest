@@ -340,20 +340,28 @@ namespace MMDance
         }
         double GetZFromStep(int step)
         {
-            double angle = step;
-            angle *= Properties.Settings.Default.StepZmm;
-            return angle;
-        }
-        int GetStepFromY(double Y)
-        {
-            double ret = Y/Properties.Settings.Default.StepYmm;
-            return (int)ret;
+            double Z = step;
+            Z *= Properties.Settings.Default.StepZmm;
+            return Z;
         }
         int GetStepFromZ(double Z)
         {
             double ret = Z / Properties.Settings.Default.StepZmm;
             return (int)ret;
         }
+        double GetYFromStep(int step)
+        {
+            double Y = step;
+            Y *= Properties.Settings.Default.StepYmm;
+            return Y;
+        }
+
+        int GetStepFromY(double Y)
+        {
+            double ret = Y/Properties.Settings.Default.StepYmm;
+            return (int)ret;
+        }
+        
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (m_bPauseSoft)
@@ -371,9 +379,15 @@ namespace MMDance
                         break;
                     }
 
+                    //if (GetYFromStep(m_CurTask.x) <
+                    //    (Properties.Settings.Default.YStart-6))
+                    //{
+                    //    m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart - 5);
+                    //}
                     GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                    
                     m_CurTask.b += 1;
-                    double angle = GetAngleFromStep(m_CurTask.b);
+                    
                     if (m_CurTask.b > Get360GradSteps())
                     {
                         m_CurTask.b = 0;

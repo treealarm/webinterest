@@ -9,6 +9,7 @@
              Background ="WhiteSmoke">
     <Grid >
         <StackPanel Panel.ZIndex="2">
+            <Label Content="?" Height="28" Name="labelInfo" />
             <Slider Height="23" HorizontalAlignment="Left" Name="sliderA" VerticalAlignment="Top" Width="100" Maximum="360" Value="88" Interval="1" ValueChanged="sliderA_ValueChanged" />
             <Slider Height="23" HorizontalAlignment="Left" Name="sliderB" VerticalAlignment="Top" Width="100" Maximum="360" Value="1" Interval="1" ValueChanged="sliderB_ValueChanged" />
             <Slider  Height="23" HorizontalAlignment="Left" Name="sliderZ" VerticalAlignment="Top" Width="100" Maximum="1000" Value="0" Interval="1" ValueChanged="sliderZ_ValueChanged" Minimum="-1000" />

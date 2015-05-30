@@ -237,6 +237,7 @@ namespace MMDance
             }
 
             myMeshGeometry3D.Positions = myPositionCollection;
+            labelInfo.Content = myMeshGeometry3D.Bounds.Size;
         }
         private double IntersectsWithTriangle(Ray ray, Point3D p0, Point3D p1, Point3D p2)
         {
@@ -348,6 +349,7 @@ namespace MMDance
             E_OUT
         };
 
+        public const double m_dFreza = 3;
         public IntersectionType GetIntersection(double angle, double Z, out Point3D intersection)
         {
             IntersectionType ret = IntersectionType.E_OUT;
@@ -358,16 +360,16 @@ namespace MMDance
             
             Ray[] rays = new Ray[4];
 
-            Vector3D offset = new Vector3D(0, -1.5, 0);
+            Vector3D offset = new Vector3D(0, -m_dFreza/2, 0);
             rays[0] = GetRay(angle, Z, offset);
 
-            offset = new Vector3D(0, 1.5, 0);
+            offset = new Vector3D(0, m_dFreza/2, 0);
             rays[1] = GetRay(angle, Z, offset);
 
-            offset = new Vector3D(0, 0, -1.5);
+            offset = new Vector3D(0, 0, -m_dFreza/2);
             rays[2] = GetRay(angle, Z, offset);
 
-            offset = new Vector3D(0, 0, 1.5);
+            offset = new Vector3D(0, 0, m_dFreza/2);
             rays[3] = GetRay(angle, Z, offset);
 
             offset = new Vector3D(0, 0, 0);
