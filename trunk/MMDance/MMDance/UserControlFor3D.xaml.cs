@@ -37,11 +37,6 @@ namespace MMDance
             
             m_Model3DGroup = GetNewGroup();
             myModelVisual3D.Content = m_Model3DGroup;
-
-            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            dispatcherTimer.Start();
         }
 
         Model3DGroup GetNewGroup()
@@ -279,28 +274,6 @@ namespace MMDance
             return t;
         }
 
-        double m_CurAngle = 0;
-        double m_CurZ = 0.0001;
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            //Point3D intersection = new Point3D();
-            //if (!GetIntersection(m_CurAngle, m_CurZ, out intersection))
-            //{
-            //    m_CurAngle = 0;
-            //    m_CurZ = 0.0001;
-            //    return;
-            //}
-
-            //UpdatePosition(intersection, m_CurAngle);
-
-            //m_CurAngle += 1;
-            //if(m_CurAngle >= 360.0)
-            //{
-            //    m_CurZ += 10;
-            //    m_CurAngle = 0;
-            //}
-        }
-
         public void UpdatePosition(Point3D intersection, double CurAngle)
         {
             Point3DCollection millPositionCollection = new Point3DCollection();
@@ -322,9 +295,30 @@ namespace MMDance
                 millPositionCollection.Add(p2);
                 millPositionCollection.Add(p3);
             }
-            
+
 
             meshCube.Positions = millPositionCollection;
+            labelInfo2.Content = intersection;
+        }
+
+        public void UpdatePosition2(Point3D intersection)
+        {
+            Point3DCollection millPositionCollection = new Point3DCollection();
+            Vector3D vecTransform = new Vector3D(intersection.X, intersection.Y, 0);
+            vecTransform.Normalize();
+            vecTransform *= 50;
+            TranslateTransform3D myRotateTransform = new TranslateTransform3D(vecTransform);
+            {
+                Point3D p2 = myRotateTransform.Transform(intersection);
+                Point3D p3 = p2;
+                p3.Z += 20;
+                millPositionCollection.Add(intersection);
+                millPositionCollection.Add(p2);
+                millPositionCollection.Add(p3);
+            }
+
+            meshCube.Positions = millPositionCollection;
+            labelInfo2.Content = intersection;
         }
 
         public const double max_x = 100;
@@ -451,6 +445,35 @@ namespace MMDance
         private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             m_axB3d.Angle += e.Delta/12;
+        }
+
+
+        private void myViewport3D_MouseDown(object sender, MouseButtonEventArgs args)
+        {
+            Point mousePos = args.GetPosition(myViewport3D);
+            PointHitTestParameters hitParams = new PointHitTestParameters(mousePos);
+            VisualTreeHelper.HitTest(myViewport3D, null, ResultCallback, hitParams);
+        }
+        public HitTestResultBehavior ResultCallback(HitTestResult result)
+        {
+            // Did we hit 3D?
+            RayHitTestResult rayResult = result as RayHitTestResult;
+            if (rayResult != null)
+            {
+                // Did we hit a MeshGeometry3D?
+                RayMeshGeometry3DHitTestResult rayMeshResult =
+                    rayResult as RayMeshGeometry3DHitTestResult;
+
+                if (rayMeshResult != null)
+                {
+                    Point3D intersect = rayMeshResult.PointHit;
+                    intersect = m_Model3DGroup.Transform.Inverse.Transform(intersect);
+                    UpdatePosition2(intersect);
+                    return HitTestResultBehavior.Stop;
+                }
+            }
+
+            return HitTestResultBehavior.Continue;
         }
     }
 }
