@@ -9,12 +9,15 @@
              Background ="WhiteSmoke">
     <Grid >
         <StackPanel Panel.ZIndex="2">
-            <Label Content="?" Height="28" Name="labelInfo" />
-            <Slider Height="23" HorizontalAlignment="Left" Name="sliderA" VerticalAlignment="Top" Width="100" Maximum="360" Value="88" Interval="1" ValueChanged="sliderA_ValueChanged" />
-            <Slider Height="23" HorizontalAlignment="Left" Name="sliderB" VerticalAlignment="Top" Width="100" Maximum="360" Value="1" Interval="1" ValueChanged="sliderB_ValueChanged" />
+            <StackPanel Orientation="Vertical">
+                <Label Content="?" Height="28" Name="labelInfo" />
+                <Label Content="?" Height="28" Name="labelInfo2" />
+            </StackPanel>
+            <Slider Height="23" HorizontalAlignment="Left" Name="sliderA" VerticalAlignment="Top" Width="100" Maximum="360" Value="0" Interval="1" ValueChanged="sliderA_ValueChanged" />
+            <Slider Height="23" HorizontalAlignment="Left" Name="sliderB" VerticalAlignment="Top" Width="100" Maximum="360" Value="0" Interval="1" ValueChanged="sliderB_ValueChanged" />
             <Slider  Height="23" HorizontalAlignment="Left" Name="sliderZ" VerticalAlignment="Top" Width="100" Maximum="1000" Value="0" Interval="1" ValueChanged="sliderZ_ValueChanged" Minimum="-1000" />
         </StackPanel>
-        <Viewport3D Name="myViewport3D" Panel.ZIndex="1">
+        <Viewport3D Name="myViewport3D" Panel.ZIndex="1" MouseDown="myViewport3D_MouseDown">
             <Viewport3D.Camera>
                 <OrthographicCamera x:Name="myPCamera" Position="-200,0,0" UpDirection="0,1,0" LookDirection="1,0,0"  Width="600">
                 </OrthographicCamera>
@@ -43,7 +46,7 @@
                         </GeometryModel3D.BackMaterial>
                     </GeometryModel3D>
                 </ModelVisual3D.Content>
-            </ModelVisual3D>
+                </ModelVisual3D>
         </Viewport3D>
     </Grid>
 </UserControl>

@@ -252,14 +252,18 @@ namespace MMDance
 	        AddCommand(OutputPacketBuffer);
         }
 
-        public void GoToZX(int z, int x, int b = -1, int w = -1)
+        public void GoToZX(int z = -1, int x = -1, int b = -1, int w = -1)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
             
-            var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
-            var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
-            var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
-            var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
+            if(z >= 0)
+                var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
+            if(x >= 0)
+                var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
+            if (b >= 0)
+                var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
+            if (w >= 0)
+                var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
 
             string s;
             s = String.Format("Z:{0},X:{1},B:{2}",
@@ -298,8 +302,13 @@ namespace MMDance
         void InitStartYPos()
         {
             m_cur_pos.x = GetStepFromY(Properties.Settings.Default.YStart);
+            m_CurDepth = 0;// Properties.Settings.Default.YStart - GetDepthStep();
         }
 
+        public double GetDepthStep()
+        {
+            return UserControlFor3D.m_dFreza * 2;
+        }
         private bool DoEngraving(ref stanok_coord cur_coords)
         {
             Point3D intersection;
@@ -328,6 +337,7 @@ namespace MMDance
         }
 
         stanok_coord m_CurTask = new stanok_coord();
+        double m_CurDepth = 0;
         int Get360GradSteps()
         {
             return (int)(360/ Properties.Settings.Default.StepBgrad);
@@ -361,7 +371,8 @@ namespace MMDance
             double ret = Y/Properties.Settings.Default.StepYmm;
             return (int)ret;
         }
-        
+
+        bool m_bDepthUsed = false;
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (m_bPauseSoft)
@@ -379,12 +390,15 @@ namespace MMDance
                         break;
                     }
 
-                    //if (GetYFromStep(m_CurTask.x) <
-                    //    (Properties.Settings.Default.YStart-6))
-                    //{
-                    //    m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart - 5);
-                    //}
+                    if (GetYFromStep(m_CurTask.x) <  m_CurDepth)
+                    {
+                        m_CurTask.x = GetStepFromY(m_CurDepth);
+                        m_bDepthUsed = true;
+                    }
+                    
                     GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                    
+                    
                     
                     m_CurTask.b += 1;
                     
@@ -392,7 +406,7 @@ namespace MMDance
                     {
                         m_CurTask.b = 0;
                         InitCurBPos();
-                        m_CurTask.z += GetStepFromZ(3);
+                        m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza-1);
                     }
                     m_counter++;
                 }
@@ -402,12 +416,23 @@ namespace MMDance
                 if(!ret)
                 {
                     Thread.Sleep(1000);
-                    GoToZX(0, GetStepFromY(Properties.Settings.Default.YStart));
-                    //GoToBW(0, 0);
-                    m_CurTask = new stanok_coord();
-                    //ControlUserControl.checkBoxPauseSoft.IsChecked = true;
-                    dispatcherTimer.Stop();
-                    //ControlUserControl.checkBoxOutpusEnergy.IsChecked = false;
+                    m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart);
+                    GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                    m_CurTask.z = 0;
+                    m_CurTask.b = 0;
+                    GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                    if (!m_bDepthUsed)
+                    {
+                        m_CurTask = new stanok_coord();
+                        //ControlUserControl.checkBoxPauseSoft.IsChecked = true;
+                        dispatcherTimer.Stop();
+                        //ControlUserControl.checkBoxOutpusEnergy.IsChecked = false;
+                    }
+                    else
+                    {
+                        m_bDepthUsed = false;
+                        m_CurDepth -= GetDepthStep();
+                    }
                 }
             }
         } 
