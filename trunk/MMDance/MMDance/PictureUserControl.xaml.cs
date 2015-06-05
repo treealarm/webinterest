@@ -43,18 +43,23 @@ namespace MMDance
                 m_ProfileData = new ProfileElementList();
             }
 
-            ProfileDataGrid.DataContext = m_ProfileData;
+            ProfileDataGrid.DataContext = m_ProfileData.ProfileElements;
         }
 
         public ProfileElementList GetFullProfile()
         {
-            for (int i = 0; i < m_ProfileData.Count; i++)
+            for (int i = 0; i < m_ProfileData.ProfileElements.Count; i++)
             {
-                ProfileElement element = m_ProfileData[i];
+                ProfileElement element = m_ProfileData.ProfileElements[i];
                 element.Points = ListPoint.DeserializeObject(element.FileName);
             }
 
             return m_ProfileData;
+        }
+        public void SetFullProfile(ProfileElementList profile)
+        {
+            m_ProfileData = profile;
+            ProfileDataGrid.DataContext = m_ProfileData.ProfileElements;
         }
         private void Click_FileName(object sender, RoutedEventArgs e)
         {
@@ -105,9 +110,9 @@ namespace MMDance
             m_UserControlFor3D.m_listCurve = wnd.GetLongProfileCurvePoints();
 
             int cur_pos = 0;
-            for (int i = 0; i < m_ProfileData.Count; i++)
+            for (int i = 0; i < m_ProfileData.ProfileElements.Count; i++)
             {
-                ProfileElement element = m_ProfileData[i];
+                ProfileElement element = m_ProfileData.ProfileElements[i];
                 if (element.Length <= 0)
                 {
                     continue;

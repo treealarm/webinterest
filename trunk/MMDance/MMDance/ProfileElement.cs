@@ -36,8 +36,10 @@ namespace MMDance
 
     }
 
-    public class ProfileElementList : ObservableCollection<ProfileElement>
+    public class ProfileElementList
     {
+        public ProfileElementList() { }
+        public ObservableCollection<ProfileElement> ProfileElements = new ObservableCollection<ProfileElement>();
         public String BezierCurve { get; set; }
         public String BezierCurveLimit { get; set; }
     }

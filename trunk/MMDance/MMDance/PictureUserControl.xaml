@@ -7,7 +7,7 @@
              xmlns:c="clr-namespace:MMDance"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <c:ProfileElementList x:Key="m_ProfileData"/>
+        <c:ProfileElementList x:Key="m_ProfileData.ProfileElements"/>
         <c:PathValueConverter x:Key="PathValueConverter" />
     </UserControl.Resources>
     

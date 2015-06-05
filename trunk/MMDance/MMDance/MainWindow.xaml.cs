@@ -464,7 +464,7 @@ namespace MMDance
 
         public void LoadAll(string FileName)
         {
-            ProfileElementList profile = PictureUserControl.GetFullProfile();
+            ProfileElementList profile = new ProfileElementList();
             string dir = System.IO.Path.GetDirectoryName(FileName);
             using (StreamReader outfile = new StreamReader(FileName, true))
             {
@@ -474,15 +474,16 @@ namespace MMDance
 
             profile.BezierCurve = null;
             profile.BezierCurveLimit = null;
-            for (int i = 0; i < profile.Count; i++)
+            for (int i = 0; i < profile.ProfileElements.Count; i++)
             {
-                ProfileElement element = profile[i];
+                ProfileElement element = profile.ProfileElements[i];
                 
                 string filename = System.IO.Path.GetFileName(element.FileName);
                 element.FileName = dir + filename;
                 ListPoint.SerializeObject(element.Points, element.FileName);
                 element.Points = null;
-            }           
+            }
+            PictureUserControl.SetFullProfile(profile);
         }
 
         public void SaveAll(string FileName)
@@ -501,9 +502,9 @@ namespace MMDance
             }
             profile.BezierCurve = null;
             profile.BezierCurveLimit = null;
-            for (int i = 0; i < profile.Count; i++)
+            for (int i = 0; i < profile.ProfileElements.Count; i++)
             {
-                ProfileElement element = profile[i];
+                ProfileElement element = profile.ProfileElements[i];
                 element.Points = null;
             }
         }
