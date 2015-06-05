@@ -27,6 +27,7 @@ namespace MMDance
     public partial class PictureUserControl : UserControl
     {
         ProfileElementList m_ProfileData = new ProfileElementList();
+
         public PictureUserControl()
         {
             InitializeComponent();
@@ -45,6 +46,16 @@ namespace MMDance
             ProfileDataGrid.DataContext = m_ProfileData;
         }
 
+        public ProfileElementList GetFullProfile()
+        {
+            for (int i = 0; i < m_ProfileData.Count; i++)
+            {
+                ProfileElement element = m_ProfileData[i];
+                element.Points = ListPoint.DeserializeObject(element.FileName);
+            }
+
+            return m_ProfileData;
+        }
         private void Click_FileName(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
