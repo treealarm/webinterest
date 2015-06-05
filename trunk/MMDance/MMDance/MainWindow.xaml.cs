@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Media3D;
 using System.Diagnostics;
+using System.IO;
 
 
 namespace MMDance
@@ -459,6 +460,52 @@ namespace MMDance
         public List<Point> GetLimitProfileCurvePoints()
         {
             return m_BezierProfileLimitUserControl.GetCurvePoints();
+        }
+
+        public void LoadAll(string FileName)
+        {
+            ProfileElementList profile = PictureUserControl.GetFullProfile();
+            string dir = System.IO.Path.GetDirectoryName(FileName);
+            using (StreamReader outfile = new StreamReader(FileName, true))
+            {
+                profile = ProfileElementSerializer.DeserializeObject(outfile.ReadToEnd());
+            }
+
+
+            profile.BezierCurve = null;
+            profile.BezierCurveLimit = null;
+            for (int i = 0; i < profile.Count; i++)
+            {
+                ProfileElement element = profile[i];
+                
+                string filename = System.IO.Path.GetFileName(element.FileName);
+                element.FileName = dir + filename;
+                ListPoint.SerializeObject(element.Points, element.FileName);
+                element.Points = null;
+            }           
+        }
+
+        public void SaveAll(string FileName)
+        {
+            ProfileElementList profile = PictureUserControl.GetFullProfile();
+            if (profile == null)
+            {
+                return;
+            }
+            profile.BezierCurve = m_BezierProfileUserControl.GetCurve();
+            profile.BezierCurveLimit = m_BezierProfileLimitUserControl.GetCurve();
+
+            using (StreamWriter outfile = new StreamWriter(FileName, false))
+            {
+                outfile.Write(ProfileElementSerializer.SerializeObject(profile));
+            }
+            profile.BezierCurve = null;
+            profile.BezierCurveLimit = null;
+            for (int i = 0; i < profile.Count; i++)
+            {
+                ProfileElement element = profile[i];
+                element.Points = null;
+            }
         }
     }
 }

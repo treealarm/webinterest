@@ -29,6 +29,8 @@
             <CheckBox Content="Поднять" Height="16" HorizontalAlignment="Left" Name="checkBoxInk" VerticalAlignment="Top" Checked="checkBoxInk_Checked" Unchecked="checkBoxInk_Unchecked" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockInfo" Text="->>>" VerticalAlignment="Top" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockCounter" Text="->>>" VerticalAlignment="Top" />
+            <Button Content="Сохранить все" Height="23" HorizontalAlignment="Stretch" Name="buttonSaveAll" Click="buttonSaveAll_Click" />
+            <Button Content="Загрузить все" Height="23" HorizontalAlignment="Stretch" Name="buttonLoadAll" Click="buttonLoadAll_Click" />
         </StackPanel>
 
         <Grid Grid.Column = "1"  Grid.Row = "0">

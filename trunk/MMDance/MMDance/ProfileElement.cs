@@ -9,6 +9,7 @@ using System.Windows;
 using System.Xml.Serialization;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
+using BezierCurve;
 
 namespace MMDance
 {
@@ -18,7 +19,7 @@ namespace MMDance
         public string FileName { get; set; }
         public int Length { get; set; }
         public double Angle { get; set; }
-
+        public List<Point> Points { get; set; }
         public static BitmapImage GetImage(string fileName)
         {
             if (!File.Exists(fileName))
@@ -32,10 +33,13 @@ namespace MMDance
             image.EndInit();
             return image;
         }
+
     }
 
     public class ProfileElementList : ObservableCollection<ProfileElement>
     {
+        public String BezierCurve { get; set; }
+        public String BezierCurveLimit { get; set; }
     }
     public static class ProfileElementSerializer
     {

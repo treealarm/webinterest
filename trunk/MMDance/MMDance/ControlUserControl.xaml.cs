@@ -183,5 +183,25 @@ namespace MMDance
         {
             SetTimerSetting();
         }
+
+        private void buttonSaveAll_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog op = new SaveFileDialog();
+            op.Filter = "xml|*.xml;";
+            if (op.ShowDialog() == true)
+            {
+                MainWindow.GetMainWnd().SaveAll(op.FileName);
+            }
+        }
+
+        private void buttonLoadAll_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog op = new OpenFileDialog();
+            op.Filter = "xml|*.xml;";
+            if (op.ShowDialog() == true)
+            {
+                MainWindow.GetMainWnd().LoadAll(op.FileName);
+            }
+        }
     }
 }
