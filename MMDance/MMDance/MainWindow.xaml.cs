@@ -293,17 +293,20 @@ namespace MMDance
 
             PictureUserControl.UpdateProfileResult();
 
-            InitStartYPos();
+            InitStartPos();
 
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
-            dispatcherTimer.Start(); 
+            dispatcherTimer.Start();
+            GoToZX(m_CurTask.z, -1, -1);
         }
 
-        void InitStartYPos()
+        void InitStartPos()
         {
             m_cur_pos.x = GetStepFromY(Properties.Settings.Default.YStart);
             m_CurDepth = 0;// Properties.Settings.Default.YStart - GetDepthStep();
+
+            m_CurTask.z =  GetStepFromZ((double)Properties.Settings.Default.ZStart);
         }
 
         public double GetDepthStep()
