@@ -147,5 +147,35 @@ namespace MMDance
             Properties.Settings.Default.Save();
             UpdateProfileResult();
         }
+
+        private void buttonUp_Click(object sender, RoutedEventArgs e)
+        {
+            ProfileElement element = ProfileDataGrid.SelectedItem as ProfileElement;
+            if (element == null)
+            {
+                return;
+            }
+            int index = m_ProfileData.ProfileElements.IndexOf(element);
+            if(index > 0)
+            {
+                m_ProfileData.ProfileElements.RemoveAt(index);
+                m_ProfileData.ProfileElements.Insert(index - 1, element);
+            }
+        }
+
+        private void buttonDown_Click(object sender, RoutedEventArgs e)
+        {
+            ProfileElement element = ProfileDataGrid.SelectedItem as ProfileElement;
+            if (element == null)
+            {
+                return;
+            }
+            int index = m_ProfileData.ProfileElements.IndexOf(element);
+            if (index < m_ProfileData.ProfileElements.Count - 1)
+            {
+                m_ProfileData.ProfileElements.RemoveAt(index);
+                m_ProfileData.ProfileElements.Insert(index+1, element);
+            }
+        }
     }
 }
