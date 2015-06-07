@@ -232,7 +232,9 @@ namespace MMDance
             }
 
             myMeshGeometry3D.Positions = myPositionCollection;
-            labelInfo.Content = myMeshGeometry3D.Bounds.Size;
+            Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
+            string s = string.Format("X:{0},Y:{1},Z:{2}",(int)mySize.X,(int)mySize.Y,(int)mySize.Z);
+            labelInfo.Content = s;
         }
         private double IntersectsWithTriangle(Ray ray, Point3D p0, Point3D p1, Point3D p2)
         {
@@ -298,7 +300,14 @@ namespace MMDance
 
 
             meshCube.Positions = millPositionCollection;
-            labelInfo2.Content = intersection;
+
+            Vector3D intersection1 = (Vector3D)intersection;
+            intersection1.Z = 0;
+            string s = string.Format("Len:{3}  X:{0},Y:{1},Z:{2}", 
+                (int)intersection.X, (int)intersection.Y, (int)intersection.Z,
+                (int)intersection1.Length);
+
+            labelInfo2.Content = s;
         }
 
         public void UpdatePosition2(Point3D intersection)
@@ -318,7 +327,13 @@ namespace MMDance
             }
 
             meshCube.Positions = millPositionCollection;
-            labelInfo2.Content = intersection;
+            Vector3D intersection1 = (Vector3D)intersection;
+            intersection1.Z = 0;
+            string s = string.Format("Len:{3}  X:{0},Y:{1},Z:{2}",
+                (int)intersection.X, (int)intersection.Y, (int)intersection.Z,
+                (int)intersection1.Length);
+
+            labelInfo2.Content = s;
         }
 
         public const double max_x = 100;
