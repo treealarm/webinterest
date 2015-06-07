@@ -104,6 +104,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
             <Grid.Resources>
@@ -141,6 +142,9 @@
 
             <Label  Grid.Column = "0"  Grid.Row = "8" Content="Начало Y(mm):" Height="28" HorizontalAlignment="Right"/>
             <TextBox Grid.Column = "1"  Grid.Row = "8" Height="23" Name="textBoxYStart" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.YStart}"/>
+
+            <Label  Grid.Column = "0"  Grid.Row = "9" Content="Начало 0->Z(mm):" Height="28" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column = "1"  Grid.Row = "9" Height="23" Name="textBoxZStart" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.ZStart}"/>
         </Grid>
 
         <Grid Grid.Column = "3"  Grid.Row = "0">

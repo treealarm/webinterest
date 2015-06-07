@@ -274,5 +274,17 @@ namespace MMDance.Properties {
                 this["YStart"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ZStart {
+            get {
+                return ((int)(this["ZStart"]));
+            }
+            set {
+                this["ZStart"] = value;
+            }
+        }
     }
 }
