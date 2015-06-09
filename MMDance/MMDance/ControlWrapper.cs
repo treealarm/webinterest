@@ -183,9 +183,9 @@ public class ControlWrapper
             if (ReadFileManagedBuffer(ReadHandleToUSBDevice, INBuffer, 65, ref BytesRead, IntPtr.Zero))		//Blocking function, unless an "overlapped" structure is used	
             {
                 do_steps buf = new do_steps();
-                ByteArrayToStructure(INBuffer , ref m_cur_steps, 3);
+                ByteArrayToStructure(INBuffer, ref m_cur_steps, 3);
                 ByteArrayToStructure(INBuffer, ref buf, 3 + Marshal.SizeOf(m_cur_steps));
-                ByteArrayToStructure(INBuffer, ref m_timer_ink_impuls, 3 + Marshal.SizeOf(m_cur_steps)*2);
+                ByteArrayToStructure(INBuffer, ref m_timer_ink_impuls, 3 + Marshal.SizeOf(m_cur_steps) * 2);
 
                 for (int i = 0; i < MOTORS_COUNT; i++)
                 {
@@ -195,7 +195,7 @@ public class ControlWrapper
                     }
                     if (Math.Abs(m_cur_steps.m_uSteps[i]) > 100000)
                     {
-                         Debug.WriteLine("Something wrong");
+                        Debug.WriteLine("Something wrong");
                     }
                 }
 
@@ -204,6 +204,10 @@ public class ControlWrapper
                     return true;
                 }
             }
+        }
+        else
+        {
+            return false;
         }
         return false;
     }
