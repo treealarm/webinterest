@@ -474,9 +474,9 @@ namespace MMDance
                 profile = ProfileElementSerializer.DeserializeObject(outfile.ReadToEnd());
             }
 
+            m_BezierProfileUserControl.SetCurve(profile.BezierCurve);
+            m_BezierProfileLimitUserControl.SetCurve(profile.BezierCurveLimit);
 
-            profile.BezierCurve = null;
-            profile.BezierCurveLimit = null;
             for (int i = 0; i < profile.ProfileElements.Count; i++)
             {
                 ProfileElement element = profile.ProfileElements[i];
@@ -496,8 +496,8 @@ namespace MMDance
             {
                 return;
             }
-            profile.BezierCurve = m_BezierProfileUserControl.GetCurve();
-            profile.BezierCurveLimit = m_BezierProfileLimitUserControl.GetCurve();
+            profile.BezierCurve = m_BezierProfileUserControl.m_Segments;
+            profile.BezierCurveLimit = m_BezierProfileLimitUserControl.m_Segments;
 
             using (StreamWriter outfile = new StreamWriter(FileName, false))
             {
