@@ -24,6 +24,12 @@ namespace BezierCurve
             InitializeComponent();
         }
 
+        public void SetCurve(BezierViewModel pCurve)
+        {
+            m_Segments = pCurve;
+            DataContext = m_Segments;
+        }
+
         public void SetCurve(string sCurve)
         {
             m_Segments = BezierViewModelSerializer.DeserializeObject(sCurve);
@@ -33,6 +39,7 @@ namespace BezierCurve
         {
             return BezierViewModelSerializer.SerializeObject(m_Segments);
         }
+
         public BezierViewModel m_Segments = new BezierViewModel();
 
 
@@ -68,7 +75,7 @@ namespace BezierCurve
         public List<Point> GetCurvePoints()
         {
             List<Point> ret = new List<Point>();
-            List<BezierSegment> SortedList = m_Segments.Segments.OrderBy(o => o.Number).ToList();
+            List<BezierSegment> SortedList = m_Segments.Segments;
             for (int k = 0; k < SortedList.Count; k++)
             {
                 BezierSegment seg = SortedList[k];
@@ -142,6 +149,77 @@ namespace BezierCurve
             {
                 RedrawLines();
             }
+        }
+
+        private void buttonUp_Click(object sender, RoutedEventArgs e)
+        {
+            BezierSegment element = dataGridSegments.SelectedItem as BezierSegment;
+            if (element == null)
+            {
+                return;
+            }
+            int index = m_Segments.Segments.IndexOf(element);
+            if (index > 0)
+            {
+                m_Segments.Segments.RemoveAt(index);
+                m_Segments.Segments.Insert(index - 1, element);
+            }
+            dataGridSegments.SelectedItem = element;
+            dataGridSegments.Items.Refresh();
+        }
+
+        private void buttonDown_Click(object sender, RoutedEventArgs e)
+        {
+            BezierSegment element = dataGridSegments.SelectedItem as BezierSegment;
+            if (element == null)
+            {
+                return;
+            }
+            int index = m_Segments.Segments.IndexOf(element);
+            if (index < m_Segments.Segments.Count - 1)
+            {
+                m_Segments.Segments.RemoveAt(index);
+                m_Segments.Segments.Insert(index + 1, element);
+            }
+            dataGridSegments.SelectedItem = element;
+            dataGridSegments.Items.Refresh();
+        }
+
+        private void buttonUpCoords_Click(object sender, RoutedEventArgs e)
+        {
+            BezierSegment segment = dataGridSegments.SelectedItem as BezierSegment;
+
+            BezierPoint element = dataGridPoints.SelectedItem as BezierPoint;
+            if (element == null)
+            {
+                return;
+            }
+            int index = segment.Points.IndexOf(element);
+            if (index > 0)
+            {
+                segment.Points.RemoveAt(index);
+                segment.Points.Insert(index - 1, element);
+            }
+            dataGridPoints.SelectedItem = element;
+            dataGridPoints.Items.Refresh();
+        }
+
+        private void buttonDownCoords_Click(object sender, RoutedEventArgs e)
+        {
+            BezierSegment segment = dataGridSegments.SelectedItem as BezierSegment;
+            BezierPoint element = dataGridPoints.SelectedItem as BezierPoint;
+            if (element == null)
+            {
+                return;
+            }
+            int index = segment.Points.IndexOf(element);
+            if (index < segment.Points.Count - 1)
+            {
+                segment.Points.RemoveAt(index);
+                segment.Points.Insert(index + 1, element);
+            }
+            dataGridPoints.SelectedItem = element;
+            dataGridPoints.Items.Refresh();
         }
     }
 }

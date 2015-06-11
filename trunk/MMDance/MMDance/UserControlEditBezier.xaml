@@ -10,6 +10,7 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Canvas Background="Gainsboro" Loaded="Grid_Loaded" Name="m_Canvas" PreviewMouseLeftButtonDown="m_Canvas_PreviewMouseLeftButtonDown">
         </Canvas>
@@ -24,19 +25,21 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-                         
-            <DataGrid  AutoGenerateColumns="False" Height="Auto" Name="dataGridSegments" Width="Auto"
-                       ItemsSource="{Binding Segments}" IsSynchronizedWithCurrentItem="True" CellEditEnding="dataGridSegments_CellEditEnding">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Number" Binding="{Binding Number}"/>
-                </DataGrid.Columns>
-            </DataGrid>
+            
+                    <DataGrid  VerticalAlignment="Top"  AutoGenerateColumns="False" Height="Auto" Name="dataGridSegments" Width="Auto"
+                       ItemsSource="{Binding Segments}" IsSynchronizedWithCurrentItem="True" CellEditEnding="dataGridSegments_CellEditEnding" MaxHeight="200">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Number" Binding="{Binding Number}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+            
+                
             <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" 
               HorizontalAlignment="Center"
               Background="Blue" 
               ShowsPreview="true"
               Width="5"/>
-            <DataGrid  AutoGenerateColumns="False" Grid.Column="2" Height="Auto" Name="dataGridPoints" Width="Auto"
+            <DataGrid  VerticalAlignment="Top" AutoGenerateColumns="False" Grid.Column="2" Height="Auto" Name="dataGridPoints" Width="Auto"
                        ItemsSource="{Binding Segments/Points}" IsSynchronizedWithCurrentItem="True" CellEditEnding="dataGridPoints_CellEditEnding">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="X" Binding="{Binding X}"/>
@@ -44,6 +47,15 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="Up" Height="23" Name="buttonUp" Width="Auto" HorizontalAlignment="Left" Click="buttonUp_Click" />
+            <Button Content="Down" Height="23" Name="buttonDown" Width="Auto" HorizontalAlignment="Left" Click="buttonDown_Click" />
+        </StackPanel>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Up" Height="23" Name="buttonUpCoords" Width="Auto" HorizontalAlignment="Right" Click="buttonUpCoords_Click" />
+            <Button Content="Down" Height="23" Name="buttonDownCoords" Width="Auto" HorizontalAlignment="Right" Click="buttonDownCoords_Click" />
+        </StackPanel>
+
     </Grid>
 </UserControl>
