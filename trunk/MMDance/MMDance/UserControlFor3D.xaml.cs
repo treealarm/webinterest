@@ -358,7 +358,7 @@ namespace MMDance
             E_OUT
         };
 
-        public const double m_dFreza = 3;
+        public static Point3D m_dFreza = new Point3D(3, 0, 3);
         public IntersectionType GetIntersection(double angle, double Z, out Point3D intersection)
         {
             IntersectionType ret = IntersectionType.E_OUT;
@@ -369,16 +369,16 @@ namespace MMDance
             
             Ray[] rays = new Ray[4];
 
-            Vector3D offset = new Vector3D(0, -m_dFreza/2, 0);
+            Vector3D offset = new Vector3D(0, -m_dFreza.Y/2, 0);
             rays[0] = GetRay(angle, Z, offset);
 
-            offset = new Vector3D(0, m_dFreza/2, 0);
+            offset = new Vector3D(0, m_dFreza.Y/2, 0);
             rays[1] = GetRay(angle, Z, offset);
 
-            offset = new Vector3D(0, 0, -m_dFreza/2);
+            offset = new Vector3D(0, 0, -m_dFreza.Z/2);
             rays[2] = GetRay(angle, Z, offset);
 
-            offset = new Vector3D(0, 0, m_dFreza/2);
+            offset = new Vector3D(0, 0, m_dFreza.Z/2);
             rays[3] = GetRay(angle, Z, offset);
 
             offset = new Vector3D(0, 0, 0);

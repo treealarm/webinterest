@@ -80,9 +80,9 @@ namespace MMDance
         private void ProcessCommand()
         {
             int check_counter = 100;
+            int SleepVal = 1;
             while (!StopThread)
             {
-                int SleepVal = 1;
                 check_counter++;
                 if (check_counter > 100 && ControlUserControl != null && m_ControlWrapper.IsOpen())
                 {
@@ -109,6 +109,11 @@ namespace MMDance
                             }
                         }
                     }
+                    SleepVal = 1;
+                }
+                else
+                {
+                    SleepVal = m_ControlWrapper.GetEstimatedSleep();
                 }
                 
                 Thread.Sleep(SleepVal);
@@ -138,7 +143,7 @@ namespace MMDance
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 4 + ControlWrapper.MOTORS_COUNT), Serializable]
-        internal class do_timer_set
+        public class do_timer_set
         {
             [MarshalAs(UnmanagedType.U2)]
             public UInt16 m_timer_res;
@@ -177,23 +182,22 @@ namespace MMDance
             AddCommand(OutputPacketBuffer);
         }
 
-        do_timer_set m_curtimerset = new do_timer_set();
-
+        public static do_timer_set m_curtimerset = new do_timer_set();
+        
         public void SetTimerSettings(UInt16 timer_res, UInt16 strike_impuls, byte[] multiplier)
         {
-            do_timer_set timerset = new do_timer_set();
-            timerset.m_timer_res = (UInt16)(UInt16.MaxValue - timer_res);
-            timerset.m_strike_impuls = strike_impuls;
+            m_curtimerset.m_timer_res = (UInt16)(UInt16.MaxValue - timer_res);
+            m_curtimerset.m_strike_impuls = strike_impuls;
 
             for (int i = 0; i < ControlWrapper.MOTORS_COUNT && i < multiplier.Length; i++)
             {
-                timerset.m_multiplier[i] = multiplier[i];
+                m_curtimerset.m_multiplier[i] = multiplier[i];
             }
             
             byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
             OutputPacketBuffer[0] = 0;
             OutputPacketBuffer[1] = ControlWrapper.COMMAND_SET_TIME;
-            ControlWrapper.StructureToByteArray(timerset, OutputPacketBuffer, 2);
+            ControlWrapper.StructureToByteArray(m_curtimerset, OutputPacketBuffer, 2);
             AddCommand(OutputPacketBuffer);
         }
         bool m_bPauseSoft = false;
@@ -311,7 +315,7 @@ namespace MMDance
 
         public double GetDepthStep()
         {
-            return UserControlFor3D.m_dFreza * 2;
+            return UserControlFor3D.m_dFreza.X + UserControlFor3D.m_dFreza.Z;
         }
         private bool DoEngraving(ref stanok_coord cur_coords)
         {
@@ -325,7 +329,11 @@ namespace MMDance
             vec.Z = 0;
             if (UserControlFor3D.IntersectionType.E_INTERSECTION == ret)
             {
-                PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
+                if (!Properties.Settings.Default.Roughing || cur_coords.b == 0)
+                {
+                    PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
+                }
+                
                 cur_coords.x = GetStepFromY(vec.Length);
             }
             else if (UserControlFor3D.IntersectionType.E_OUT == ret)
@@ -388,7 +396,24 @@ namespace MMDance
                 bool ret = true;
                 for (int i = 0; i < 10; i++)
                 {
-                    ret = DoEngraving(ref m_CurTask);
+                    if (Properties.Settings.Default.Roughing)
+                    {
+                        int max_y = 0;
+                        for (m_CurTask.b = 0; m_CurTask.b  < Get360GradSteps(); m_CurTask.b += 1)
+                        {
+                            ret = DoEngraving(ref m_CurTask);
+                            if (m_CurTask.x > max_y)
+                            {
+                                max_y = m_CurTask.x;
+                            }
+                        }
+                        m_CurTask.x = max_y;
+                    }
+                    else
+                    {
+                        ret = DoEngraving(ref m_CurTask);
+                    }
+                    
                     if (!ret)
                     {
                         break;
@@ -410,7 +435,7 @@ namespace MMDance
                     {
                         m_CurTask.b = 0;
                         InitCurBPos();
-                        m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza-1);
+                        m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z-1);
                     }
                     m_counter++;
                 }

@@ -31,6 +31,8 @@
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockCounter" Text="->>>" VerticalAlignment="Top" />
             <Button Content="Сохранить все" Height="23" HorizontalAlignment="Stretch" Name="buttonSaveAll" Click="buttonSaveAll_Click" />
             <Button Content="Загрузить все" Height="23" HorizontalAlignment="Stretch" Name="buttonLoadAll" Click="buttonLoadAll_Click" />
+            <CheckBox Content="Обдирка" Height="16" HorizontalAlignment="Left" Name="checkBoxRoughing" VerticalAlignment="Top" 
+                      IsChecked="{Binding Source={StaticResource Settings}, Path=Default.Roughing}"/>
         </StackPanel>
 
         <Grid Grid.Column = "1"  Grid.Row = "0">

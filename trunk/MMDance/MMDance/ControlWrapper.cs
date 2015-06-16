@@ -131,6 +131,27 @@ public class ControlWrapper
             m_timer_ink_impuls);
         return ret;
     }
+
+
+    public int GetEstimatedSleep()
+    {
+        int maxSleep = 0;
+        for(int i = 0 ; i < MOTORS_COUNT; i++)
+        {
+            double msec = (1000 / 18661) * 
+                (double)(MainWindow.m_curtimerset.m_timer_res * MainWindow.m_curtimerset.m_multiplier[i]*
+                Math.Abs(m_cur_steps.m_uSteps[i]));
+            if (msec > maxSleep)
+            {
+                maxSleep = (int)msec;
+            }
+        }
+        if (maxSleep > 100)
+        {
+            maxSleep = 100;
+        }
+        return maxSleep;
+    }
     public static void StructureToByteArray(object obj, byte[] bytearray, int position)
     {
         int len = Marshal.SizeOf(obj);
