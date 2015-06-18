@@ -230,22 +230,36 @@ namespace CreateFigure
             }
         }
 
+        Ellipse CreateEllipse(double width, double height, double desiredCenterX, double desiredCenterY)
+        {
+            Ellipse ellipse = new Ellipse { Width = width, Height = height };
+            double left = desiredCenterX - (width / 2);
+            double top = desiredCenterY - (height / 2);
+
+            ellipse.Margin = new Thickness(left, top, 0, 0);
+            return ellipse;
+        }
+
         private void buttonCreateCurve_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog op = new OpenFileDialog();
-            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bmp|" +
-                "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-                "Portable Network Graphic (*.png)|*.png";
-            if (op.ShowDialog() == true)
+            myCanvas.Children.Clear();
+            
+            double R = Convert.ToDouble(textBoxGreeceDiameter.Text) / 2;
+            double RThr = Convert.ToDouble(textBoxGreeceEllipceDiameter.Text) / 2;
+            int nPoints = Convert.ToInt32(textBoxGreeceEllipceNumber.Text);
+
+            double shift = (RThr + R);
+            double TotalWidth = shift * 2;
+            double fAngleDelta = ConvertToRadians(360 / nPoints);
+
+            for (double angle = 0; angle < Math.PI * 2; angle += fAngleDelta)
             {
-                SaveFileDialog op1 = new SaveFileDialog();
-                op1.Filter = "xml|*.xml;";
-                if (op1.ShowDialog() == true)
-                {
-                    List<double> list = new List<double>();
-                    GetLongitudinalSectionProfile(op.FileName, list, Convert.ToDouble(textBoxCurvePointHeight.Text));
-                    ListDouble.SerializeObject(list, op1.FileName);
-                }
+                double y = R * Math.Sin(angle) + shift;
+                double x = R * Math.Cos(angle) + shift;
+                Ellipse myEllipse = CreateEllipse(RThr*2,RThr*2,x,y);
+                myEllipse.Stroke = System.Windows.Media.Brushes.Black;
+                myEllipse.Fill = System.Windows.Media.Brushes.DarkBlue;
+                myCanvas.Children.Add(myEllipse);
             }
         }
 

@@ -1,9 +1,21 @@
 ﻿<Window x:Class="CreateFigure.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="446" Width="525">
     <Grid>
-        <StackPanel Orientation="Horizontal">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Canvas Background="Gainsboro" Grid.Row="0" Canvas.Left="0" Canvas.Top="0" Name="myCanvas" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" 
+              VerticalAlignment="Center"
+              Background="Black" 
+              ShowsPreview="true"
+              Height="5"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <StackPanel>
                 <Button Content="Create Circle" Height="23" HorizontalAlignment="Left" Name="buttonCreateCircle" VerticalAlignment="Top" Width="75" Click="buttonCreateCircle_Click" />
                 <Label Content="Diameter (mm):" Height="28" Name="labelDiameter" />
@@ -22,10 +34,16 @@
             </StackPanel>
 
             <StackPanel>
-                <Button Content="Create Curve" Height="23" HorizontalAlignment="Left" Name="buttonCreateCurve" VerticalAlignment="Top" Width="75" Click="buttonCreateCurve_Click" />
+                <Button Content="Create Greece" Height="23" HorizontalAlignment="Left" Name="buttonCreateCurve" VerticalAlignment="Top" Width="75" Click="buttonCreateCurve_Click" />
 
-                <Label Content="Height of OnePoint (mm):" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxCurvePointHeight" VerticalAlignment="Top" Width="120" Text="1" />
+                <Label Content="Diameter (mm):" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceDiameter" VerticalAlignment="Top" Width="120" Text="90" />
+
+                <Label Content="Ellipce Diameters (mm):" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceDiameter" VerticalAlignment="Top" Width="120" Text="10" />
+
+                <Label Content="Ellipce Number:" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceNumber" VerticalAlignment="Top" Width="120" Text="10" />
             </StackPanel>
 
             <StackPanel>
@@ -41,5 +59,5 @@
                 <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxCirclesNumber" VerticalAlignment="Top" Width="120" Text="5" />
             </StackPanel>
         </StackPanel>
-    </Grid>
+        </Grid>
 </Window>
