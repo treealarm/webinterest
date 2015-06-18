@@ -135,6 +135,10 @@ public class ControlWrapper
 
     public int GetEstimatedSleep()
     {
+        if (m_cur_steps.m_uSteps == null)
+        {
+            return 1000;
+        }
         int maxSleep = 0;
         for(int i = 0 ; i < MOTORS_COUNT; i++)
         {
