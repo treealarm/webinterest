@@ -33,6 +33,9 @@
             <Button Content="Загрузить все" Height="23" HorizontalAlignment="Stretch" Name="buttonLoadAll" Click="buttonLoadAll_Click" />
             <CheckBox Content="Обдирка" Height="16" HorizontalAlignment="Left" Name="checkBoxRoughing" VerticalAlignment="Top" 
                       IsChecked="{Binding Source={StaticResource Settings}, Path=Default.Roughing}"/>
+
+            <CheckBox Content="Один круг" Height="16" HorizontalAlignment="Left" Name="checkBoxOneCircle" VerticalAlignment="Top" 
+                      IsChecked="{Binding Source={StaticResource Settings}, Path=Default.OneCircle}"/>
         </StackPanel>
 
         <Grid Grid.Column = "1"  Grid.Row = "0">

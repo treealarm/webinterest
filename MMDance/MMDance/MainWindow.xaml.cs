@@ -436,6 +436,12 @@ namespace MMDance
                         m_CurTask.b = 0;
                         InitCurBPos();
                         m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z-1);
+
+                        if (Properties.Settings.Default.OneCircle)
+                        {
+                            ret = false;
+                            break;
+                        }
                     }
                     m_counter++;
                 }

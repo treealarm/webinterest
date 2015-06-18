@@ -298,5 +298,17 @@ namespace MMDance.Properties {
                 this["Roughing"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OneCircle {
+            get {
+                return ((bool)(this["OneCircle"]));
+            }
+            set {
+                this["OneCircle"] = value;
+            }
+        }
     }
 }
