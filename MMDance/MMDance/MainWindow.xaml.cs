@@ -298,6 +298,8 @@ namespace MMDance
             PictureUserControl.UpdateProfileResult();
 
             InitStartPos();
+            //RawProg();
+            
 
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
@@ -305,6 +307,26 @@ namespace MMDance
             GoToZX(m_CurTask.z, -1, -1);
         }
 
+        void RawProg()
+        {
+            int z1 = GetStepFromZ(10);
+            int z2 = GetStepFromZ(700);
+
+            
+            int yDown = GetStepFromY(40);
+            int yUp = GetStepFromY(45);
+            GoToZX(-1, yUp, -1);
+            for (double alfa = 0; alfa < 360; alfa += 45)
+            {
+                int b = GetStepFromAngle(alfa);
+                GoToZX(z1, yUp, b);
+                GoToZX(z1, yDown, b);
+                GoToZX(z2, yDown, b);
+                GoToZX(z2, yUp, b);
+            }
+
+            GoToZeroes();
+        }
         void InitStartPos()
         {
             m_cur_pos.x = GetStepFromY(Properties.Settings.Default.YStart);
@@ -353,6 +375,11 @@ namespace MMDance
         int Get360GradSteps()
         {
             return (int)(360/ Properties.Settings.Default.StepBgrad);
+        }
+        int GetStepFromAngle(double angle)
+        {
+            double temp = 360 / Properties.Settings.Default.StepBgrad * Properties.Settings.Default.StepBgrad;
+            return (int)temp;
         }
         double GetAngleFromStep(int step)
         {
@@ -451,11 +478,7 @@ namespace MMDance
                 if(!ret)
                 {
                     Thread.Sleep(1000);
-                    m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart);
-                    GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
-                    m_CurTask.z = 0;
-                    m_CurTask.b = 0;
-                    GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                    GoToZeroes();
                     if (!m_bDepthUsed)
                     {
                         m_CurTask = new stanok_coord();
@@ -470,7 +493,16 @@ namespace MMDance
                     }
                 }
             }
-        } 
+        }
+
+        void GoToZeroes()
+        {
+            m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart);
+            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+            m_CurTask.z = 0;
+            m_CurTask.b = 0;
+            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Properties.Settings.Default.BezierCurve = m_BezierProfileUserControl.GetCurve();
