@@ -435,6 +435,10 @@ namespace MMDance
                             }
                         }
                         m_CurTask.x = max_y;
+                        for (m_CurTask.b = 0; m_CurTask.b < Get360GradSteps(); m_CurTask.b += 1)
+                        {
+                            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                        }
                     }
                     else
                     {
@@ -446,13 +450,16 @@ namespace MMDance
                         break;
                     }
 
-                    if (GetYFromStep(m_CurTask.x) <  m_CurDepth)
+                    if (!Properties.Settings.Default.Roughing)
                     {
-                        m_CurTask.x = GetStepFromY(m_CurDepth);
-                        m_bDepthUsed = true;
+                        if (GetYFromStep(m_CurTask.x) < m_CurDepth)
+                        {
+                            m_CurTask.x = GetStepFromY(m_CurDepth);
+                            m_bDepthUsed = true;
+                        }
+
+                        GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
                     }
-                    
-                    GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
                     
                     
                     
@@ -462,13 +469,12 @@ namespace MMDance
                     {
                         m_CurTask.b = 0;
                         InitCurBPos();
-                        m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z-1);
-
                         if (Properties.Settings.Default.OneCircle)
                         {
                             ret = false;
                             break;
                         }
+                        m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
                     }
                     m_counter++;
                 }
