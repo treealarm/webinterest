@@ -9,7 +9,7 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Canvas Background="Gainsboro" Grid.Row="0" Canvas.Left="0" Canvas.Top="0" Name="myCanvas" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+        <Canvas Background="White" Grid.Row="0" Canvas.Left="0" Canvas.Top="0" Name="myCanvas" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" 
               VerticalAlignment="Center"
               Background="Black" 
@@ -37,13 +37,13 @@
                 <Button Content="Create Greece" Height="23" HorizontalAlignment="Left" Name="buttonCreateCurve" VerticalAlignment="Top" Width="75" Click="buttonCreateGreece_Click" />
 
                 <Label Content="Diameter (mm):" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceDiameter" VerticalAlignment="Top" Width="120" Text="200" />
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceDiameter" VerticalAlignment="Top" Width="120" Text="90" />
 
                 <Label Content="Ellipce Width (mm):" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceWidth" VerticalAlignment="Top" Width="120" Text="50" />
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceWidth" VerticalAlignment="Top" Width="120" Text="20" />
 
                 <Label Content="Ellipce Height (mm):" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceHeight" VerticalAlignment="Top" Width="120" Text="20" />
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceHeight" VerticalAlignment="Top" Width="120" Text="15" />
 
                 <Label Content="Ellipce Number:" Height="28"/>
                 <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceNumber" VerticalAlignment="Top" Width="120" Text="8" />
