@@ -34,16 +34,19 @@
             </StackPanel>
 
             <StackPanel>
-                <Button Content="Create Greece" Height="23" HorizontalAlignment="Left" Name="buttonCreateCurve" VerticalAlignment="Top" Width="75" Click="buttonCreateCurve_Click" />
+                <Button Content="Create Greece" Height="23" HorizontalAlignment="Left" Name="buttonCreateCurve" VerticalAlignment="Top" Width="75" Click="buttonCreateGreece_Click" />
 
                 <Label Content="Diameter (mm):" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceDiameter" VerticalAlignment="Top" Width="120" Text="90" />
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceDiameter" VerticalAlignment="Top" Width="120" Text="200" />
 
-                <Label Content="Ellipce Diameters (mm):" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceDiameter" VerticalAlignment="Top" Width="120" Text="10" />
+                <Label Content="Ellipce Width (mm):" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceWidth" VerticalAlignment="Top" Width="120" Text="50" />
+
+                <Label Content="Ellipce Height (mm):" Height="28"/>
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceHeight" VerticalAlignment="Top" Width="120" Text="20" />
 
                 <Label Content="Ellipce Number:" Height="28"/>
-                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceNumber" VerticalAlignment="Top" Width="120" Text="10" />
+                <TextBox Height="23" HorizontalAlignment="Left" Name="textBoxGreeceEllipceNumber" VerticalAlignment="Top" Width="120" Text="8" />
             </StackPanel>
 
             <StackPanel>

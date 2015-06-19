@@ -240,27 +240,78 @@ namespace CreateFigure
             return ellipse;
         }
 
-        private void buttonCreateCurve_Click(object sender, RoutedEventArgs e)
+        private void buttonCreateGreece_Click(object sender, RoutedEventArgs e)
         {
             myCanvas.Children.Clear();
             
             double R = Convert.ToDouble(textBoxGreeceDiameter.Text) / 2;
-            double RThr = Convert.ToDouble(textBoxGreeceEllipceDiameter.Text) / 2;
             int nPoints = Convert.ToInt32(textBoxGreeceEllipceNumber.Text);
-
-            double shift = (RThr + R);
-            double TotalWidth = shift * 2;
+            double EllipseWidth = Convert.ToDouble(textBoxGreeceEllipceWidth.Text);
+            double EllipseHeight = Convert.ToDouble(textBoxGreeceEllipceHeight.Text);
             double fAngleDelta = ConvertToRadians(360 / nPoints);
 
-            for (double angle = 0; angle < Math.PI * 2; angle += fAngleDelta)
+
+            Ellipse myEllipse = new Ellipse { Width = R*2, Height = R*2 };
+            myEllipse.Stroke = System.Windows.Media.Brushes.Black;
+            myEllipse.Fill = System.Windows.Media.Brushes.BlueViolet;
+            myEllipse.RenderTransform = new TranslateTransform(EllipseHeight, EllipseHeight); 
+            myCanvas.Children.Add(myEllipse);
+
+            for (double angle = 0; angle < 360; angle += 360 / nPoints)
             {
-                double y = R * Math.Sin(angle) + shift;
-                double x = R * Math.Cos(angle) + shift;
-                Ellipse myEllipse = CreateEllipse(RThr*2,RThr*2,x,y);
-                myEllipse.Stroke = System.Windows.Media.Brushes.Black;
-                myEllipse.Fill = System.Windows.Media.Brushes.DarkBlue;
+                myEllipse = new Ellipse { Width = EllipseWidth, Height = EllipseHeight };
+                TransformGroup transGroup = new TransformGroup();
+                transGroup.Children.Add(new RotateTransform(angle, EllipseWidth / 2, R + EllipseHeight / 2));
+                transGroup.Children.Add(new TranslateTransform(R - EllipseWidth / 2  + EllipseHeight, -EllipseHeight / 2 +EllipseHeight));
+                myEllipse.RenderTransform = transGroup; 
+                myEllipse.Stroke = System.Windows.Media.Brushes.White;
+                myEllipse.Fill = System.Windows.Media.Brushes.White;
                 myCanvas.Children.Add(myEllipse);
             }
+            myCanvas.Width = R * 2 + EllipseHeight*2;
+            myCanvas.Height = R * 2 + EllipseHeight*2;
+            ExportToBmp(new Uri("D:\\Canvas.bmp"), myCanvas);
+        }
+
+        public void ExportToBmp(Uri path, Canvas surface)
+        {
+            if (path == null) return;
+
+            // Save current canvas transform
+            Transform transform = surface.LayoutTransform;
+            // reset current transform (in case it is scaled or rotated)
+            surface.LayoutTransform = null;
+            
+            // Get the size of canvas
+            Size size = new Size(surface.Width, surface.Height);
+            // Measure and arrange the surface
+            // VERY IMPORTANT
+            surface.Measure(size);
+            surface.Arrange(new Rect(size));
+
+            // Create a render bitmap and push the surface to it
+            RenderTargetBitmap renderBitmap =
+              new RenderTargetBitmap(
+                (int)size.Width,
+                (int)size.Height,
+                96d,
+                96d,
+                PixelFormats.Pbgra32);
+            renderBitmap.Render(surface);
+
+            // Create a file stream for saving image
+            using (FileStream outStream = new FileStream(path.LocalPath, FileMode.Create))
+            {
+                // Use png encoder for our data
+                BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+                // push the rendered bitmap to it
+                encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                // save the data to the stream
+                encoder.Save(outStream);
+            }
+
+            // Restore previously saved layout
+            surface.LayoutTransform = transform;
         }
 
         public static BitmapSource CreateBitmap(int width, int height, double dpi, Action<DrawingContext> render)
