@@ -330,8 +330,6 @@ namespace MMDance
         void InitStartPos()
         {
             m_cur_pos.x = GetStepFromY(Properties.Settings.Default.YStart);
-            m_CurDepth = 0;// Properties.Settings.Default.YStart - GetDepthStep();
-
             m_CurTask.z =  GetStepFromZ((double)Properties.Settings.Default.ZStart);
         }
 
@@ -339,11 +337,14 @@ namespace MMDance
         {
             return UserControlFor3D.m_dFreza.X + UserControlFor3D.m_dFreza.Z;
         }
-        private bool DoEngraving(ref stanok_coord cur_coords)
+
+        private int DoEngraving(int BSteps, int ZSteps)
         {
             Point3D intersection;
-            double angle = GetAngleFromStep(cur_coords.b);
-            double Z = GetZFromStep(cur_coords.z);
+            double angle = GetAngleFromStep(BSteps);
+            double Z = GetZFromStep(ZSteps);
+            int YSteps = GetStepFromY(Properties.Settings.Default.YStart);
+
             UserControlFor3D.IntersectionType ret = PictureUserControl.
                 m_UserControlFor3D.GetIntersection(angle, Z, out intersection);
 
@@ -351,27 +352,23 @@ namespace MMDance
             vec.Z = 0;
             if (UserControlFor3D.IntersectionType.E_INTERSECTION == ret)
             {
-                if (!Properties.Settings.Default.Roughing || cur_coords.b == 0)
+                if (!Properties.Settings.Default.Roughing || BSteps == 0)
                 {
                     PictureUserControl.m_UserControlFor3D.UpdatePosition(intersection, angle);
                 }
-                
-                cur_coords.x = GetStepFromY(vec.Length);
+
+                YSteps = GetStepFromY(vec.Length);
             }
-            else if (UserControlFor3D.IntersectionType.E_OUT == ret)
+            else if (UserControlFor3D.IntersectionType.E_OUT != ret)
             {
-                return false;
+                YSteps = GetStepFromY(UserControlFor3D.max_x);
             }
-            else
-            {
-                cur_coords.x = GetStepFromY(UserControlFor3D.max_x);
-            }
-            
-            return true;
+
+            return YSteps;
         }
 
         stanok_coord m_CurTask = new stanok_coord();
-        double m_CurDepth = 0;
+        
         int Get360GradSteps()
         {
             return (int)(360/ Properties.Settings.Default.StepBgrad);
@@ -411,7 +408,55 @@ namespace MMDance
             return (int)ret;
         }
 
-        bool m_bDepthUsed = false;
+        int GetMaxOnCircle()
+        {
+            int max_y = 0;
+            for (m_CurTask.b = 0; m_CurTask.b < Get360GradSteps(); m_CurTask.b += 1)
+            {
+                m_CurTask.x = DoEngraving(m_CurTask.b, m_CurTask.z);
+                if (m_CurTask.x > max_y)
+                {
+                    max_y = m_CurTask.x;
+                }
+            }
+            return max_y;
+        }
+
+        void DoLongitudinal()
+        {
+
+        }
+        void DoTransversal()
+        {
+            if (Properties.Settings.Default.Roughing)
+            {
+                m_CurTask.x = GetMaxOnCircle();
+                for (m_CurTask.b = 0; m_CurTask.b < Get360GradSteps(); m_CurTask.b += 1)
+                {
+                    GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                }
+            }
+            else
+            {
+                m_CurTask.x = DoEngraving(m_CurTask.b, m_CurTask.z);
+                GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+            }
+
+            m_CurTask.b += 1;
+
+            if (m_CurTask.b > Get360GradSteps())
+            {
+                m_CurTask.b = 0;
+                InitCurBPos();
+                m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
+            }
+            m_counter++;
+
+            if (GetZFromStep(m_CurTask.z) > PictureUserControl.m_UserControlFor3D.GetMaxZ())
+            {
+                StopMachine();
+            }
+        }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (m_bPauseSoft)
@@ -420,87 +465,29 @@ namespace MMDance
             }
             if (GetQueueLen() < 10)
             {
-                bool ret = true;
-                for (int i = 0; i < 10; i++)
+
+                if (Properties.Settings.Default.Longitudinal)
                 {
-                    if (Properties.Settings.Default.Roughing)
-                    {
-                        int max_y = 0;
-                        for (m_CurTask.b = 0; m_CurTask.b  < Get360GradSteps(); m_CurTask.b += 1)
-                        {
-                            ret = DoEngraving(ref m_CurTask);
-                            if (m_CurTask.x > max_y)
-                            {
-                                max_y = m_CurTask.x;
-                            }
-                        }
-                        m_CurTask.x = max_y;
-                        for (m_CurTask.b = 0; m_CurTask.b < Get360GradSteps(); m_CurTask.b += 1)
-                        {
-                            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
-                        }
-                    }
-                    else
-                    {
-                        ret = DoEngraving(ref m_CurTask);
-                    }
-                    
-                    if (!ret)
-                    {
-                        break;
-                    }
-
-                    if (!Properties.Settings.Default.Roughing)
-                    {
-                        if (GetYFromStep(m_CurTask.x) < m_CurDepth)
-                        {
-                            m_CurTask.x = GetStepFromY(m_CurDepth);
-                            m_bDepthUsed = true;
-                        }
-
-                        GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
-                    }
-                    
-                    
-                    
-                    m_CurTask.b += 1;
-                    
-                    if (m_CurTask.b > Get360GradSteps())
-                    {
-                        m_CurTask.b = 0;
-                        InitCurBPos();
-                        if (Properties.Settings.Default.OneCircle)
-                        {
-                            ret = false;
-                            break;
-                        }
-                        m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
-                    }
-                    m_counter++;
+                    DoLongitudinal();
+                }
+                else
+                {
+                    DoTransversal();
                 }
                 
                 ControlUserControl.textBlockCounter.Text = m_counter.ToString();
-                
-                if(!ret)
-                {
-                    Thread.Sleep(1000);
-                    GoToZeroes();
-                    if (!m_bDepthUsed)
-                    {
-                        m_CurTask = new stanok_coord();
-                        //ControlUserControl.checkBoxPauseSoft.IsChecked = true;
-                        dispatcherTimer.Stop();
-                        //ControlUserControl.checkBoxOutpusEnergy.IsChecked = false;
-                    }
-                    else
-                    {
-                        m_bDepthUsed = false;
-                        m_CurDepth -= GetDepthStep();
-                    }
-                }
+
             }
         }
 
+        void StopMachine()
+        {
+            Thread.Sleep(1000);
+            GoToZeroes();
+            m_CurTask = new stanok_coord();
+            //ControlUserControl.checkBoxPauseSoft.IsChecked = true;
+            dispatcherTimer.Stop();
+        }
         void GoToZeroes()
         {
             m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart);
