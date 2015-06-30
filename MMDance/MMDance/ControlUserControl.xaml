@@ -34,8 +34,8 @@
             <CheckBox Content="Обдирка" Height="16" HorizontalAlignment="Left" Name="checkBoxRoughing" VerticalAlignment="Top" 
                       IsChecked="{Binding Source={StaticResource Settings}, Path=Default.Roughing}"/>
 
-            <CheckBox Content="Один круг" Height="16" HorizontalAlignment="Left" Name="checkBoxOneCircle" VerticalAlignment="Top" 
-                      IsChecked="{Binding Source={StaticResource Settings}, Path=Default.OneCircle}"/>
+            <CheckBox Content="Продольно" Height="16" HorizontalAlignment="Left" Name="checkBoxLongitudinal" VerticalAlignment="Top" 
+                      IsChecked="{Binding Source={StaticResource Settings}, Path=Default.Longitudinal}"/>
         </StackPanel>
 
         <Grid Grid.Column = "1"  Grid.Row = "0">

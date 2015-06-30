@@ -302,12 +302,12 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool OneCircle {
+        public bool Longitudinal {
             get {
-                return ((bool)(this["OneCircle"]));
+                return ((bool)(this["Longitudinal"]));
             }
             set {
-                this["OneCircle"] = value;
+                this["Longitudinal"] = value;
             }
         }
     }

@@ -236,6 +236,12 @@ namespace MMDance
             string s = string.Format("X:{0},Y:{1},Z:{2}",(int)mySize.X,(int)mySize.Y,(int)mySize.Z);
             labelInfo.Content = s;
         }
+
+        public double GetMaxZ()
+        {
+            Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
+            return mySize.Z;
+        }
         private double IntersectsWithTriangle(Ray ray, Point3D p0, Point3D p1, Point3D p2)
         {
             Vector3D e1 = p1 - p0;
