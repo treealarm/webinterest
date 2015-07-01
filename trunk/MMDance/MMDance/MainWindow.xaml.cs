@@ -375,7 +375,7 @@ namespace MMDance
         }
         int GetStepFromAngle(double angle)
         {
-            double temp = 360 / Properties.Settings.Default.StepBgrad * Properties.Settings.Default.StepBgrad;
+            double temp = angle / Properties.Settings.Default.StepBgrad;
             return (int)temp;
         }
         double GetAngleFromStep(int step)
@@ -424,7 +424,25 @@ namespace MMDance
 
         void DoLongitudinal()
         {
+            m_CurTask.x = DoEngraving(m_CurTask.b, m_CurTask.z);
+            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
 
+
+            m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
+
+            if (GetZFromStep(m_CurTask.z) > PictureUserControl.m_UserControlFor3D.GetMaxZ())
+            {
+                m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart);
+                GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                m_CurTask.b += GetStepFromAngle(0.9);
+                m_CurTask.z = 0;
+            }
+            m_counter++;
+
+            if (m_CurTask.b > Get360GradSteps())
+            {
+                StopMachine();
+            }
         }
         void DoTransversal()
         {
