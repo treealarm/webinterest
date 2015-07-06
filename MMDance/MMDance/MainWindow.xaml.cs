@@ -422,22 +422,35 @@ namespace MMDance
             return max_y;
         }
 
+        bool StartFromBegin = true;
         void DoLongitudinal()
         {
             m_CurTask.x = DoEngraving(m_CurTask.b, m_CurTask.z);
             GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
 
-
-            m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
-
-            if (GetZFromStep(m_CurTask.z) > PictureUserControl.m_UserControlFor3D.GetMaxZ())
+            if (StartFromBegin)
             {
-                m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart);
-                GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
-                m_CurTask.z = GetStepFromZ((double)Properties.Settings.Default.ZStart); ;
-                GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
-                m_CurTask.b += GetStepFromAngle(0.9);
-                
+                int prev_z = m_CurTask.z;
+                m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
+                double cur_z_mm = GetZFromStep(m_CurTask.z);
+                if ( cur_z_mm > PictureUserControl.m_UserControlFor3D.GetMaxZ())
+                {
+                    m_CurTask.z = prev_z;
+                    StartFromBegin = !StartFromBegin;
+                    m_CurTask.b += GetStepFromAngle(3.6);
+                }
+            }
+            else
+            {
+                int prev_z = m_CurTask.z;
+                m_CurTask.z -= GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
+                double cur_z_mm = GetZFromStep(m_CurTask.z);
+                if (cur_z_mm < Properties.Settings.Default.ZStart)
+                {
+                    m_CurTask.z = prev_z;
+                    StartFromBegin = !StartFromBegin;
+                    m_CurTask.b += GetStepFromAngle(3.6);
+                }
             }
             m_counter++;
 
