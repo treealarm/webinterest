@@ -434,8 +434,10 @@ namespace MMDance
             {
                 m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart);
                 GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                m_CurTask.z = GetStepFromZ((double)Properties.Settings.Default.ZStart); ;
+                GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
                 m_CurTask.b += GetStepFromAngle(0.9);
-                m_CurTask.z = 0;
+                
             }
             m_counter++;
 
