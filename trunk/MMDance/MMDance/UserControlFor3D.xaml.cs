@@ -364,7 +364,7 @@ namespace MMDance
             E_OUT
         };
 
-        public static Point3D m_dFreza = new Point3D(1.5, 0, 25);
+        public static Point3D m_dFreza = new Point3D(5, 0, 8);
         public IntersectionType GetIntersection(double angle, double Z, out Point3D intersection)
         {
             IntersectionType ret = IntersectionType.E_OUT;
