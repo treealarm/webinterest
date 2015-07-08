@@ -310,5 +310,17 @@ namespace MMDance.Properties {
                 this["Longitudinal"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Plane {
+            get {
+                return ((bool)(this["Plane"]));
+            }
+            set {
+                this["Plane"] = value;
+            }
+        }
     }
 }

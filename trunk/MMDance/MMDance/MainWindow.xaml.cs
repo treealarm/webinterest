@@ -123,8 +123,8 @@ namespace MMDance
         internal class stanok_coord
         {
             public int z = 0;//между бабок
-            public int x = 0;//ход шпинделя
-            public int b = 0;//угол
+            public int x = 0;//ход шпинделя or x
+            public int b = 0;//угол or y
             public int w = 0;
         }
 
@@ -298,8 +298,7 @@ namespace MMDance
             PictureUserControl.UpdateProfileResult();
 
             InitStartPos();
-            //RawProg();
-            
+        
 
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
@@ -307,26 +306,6 @@ namespace MMDance
             GoToZX(m_CurTask.z, -1, -1);
         }
 
-        void RawProg()
-        {
-            int z1 = GetStepFromZ(10);
-            int z2 = GetStepFromZ(700);
-
-            
-            int yDown = GetStepFromY(40);
-            int yUp = GetStepFromY(45);
-            GoToZX(-1, yUp, -1);
-            for (double alfa = 0; alfa < 360; alfa += 45)
-            {
-                int b = GetStepFromAngle(alfa);
-                GoToZX(z1, yUp, b);
-                GoToZX(z1, yDown, b);
-                GoToZX(z2, yDown, b);
-                GoToZX(z2, yUp, b);
-            }
-
-            GoToZeroes();
-        }
         void InitStartPos()
         {
             m_cur_pos.x = GetStepFromY(Properties.Settings.Default.YStart);
@@ -336,6 +315,30 @@ namespace MMDance
         public double GetDepthStep()
         {
             return UserControlFor3D.m_dFreza.X + UserControlFor3D.m_dFreza.Z;
+        }
+
+        private int DoEngravingPlane(int XSteps, int YSteps)
+        {
+            Point3D intersection;
+
+            double X = GetXFromStep(XSteps);
+            double Y = GetYFromStep(YSteps);
+            int ZSteps = GetStepFromZ(Properties.Settings.Default.ZStart);
+
+            UserControlFor3D.IntersectionType ret = PictureUserControl.
+                m_UserControlFor3D.GetIntersectionPlane(X, Y, out intersection);
+
+            if (UserControlFor3D.IntersectionType.E_INTERSECTION == ret)
+            {
+                ZSteps = GetStepFromY(intersection.Z);
+                PictureUserControl.m_UserControlFor3D.UpdatePositionPlane(intersection);
+            }
+            else if (UserControlFor3D.IntersectionType.E_OUT != ret)
+            {
+                ZSteps = GetStepFromZ(Properties.Settings.Default.ZStart);
+            }
+
+            return ZSteps;
         }
 
         private int DoEngraving(int BSteps, int ZSteps)
@@ -361,7 +364,7 @@ namespace MMDance
             }
             else if (UserControlFor3D.IntersectionType.E_OUT != ret)
             {
-                YSteps = GetStepFromY(UserControlFor3D.max_x);
+                YSteps = GetStepFromY(Properties.Settings.Default.YStart);
             }
 
             return YSteps;
@@ -383,6 +386,14 @@ namespace MMDance
             double angle = step;
             angle *= Properties.Settings.Default.StepBgrad;
             return angle;
+        }
+        int GetStepFromX(double angle)
+        {
+            return GetStepFromAngle(angle);
+        }
+        double GetXFromStep(int step)
+        {
+            return GetAngleFromStep(step);
         }
         double GetZFromStep(int step)
         {
@@ -423,6 +434,26 @@ namespace MMDance
         }
 
         bool StartFromBegin = true;
+        void DoPlane()
+        {
+            
+            m_CurTask.z = DoEngravingPlane(m_CurTask.x, m_CurTask.b);
+            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+
+            m_CurTask.x += GetStepFromX(UserControlFor3D.m_dFreza.Z - 1);;
+
+            if (m_CurTask.x > PictureUserControl.m_UserControlFor3D.GetMaxX())
+            {
+                m_CurTask.x = 0;
+                m_CurTask.b += GetStepFromY(UserControlFor3D.m_dFreza.Y - 1);
+            }
+            m_counter++;
+
+            if (GetYFromStep(m_CurTask.b) > PictureUserControl.m_UserControlFor3D.GetMaxY())
+            {
+                StopMachine();
+            }
+        }
         void DoLongitudinal()
         {
             m_CurTask.x = DoEngraving(m_CurTask.b, m_CurTask.z);
@@ -496,9 +527,13 @@ namespace MMDance
             {
                 return;
             }
-            if (GetQueueLen() < 10)
+            //if (GetQueueLen() < 10)
             {
-
+                if (Properties.Settings.Default.Plane)
+                {
+                    DoPlane();
+                }
+                else
                 if (Properties.Settings.Default.Longitudinal)
                 {
                     DoLongitudinal();

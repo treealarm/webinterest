@@ -254,6 +254,16 @@ namespace MMDance
             Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
             return mySize.Z;
         }
+        public double GetMaxX()
+        {
+            Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
+            return mySize.X;
+        }
+        public double GetMaxY()
+        {
+            Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
+            return mySize.Y;
+        }
         private double IntersectsWithTriangle(Ray ray, Point3D p0, Point3D p1, Point3D p2)
         {
             Vector3D e1 = p1 - p0;
@@ -328,6 +338,46 @@ namespace MMDance
             labelInfo2.Content = s;
         }
 
+        public void UpdatePositionPlane(Point3D intersection)
+        {
+            Point3DCollection millPositionCollection = new Point3DCollection();
+            
+            const double w = 3;
+            {
+                Point3D p2 = intersection;
+                Point3D p3 = intersection;
+                p2.Z = -max_x;
+                p3.Z = -max_x;
+
+                p2.X += w;
+                p3.X -= w;
+                millPositionCollection.Add(intersection);
+                millPositionCollection.Add(p2);
+                millPositionCollection.Add(p3);
+            }
+            {
+                Point3D p2 = intersection;
+                Point3D p3 = intersection;
+                p2.Z = -max_x;
+                p3.Z = -max_x;
+
+                p2.Y += w;
+                p3.Y -= w;
+                millPositionCollection.Add(intersection);
+                millPositionCollection.Add(p2);
+                millPositionCollection.Add(p3);
+            }
+
+            meshCube.Positions = millPositionCollection;
+
+            Vector3D intersection1 = (Vector3D)intersection;
+            intersection1.Z = 0;
+            string s = string.Format("Len:{3}  X:{0},Y:{1},Z:{2}",
+                (int)intersection.X, (int)intersection.Y, (int)intersection.Z,
+                (int)intersection1.Length);
+
+            labelInfo2.Content = s;
+        }
         public void UpdatePosition2(Point3D intersection)
         {
             Point3DCollection millPositionCollection = new Point3DCollection();
@@ -368,6 +418,15 @@ namespace MMDance
             Ray ray = new Ray(pt1, dir);
             return ray;
         }
+        public Ray GetRayPlane(double X, double Y)
+        {
+            Point3D pt1 = new Point3D(X, Y, -max_x);
+            Point3D pt2 = new Point3D(X, Y, 0);
+            Vector3D dir = pt2 - pt1;
+
+            Ray ray = new Ray(pt1, dir);
+            return ray;
+        }
         
         public enum IntersectionType : int
         {
@@ -376,7 +435,7 @@ namespace MMDance
             E_OUT
         };
 
-        public static Point3D m_dFreza = new Point3D(5, 0, 8);
+        public static Point3D m_dFreza = new Point3D(5, 5, 8);
         public IntersectionType GetIntersection(double angle, double Z, out Point3D intersection)
         {
             IntersectionType ret = IntersectionType.E_OUT;
@@ -445,6 +504,71 @@ namespace MMDance
                             continue;
                         }
                         if (t > dist && t < max_x)
+                        {
+                            dist = t;
+                        }
+                    }
+                }
+            }
+
+            if (dist >= 0)
+            {
+                intersection = ray_base.Origin + dist * ray_base.Direction;
+                return IntersectionType.E_INTERSECTION;
+            }
+
+            return ret;
+        }
+        public IntersectionType GetIntersectionPlane(double X, double Y, out Point3D intersection)
+        {
+            IntersectionType ret = IntersectionType.E_OUT;
+            intersection = new Point3D();
+
+
+            Ray[] rays = new Ray[4];
+
+            double x_offset = m_dFreza.X / 2;
+            double y_offset = m_dFreza.Y / 2;
+            rays[0] = GetRayPlane(X, Y + y_offset);
+            rays[1] = GetRayPlane(X + x_offset, Y);
+            rays[2] = GetRayPlane(X, Y - y_offset);
+            rays[3] = GetRayPlane(X - x_offset, Y);
+            Ray ray_base = GetRayPlane(X, Y);
+
+
+            double dist = -1;
+
+            for (int i = 0; i < m_Model3DGroup.Children.Count; i++)
+            {
+                GeometryModel3D model = m_Model3DGroup.Children[i] as GeometryModel3D;
+
+                if (model == null || model == meshCubeModel)
+                {
+                    continue;
+                }
+                MeshGeometry3D geometry = model.Geometry as MeshGeometry3D;
+                if (geometry == null)
+                {
+                    continue;
+                }
+
+                if (!model.Bounds.Contains(new Point3D(X, Y, 0)))
+                {
+                    continue;
+                }
+                ret = IntersectionType.E_NOTHING;
+                Point3DCollection points = geometry.Positions;
+
+                for (int j = 0; j < points.Count; j += 3)
+                {
+                     for (int k = 0; k < rays.Length; k++)
+                    {
+                        double t = IntersectsWithTriangle(rays[k], points[j], points[j + 1], points[j + 2]);
+                        if (t < 0)
+                        {
+                            continue;
+                        }
+                        if (t > dist && t >= 0)
                         {
                             dist = t;
                         }

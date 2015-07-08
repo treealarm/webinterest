@@ -36,6 +36,9 @@
 
             <CheckBox Content="Продольно" Height="16" HorizontalAlignment="Left" Name="checkBoxLongitudinal" VerticalAlignment="Top" 
                       IsChecked="{Binding Source={StaticResource Settings}, Path=Default.Longitudinal}"/>
+            
+            <CheckBox Content="Поверхность" Height="16" HorizontalAlignment="Left" Name="checkBoxPlane" VerticalAlignment="Top" 
+                      IsChecked="{Binding Source={StaticResource Settings}, Path=Default.Plane}"/>
         </StackPanel>
 
         <Grid Grid.Column = "1"  Grid.Row = "0">
@@ -142,7 +145,7 @@
             <Label  Grid.Column = "0"  Grid.Row = "6" Content="шаг Y mm:" Height="28" HorizontalAlignment="Right"/>
             <TextBox Grid.Column = "1"  Grid.Row = "6" Height="23" Name="textBoxStepYmm" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepYmm}"/>
 
-            <Label  Grid.Column = "0"  Grid.Row = "7" Content="шаг B град:" Height="28" HorizontalAlignment="Right"/>
+            <Label  Grid.Column = "0"  Grid.Row = "7" Content="шаг B(X) град(mm):" Height="28" HorizontalAlignment="Right"/>
             <TextBox Grid.Column = "1"  Grid.Row = "7" Height="23" Name="textBoxStepBgrad" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepBgrad}"/>
 
             <Label  Grid.Column = "0"  Grid.Row = "8" Content="Начало Y(mm):" Height="28" HorizontalAlignment="Right"/>
