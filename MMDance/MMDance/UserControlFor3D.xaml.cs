@@ -194,7 +194,19 @@ namespace MMDance
                     disc.Add(newPoint);
                 }
 
-
+                if (Discs.Count == 0)
+                {
+                    //крышки над примитивами
+                    Point3DCollection disc0 = new Point3DCollection();
+                    for (int i = 0; i < disc.Count; i++)
+                    {
+                        Point3D pt = disc[i];
+                        pt.X = 0;
+                        pt.Y = 0;
+                        disc0.Add(pt);
+                    }
+                    Discs.Add(disc0);
+                }
                 Discs.Add(disc);
             }
 
