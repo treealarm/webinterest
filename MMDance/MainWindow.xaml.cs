@@ -192,13 +192,17 @@ namespace MMDance
                     }
                 }
             }
-            foreach (KeyValuePair<int, int> pair in m_selected_points)
+            for (int i = 0; i < m_selected_points.Count; i++)
             {
+                KeyValuePair<int, int> pair = m_selected_points[i];
                 int index = pair.Value * stride + 3 * pair.Key;
                 pixels[index] = 0;
                 pixels[index + 1] = 255;
                 pixels[index + 2] = 0;
+                pair = new KeyValuePair<int, int>(pair.Key, newFormatedBitmapSource.PixelHeight - pair.Value - 1);
+                m_selected_points[i] = pair; 
             }
+
             PictureUserControl.loaded_image.Source = BitmapSource.Create(newFormatedBitmapSource.PixelWidth, newFormatedBitmapSource.PixelHeight,
                 newFormatedBitmapSource.DpiX, newFormatedBitmapSource.DpiY, newFormatedBitmapSource.Format,
                 null, pixels, stride);
@@ -265,7 +269,6 @@ namespace MMDance
             public int y = 0;
             public int b = 0;
             public int w = 0;
-            public bool end_of_stride = true;
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 1 * ControlWrapper.MOTORS_COUNT), Serializable]
@@ -311,7 +314,6 @@ namespace MMDance
         
         public do_steps_multiplier m_step_mult = new do_steps_multiplier();
         xyz_coord m_cur_pos = new xyz_coord();
-        xyz_coord m_cur_task = new xyz_coord();//Последняя отправленная на обработку координата
                                     //steps max x8 x16
         public const int X_POS = 2; //2225 //1150 - x16
         public const int Y_POS = 1; //1900 //950  -x16
@@ -440,9 +442,16 @@ namespace MMDance
         public void GoToXY(int x, int y, int b = -1, int w = -1)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
-            
-            var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
-            var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
+
+            if (x >= 0)
+            {
+                var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
+            }
+
+            if (y >= 0)
+            {
+                var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
+            }
 
             if (Math.Abs(var_do_steps.m_uSteps[X_POS]) > 10 || Math.Abs(var_do_steps.m_uSteps[Y_POS]) > 10)
             {
@@ -477,70 +486,69 @@ namespace MMDance
         }
 
         int m_counter = 0;
-        private bool DoEngraving(ref xyz_coord cur_coords)
+        double GetDistanse(xyz_coord pt1, xyz_coord pt2)
+        {
+            double xx = (double)pt1.x - pt2.x;
+            double yy = (double)pt1.y - pt2.y;
+            double dist = Math.Sqrt((double)(xx * xx + yy * yy));
+            return dist;
+        }
+
+        bool IsNeighbour(xyz_coord pt1, xyz_coord pt2)
+        {
+            int xx = Math.Abs(pt1.x - pt2.x);
+            int yy = Math.Abs(pt1.y - pt2.y);
+            if(yy <= 1 && xx <= 1)
+            {
+                return true;
+            }
+            return false;
+        }
+        private bool DoEngraving(ref xyz_coord cur_coords, ref bool farMove)
         {
             if (newFormatedBitmapSource == null)
             {
                 return false;
             }
-            newFormatedBitmapSource.VerifyAccess();
-
-            int stride = newFormatedBitmapSource.PixelWidth * 3;
-            int size = newFormatedBitmapSource.PixelHeight * stride;
-            byte[] pixels = new byte[size];
-
-            int start_x = cur_coords.x;
-            int start_y = cur_coords.y+1;
-            cur_coords.end_of_stride = false;
-            if (start_y >= newFormatedBitmapSource.PixelHeight)
+            
+            xyz_coord temp_pt = new xyz_coord();
+            double cur_dist = (double)GetImageSize().Width + GetImageSize().Height;
+            int pos_to_send = -1;
+            for (int i = 0; i < m_selected_points.Count; i++ )
             {
-                start_y = 0;
-                start_x++;
-                cur_coords.end_of_stride = true;
-            }
-
-            newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
-            for (int x = start_x; x < newFormatedBitmapSource.PixelWidth; x++)
-            {
-                for (int y = start_y; y < newFormatedBitmapSource.PixelHeight; y++)
+                temp_pt.x = m_selected_points[i].Key;
+                temp_pt.y = m_selected_points[i].Value;
+                if (IsNeighbour(cur_coords, temp_pt))
                 {
-                    int index = (newFormatedBitmapSource.PixelHeight-y-1) * stride + 3 * x;
-                    byte red = pixels[index];
-                    byte green = pixels[index + 1];
-                    byte blue = pixels[index + 2];
-                    Color cur_col = Color.FromRgb(red, green, blue);
-                    if(m_SelectedColor == cur_col)
-                    {
-                        int grayScale = (int)((red * 0.3) + (green * 0.59) + (blue * 0.11));
-
-                        //int black = grayScale * Properties.Settings.Default.BlackColorMax / 255;
-                        //int white = grayScale * Properties.Settings.Default.WhiteColorMax / 255;
-                        m_PixelCounter++;
-                        if (m_PixelCounter > Properties.Settings.Default.StepsPerPixel)
-                        {
-                            m_PixelCounter = 0;
-                            cur_coords.b += Properties.Settings.Default.BlackColorMax;
-                            cur_coords.w += Properties.Settings.Default.WhiteColorMax;
-                        }
-                        
-
-                        cur_coords.x = x;
-                        cur_coords.y = y;
-                        return true;
-                    }
+                    pos_to_send = i;
+                    cur_dist = -1;
+                    break;
                 }
-                cur_coords.end_of_stride = true;
-                start_y = 0;
+
+                double dist = GetDistanse(cur_coords, temp_pt);
+                
+                if (dist < cur_dist)
+                {
+                    cur_dist = dist;
+                    pos_to_send = i;
+                }
+            }
+            if (pos_to_send >= 0)
+            {
+                cur_coords.x = m_selected_points[pos_to_send].Key;
+                cur_coords.y = m_selected_points[pos_to_send].Value;
+                m_selected_points.RemoveAt(pos_to_send);
+                farMove = cur_dist > 0;
+                
+                Thread.Sleep(100);
+                return true;                
             }
             return false;
         }
 
-        int m_PixelCounter = 0;
         public void Start()
         {
             m_CurTask = new xyz_coord();
-            m_CurTask.y = -1;//start from -1 it will be incremented
-            m_CurTask.x = Convert.ToInt32(ControlUserControl.StartX.Text);
             m_counter = 0;
             if (newFormatedBitmapSource != null)
             {
@@ -553,18 +561,26 @@ namespace MMDance
         }
 
         xyz_coord m_CurTask = new xyz_coord();
+        
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (m_bPauseSoft)
             {
                 return;
             }
+
             //if (GetQueueLen() < 10)
             {
-                if (DoEngraving(ref m_CurTask))
+                bool FarMove = true;
+                if (DoEngraving(ref m_CurTask, ref FarMove))
                 {
-                    SetInk(m_CurTask.end_of_stride);
-                    GoToXY(m_CurTask.x, m_CurTask.y, m_CurTask.b, m_CurTask.w);
+                    if (FarMove)
+                    {
+                        GoToXY(-1, -1, 0);
+                        GoToXY(m_CurTask.x, m_CurTask.y, 0);
+                    }
+                    m_CurTask.b = 100;//down
+                    GoToXY(m_CurTask.x, m_CurTask.y, m_CurTask.b);
                     //GoToBW(m_CurTask.b, m_CurTask.w);
                     m_counter++;
                     ControlUserControl.textBlockCounter.Text = m_counter.ToString();
