@@ -182,18 +182,6 @@ namespace MMDance
             wnd.SetPause(checkBoxPause.IsChecked == true);
         }
 
-        private void checkBoxInk_Checked(object sender, RoutedEventArgs e)
-        {
-            MainWindow wnd = MainWindow.GetMainWnd();
-            wnd.SetInk(checkBoxInk.IsChecked == true);
-        }
-
-        private void checkBoxInk_Unchecked(object sender, RoutedEventArgs e)
-        {
-            MainWindow wnd = MainWindow.GetMainWnd();
-            wnd.SetInk(checkBoxInk.IsChecked == true);
-        }
-
         private void checkBoxPauseSoft_Checked(object sender, RoutedEventArgs e)
         {
             MainWindow wnd = MainWindow.GetMainWnd();
@@ -206,7 +194,7 @@ namespace MMDance
             wnd.SetPauseSoft(checkBoxPauseSoft.IsChecked == true);
         }
 
-        private void OnSelectionChanged()
+        public void OnSelectionChanged()
         {
             PictureColors colors = listViewColors.SelectedItem as PictureColors;
             if (colors != null)

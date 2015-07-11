@@ -27,7 +27,6 @@
             <CheckBox Content="Включить приводы" Height="16" HorizontalAlignment="Left" Name="checkBoxOutpusEnergy" VerticalAlignment="Top" Checked="checkBoxOutpusEnergy_Checked" Unchecked="checkBoxOutpusEnergy_Unchecked" />
             <CheckBox Content="Пауза контроллер" Height="16" HorizontalAlignment="Left" Name="checkBoxPause" VerticalAlignment="Top" Unchecked="checkBoxPause_Unchecked" Checked="checkBoxPause_Checked" />
             <CheckBox Content="Пауза софт" Height="16" HorizontalAlignment="Left" Name="checkBoxPauseSoft" VerticalAlignment="Top" Checked="checkBoxPauseSoft_Checked" Unchecked="checkBoxPauseSoft_Unchecked" />
-            <CheckBox Content="Поднять" Height="16" HorizontalAlignment="Left" Name="checkBoxInk" VerticalAlignment="Top" Checked="checkBoxInk_Checked" Unchecked="checkBoxInk_Unchecked" />
             <CheckBox Content="Контур" Height="16" HorizontalAlignment="Left" Name="checkBoxContour" Checked="checkBoxContour_Checked" Unchecked="checkBoxContour_Unchecked" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockInfo" Text="->>>" VerticalAlignment="Top" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockCounter" Text="->>>" VerticalAlignment="Top" />
@@ -197,22 +196,10 @@
 
 
 
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Черный:"></Label>
-                    <TextBox Name ="BlackColorMax" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.BlackColorMax}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Белый:"></Label>
-                    <TextBox Name ="WhiteColorMax" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.WhiteColorMax}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Точек на шаг:"></Label>
-                    <TextBox Name ="StepsPerPixel" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="{Binding Source={StaticResource Settings}, Path=Default.StepsPerPixel}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Начать с Х:"></Label>
-                    <TextBox Name ="StartX" Height="23"  MinWidth="30" HorizontalAlignment="Left" Text="0"/>
-                </StackPanel>
+                <StackPanel Orientation="Horizontal"></StackPanel>
+                <StackPanel Orientation="Horizontal"></StackPanel>
+                <StackPanel Orientation="Horizontal"></StackPanel>
+                <StackPanel Orientation="Horizontal"></StackPanel>
             </StackPanel>
         </Grid>
     <DataGrid Grid.ColumnSpan="3" Grid.Row="7" Height="Auto" HorizontalAlignment="Left"  
