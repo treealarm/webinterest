@@ -26,7 +26,8 @@ namespace MMDance
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+        const double BStepsPerMM = 0.00505;
+        const double XYStepsPerMM = 0.0461;
         public ControlWrapper m_ControlWrapper = new ControlWrapper();
 
         public MainWindow()
@@ -36,16 +37,7 @@ namespace MMDance
             {
                 m_step_mult.m_uMult[motor] = 1;
             }
-            
-            //UInt16 m_timer_ink_impuls = 222;
 
-            //byte[] mybytes = new byte[65];
-
-            //ControlWrapper.StructureToByteArray(m_timer_ink_impuls, mybytes, 2);
-
-            //UInt16 m_timer_ink_impul1s = 0;
-
-            //ControlWrapper.ByteArrayToStructure(mybytes, ref m_timer_ink_impul1s, 2);
 
             OnFileOpen(Properties.Settings.Default.PicFile);
             WorkingThread = new Thread(new ThreadStart(ProcessCommand));
@@ -158,7 +150,8 @@ namespace MMDance
                     {
                         if (bContour)
                         {
-                            if (x > 0 && y > 0 && x < newFormatedBitmapSource.PixelWidth - 1 && y < newFormatedBitmapSource.PixelHeight - 1)
+                            if (x > 0 && y > 0 && x < newFormatedBitmapSource.PixelWidth - 1 
+                                && y < newFormatedBitmapSource.PixelHeight - 1)
                             {
                                 KeyValuePair<int, int>[] P = new KeyValuePair<int, int>[] 
                             { 
@@ -166,14 +159,18 @@ namespace MMDance
                                 new KeyValuePair<int,int> ( x + 1, y ), 
                                 new KeyValuePair<int,int> ( x, y - 1 ), 
                                 new KeyValuePair<int,int> ( x, y + 1 )
+                                //,
+                                //new KeyValuePair<int,int> ( x + 1, y + 1 ),
+                                //new KeyValuePair<int,int> ( x + 1, y - 1 ),
+                                //new KeyValuePair<int,int> ( x - 1, y - 1 ),
+                                //new KeyValuePair<int,int> ( x - 1, y + 1 ),
                             };
                                 for (int i = 0; i < P.Length; i++)
                                 {
                                     Color nColor = GetPixelColor(pixels, P[i].Key, P[i].Value, stride);
                                     if (nColor != color)
                                     {
-                                        m_selected_points.Add(new KeyValuePair<int, int>(x, y));
-                                        break;
+                                        m_selected_points.Add(P[i]);
                                     }
                                 }
                             }
@@ -192,6 +189,7 @@ namespace MMDance
                     }
                 }
             }
+            m_selected_points = m_selected_points.Distinct().ToList();
             for (int i = 0; i < m_selected_points.Count; i++)
             {
                 KeyValuePair<int, int> pair = m_selected_points[i];
@@ -316,8 +314,8 @@ namespace MMDance
         xyz_coord m_cur_pos = new xyz_coord();
                                     //steps max x8 x16
         public const int X_POS = 2; //2225 //1150 - x16
-        public const int Y_POS = 1; //1900 //950  -x16
-        public const int B_POS = 3; //12000 
+        public const int Y_POS = 3; //1900 //950  -x16
+        public const int B_POS = 1; //12000 
         public const int W_POS = 0; //12000 
         //~0.38 мм на шаг x16 0.76 mm
 
@@ -385,8 +383,8 @@ namespace MMDance
             {
                 double xratio = PictureUserControl.image_canvas.ActualWidth / newFormatedBitmapSource.PixelWidth;
                 double yratio = PictureUserControl.image_canvas.ActualHeight / newFormatedBitmapSource.PixelHeight;
-                PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio,
-                    (newFormatedBitmapSource.PixelHeight - m_cur_pos.y - 1) * yratio);
+                PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio * XYStepsPerMM,
+                    (newFormatedBitmapSource.PixelHeight - m_cur_pos.y * XYStepsPerMM - 1) * yratio);
             }
             catch (Exception e)
             {
@@ -498,7 +496,11 @@ namespace MMDance
         {
             int xx = Math.Abs(pt1.x - pt2.x);
             int yy = Math.Abs(pt1.y - pt2.y);
-            if(yy <= 1 && xx <= 1)
+            if((yy == 0 && xx == 1) || (xx == 0 && yy == 1))
+            {
+                return true;
+            }
+            if (yy == 1 && xx == 1)
             {
                 return true;
             }
@@ -512,7 +514,7 @@ namespace MMDance
             }
             
             xyz_coord temp_pt = new xyz_coord();
-            double cur_dist = (double)GetImageSize().Width + GetImageSize().Height;
+            double cur_dist = (double)GetImageSize().Width*2 + GetImageSize().Height*2;
             int pos_to_send = -1;
             for (int i = 0; i < m_selected_points.Count; i++ )
             {
@@ -539,8 +541,6 @@ namespace MMDance
                 cur_coords.y = m_selected_points[pos_to_send].Value;
                 m_selected_points.RemoveAt(pos_to_send);
                 farMove = cur_dist > 0;
-                
-                Thread.Sleep(100);
                 return true;                
             }
             return false;
@@ -554,14 +554,24 @@ namespace MMDance
             {
                 newFormatedBitmapSource.Freeze();
             }
+            ControlUserControl.OnSelectionChanged();
             
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(10);
             dispatcherTimer.Start(); 
         }
 
         xyz_coord m_CurTask = new xyz_coord();
-        
+        int GetStepsFromBmm(double Bmm)
+        {
+            double ret = Bmm / BStepsPerMM;
+            return (int)ret;
+        }
+        int GetStepsFromXYmm(double XYmm)
+        {
+            double ret = XYmm / XYStepsPerMM;
+            return (int)ret;
+        }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (m_bPauseSoft)
@@ -569,7 +579,7 @@ namespace MMDance
                 return;
             }
 
-            //if (GetQueueLen() < 10)
+            if (GetQueueLen() < 10)
             {
                 bool FarMove = true;
                 if (DoEngraving(ref m_CurTask, ref FarMove))
@@ -577,20 +587,22 @@ namespace MMDance
                     if (FarMove)
                     {
                         GoToXY(-1, -1, 0);
-                        GoToXY(m_CurTask.x, m_CurTask.y, 0);
+                        GoToXY(GetStepsFromXYmm(m_CurTask.x), GetStepsFromXYmm(m_CurTask.y), 0);
                     }
-                    m_CurTask.b = 100;//down
-                    GoToXY(m_CurTask.x, m_CurTask.y, m_CurTask.b);
-                    //GoToBW(m_CurTask.b, m_CurTask.w);
+                    m_CurTask.b = GetStepsFromBmm(8);//down
+                    GoToXY(
+                        GetStepsFromXYmm(m_CurTask.x),
+                        GetStepsFromXYmm(m_CurTask.y),
+                        m_CurTask.b);
+                    
                     m_counter++;
                     ControlUserControl.textBlockCounter.Text = m_counter.ToString();
                 }
                 else
                 {
-                    SetInk(true);
                     Thread.Sleep(1000);
+                    GoToXY(-1, -1, 0);
                     GoToXY(0, 0);
-                    //GoToBW(0, 0);
                     m_CurTask = new xyz_coord();
                     ControlUserControl.checkBoxPauseSoft.IsChecked = true;
                     dispatcherTimer.Stop();
