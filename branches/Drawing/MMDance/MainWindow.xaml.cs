@@ -26,8 +26,9 @@ namespace MMDance
     /// </summary>
     public partial class MainWindow : Window
     {
-        const double BStepsPerMM = 0.00505;
-        const double XYStepsPerMM = 0.0461;
+        const double MMPerBStep = 0.00505;
+        const double MMPerXYStep = 0.0467;
+        const double MillLen = 50;
         public ControlWrapper m_ControlWrapper = new ControlWrapper();
 
         public MainWindow()
@@ -338,11 +339,11 @@ namespace MMDance
             do_timer_set timerset = new do_timer_set();
             timerset.m_timer_res = (UInt16)(UInt16.MaxValue - timer_res);
             timerset.m_strike_impuls = strike_impuls;
-
-            for (int i = 0; i < ControlWrapper.MOTORS_COUNT && i < multiplier.Length; i++)
-            {
-                timerset.m_multiplier[i] = multiplier[i];
-            }
+            timerset.m_multiplier[X_POS] = multiplier[0];
+            timerset.m_multiplier[Y_POS] = multiplier[1];
+            timerset.m_multiplier[B_POS] = multiplier[2];
+            timerset.m_multiplier[W_POS] = multiplier[3];
+            
             
             byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
             OutputPacketBuffer[0] = 0;
@@ -383,8 +384,8 @@ namespace MMDance
             {
                 double xratio = PictureUserControl.image_canvas.ActualWidth / newFormatedBitmapSource.PixelWidth;
                 double yratio = PictureUserControl.image_canvas.ActualHeight / newFormatedBitmapSource.PixelHeight;
-                PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio * XYStepsPerMM,
-                    (newFormatedBitmapSource.PixelHeight - m_cur_pos.y * XYStepsPerMM - 1) * yratio);
+                PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio * MMPerXYStep,
+                    (newFormatedBitmapSource.PixelHeight - m_cur_pos.y * MMPerXYStep - 1) * yratio);
             }
             catch (Exception e)
             {
@@ -564,12 +565,12 @@ namespace MMDance
         xyz_coord m_CurTask = new xyz_coord();
         int GetStepsFromBmm(double Bmm)
         {
-            double ret = Bmm / BStepsPerMM;
+            double ret = Bmm / MMPerBStep;
             return (int)ret;
         }
         int GetStepsFromXYmm(double XYmm)
         {
-            double ret = XYmm / XYStepsPerMM;
+            double ret = XYmm / MMPerXYStep;
             return (int)ret;
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -589,7 +590,7 @@ namespace MMDance
                         GoToXY(-1, -1, 0);
                         GoToXY(GetStepsFromXYmm(m_CurTask.x), GetStepsFromXYmm(m_CurTask.y), 0);
                     }
-                    m_CurTask.b = GetStepsFromBmm(8);//down
+                    m_CurTask.b = GetStepsFromBmm(MillLen);//down
                     GoToXY(
                         GetStepsFromXYmm(m_CurTask.x),
                         GetStepsFromXYmm(m_CurTask.y),
