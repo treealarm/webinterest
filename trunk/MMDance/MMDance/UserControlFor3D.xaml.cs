@@ -103,7 +103,7 @@ namespace MMDance
 
             return yMax;
         }
-         
+        Rect3D m_bounds = new Rect3D(); 
         public void Calculate(List<Point> listCross, int pos, int len, double angle)
         {
             if (len <= 0)
@@ -130,10 +130,10 @@ namespace MMDance
                 transGroup.Children.Add(m_trans3d);
 
                 m_Model3DGroup.Transform = transGroup;
+                m_Model3DGroup.Children.Add(meshCubeModel);
             }
             GeometryModel3D myGeometryModel = new GeometryModel3D();
             m_Model3DGroup.Children.Add(myGeometryModel);
-            m_Model3DGroup.Children.Add(meshCubeModel);
 
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
             
@@ -244,26 +244,17 @@ namespace MMDance
             }
 
             myMeshGeometry3D.Positions = myPositionCollection;
-            Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
+            m_bounds.Union(myMeshGeometry3D.Bounds);
+            Size3D mySize = m_bounds.Size;
             string s = string.Format("X:{0},Y:{1},Z:{2}",(int)mySize.X,(int)mySize.Y,(int)mySize.Z);
             labelInfo.Content = s;
         }
 
-        public double GetMaxZ()
+        public Rect3D GetBounds()
         {
-            Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
-            return mySize.Z;
+            return m_bounds;
         }
-        public double GetMaxX()
-        {
-            Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
-            return mySize.X;
-        }
-        public double GetMaxY()
-        {
-            Size3D mySize = ((System.Windows.Media.Media3D.Model3D)(m_Model3DGroup)).Bounds.Size;
-            return mySize.Y;
-        }
+
         private double IntersectsWithTriangle(Ray ray, Point3D p0, Point3D p1, Point3D p2)
         {
             Vector3D e1 = p1 - p0;

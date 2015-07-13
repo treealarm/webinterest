@@ -62,12 +62,12 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public byte TimerMultiplierB {
+        public byte TimerMultiplierY {
             get {
-                return ((byte)(this["TimerMultiplierB"]));
+                return ((byte)(this["TimerMultiplierY"]));
             }
             set {
-                this["TimerMultiplierB"] = value;
+                this["TimerMultiplierY"] = value;
             }
         }
         
@@ -98,12 +98,12 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public ushort StepMultiplierB {
+        public ushort StepMultiplierY1 {
             get {
-                return ((ushort)(this["StepMultiplierB"]));
+                return ((ushort)(this["StepMultiplierY1"]));
             }
             set {
-                this["StepMultiplierB"] = value;
+                this["StepMultiplierY1"] = value;
             }
         }
         
@@ -181,18 +181,6 @@ namespace MMDance.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public ushort StepsPerPixel {
-            get {
-                return ((ushort)(this["StepsPerPixel"]));
-            }
-            set {
-                this["StepsPerPixel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string ProfileDataSource {
             get {
@@ -217,7 +205,7 @@ namespace MMDance.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.00505")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.225")]
         public double StepYmm {
             get {
                 return ((double)(this["StepYmm"]));
@@ -229,13 +217,13 @@ namespace MMDance.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.225")]
-        public double StepBgrad {
+        [global::System.Configuration.DefaultSettingValueAttribute("0.00505")]
+        public double StepXmm {
             get {
-                return ((double)(this["StepBgrad"]));
+                return ((double)(this["StepXmm"]));
             }
             set {
-                this["StepBgrad"] = value;
+                this["StepXmm"] = value;
             }
         }
         
@@ -266,24 +254,24 @@ namespace MMDance.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int YStart {
+        public int MillStart {
             get {
-                return ((int)(this["YStart"]));
+                return ((int)(this["MillStart"]));
             }
             set {
-                this["YStart"] = value;
+                this["MillStart"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ZStart {
+        public int JobStart {
             get {
-                return ((int)(this["ZStart"]));
+                return ((int)(this["JobStart"]));
             }
             set {
-                this["ZStart"] = value;
+                this["JobStart"] = value;
             }
         }
         
@@ -320,6 +308,30 @@ namespace MMDance.Properties {
             }
             set {
                 this["Plane"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int StepMultiplierX {
+            get {
+                return ((int)(this["StepMultiplierX"]));
+            }
+            set {
+                this["StepMultiplierX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string ZStart {
+            get {
+                return ((string)(this["ZStart"]));
+            }
+            set {
+                this["ZStart"] = value;
             }
         }
     }

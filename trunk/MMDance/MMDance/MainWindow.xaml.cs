@@ -124,7 +124,7 @@ namespace MMDance
         {
             public int z = 0;//между бабок
             public int x = 0;//ход шпинделя or x
-            public int b = 0;//угол or y
+            public int y = 0;//угол or y
             public int w = 0;
         }
 
@@ -166,7 +166,7 @@ namespace MMDance
                                     //steps max x8 x16
         public const int Z_POS = 2; //2225 //1150 - x16
         public const int X_POS = 1; //1900 //950  -x16
-        public const int B_POS = 3; //12000 
+        public const int Y_POS = 3; //12000 
         public const int W_POS = 0; //12000 
         //~0.38 мм на шаг x16 0.76 mm
 
@@ -189,10 +189,12 @@ namespace MMDance
             m_curtimerset.m_timer_res = (UInt16)(UInt16.MaxValue - timer_res);
             m_curtimerset.m_strike_impuls = strike_impuls;
 
-            for (int i = 0; i < ControlWrapper.MOTORS_COUNT && i < multiplier.Length; i++)
-            {
-                m_curtimerset.m_multiplier[i] = multiplier[i];
-            }
+            
+            m_curtimerset.m_multiplier[X_POS] = multiplier[0];
+            m_curtimerset.m_multiplier[Y_POS] = multiplier[1];
+            m_curtimerset.m_multiplier[Z_POS] = multiplier[2];
+            m_curtimerset.m_multiplier[W_POS] = multiplier[3];
+            
             
             byte[] OutputPacketBuffer = new byte[ControlWrapper.LEN_OF_PACKET];
             OutputPacketBuffer[0] = 0;
@@ -223,16 +225,16 @@ namespace MMDance
             AddCommand(OutputPacketBuffer);
         }
 
-        public void InitCurBPos()
+        public void InitCurYPos()
         {
-            m_cur_pos.b = 0;
+            m_cur_pos.y = 0;
         }
         public void SetStepsToController(do_steps steps, bool update_pos = true)
         {
 	        if(
 		        steps.m_uSteps[Z_POS] == 0 &&
 		        steps.m_uSteps[X_POS] == 0 &&
-                steps.m_uSteps[B_POS] == 0 &&
+                steps.m_uSteps[Y_POS] == 0 &&
 		        steps.m_uSteps[W_POS] == 0)
 	        {
 		        return;
@@ -241,7 +243,7 @@ namespace MMDance
             {
                 m_cur_pos.x += steps.m_uSteps[X_POS];
                 m_cur_pos.z += steps.m_uSteps[Z_POS];
-                m_cur_pos.b += steps.m_uSteps[B_POS];
+                m_cur_pos.y += steps.m_uSteps[Y_POS];
                 m_cur_pos.w += steps.m_uSteps[W_POS];
             }
 
@@ -257,7 +259,7 @@ namespace MMDance
 	        AddCommand(OutputPacketBuffer);
         }
 
-        public void GoToZX(int z = -1, int x = -1, int b = -1, int w = -1)
+        public void GoToXYZ(int x = -1, int y = -1, int z = -1, int w = -1)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
             
@@ -265,16 +267,16 @@ namespace MMDance
                 var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
             if(x >= 0)
                 var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
-            if (b >= 0)
-                var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
+            if (y >= 0)
+                var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
             if (w >= 0)
                 var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
 
             string s;
-            s = String.Format("Z:{0},X:{1},B:{2}",
+            s = String.Format("Z:{0},X:{1},Y:{2}",
                 var_do_steps.m_uSteps[Z_POS],
                 var_do_steps.m_uSteps[X_POS],
-                var_do_steps.m_uSteps[B_POS]);
+                var_do_steps.m_uSteps[Y_POS]);
             Debug.WriteLine(s);
 
             SetStepsToController(var_do_steps);
@@ -283,7 +285,7 @@ namespace MMDance
         public void GoToBW(int b, int w)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
-            var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
+            var_do_steps.m_uSteps[Y_POS] = b - m_cur_pos.y;
             var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
             SetStepsToController(var_do_steps);
         }
@@ -303,13 +305,22 @@ namespace MMDance
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
             dispatcherTimer.Start();
-            GoToZX(m_CurTask.z, -1, -1);
+            GoToXYZ(-1, -1, m_CurTask.z);
         }
 
         void InitStartPos()
         {
-            m_cur_pos.x = GetStepFromY(Properties.Settings.Default.YStart);
-            m_CurTask.z =  GetStepFromZ((double)Properties.Settings.Default.ZStart);
+            if (Properties.Settings.Default.Plane)
+            {
+                m_cur_pos.x = GetStepFromX(GetBounds().X);
+                m_cur_pos.y = GetStepFromY(GetBounds().Y);
+                m_CurTask = m_cur_pos;
+            }
+            else
+            {
+                m_cur_pos.x = GetStepFromY(Properties.Settings.Default.MillStart);
+                m_CurTask.z = GetStepFromZ((double)Properties.Settings.Default.JobStart);
+            }            
         }
 
         public double GetDepthStep()
@@ -323,7 +334,7 @@ namespace MMDance
 
             double X = GetXFromStep(XSteps);
             double Y = GetYFromStep(YSteps);
-            int ZSteps = GetStepFromZ(Properties.Settings.Default.ZStart);
+            int ZSteps = GetStepFromZ(Properties.Settings.Default.JobStart);
 
             UserControlFor3D.IntersectionType ret = PictureUserControl.
                 m_UserControlFor3D.GetIntersectionPlane(X, Y, out intersection);
@@ -333,11 +344,18 @@ namespace MMDance
                 ZSteps = GetStepFromY(intersection.Z);
                 PictureUserControl.m_UserControlFor3D.UpdatePositionPlane(intersection);
             }
-            else if (UserControlFor3D.IntersectionType.E_OUT != ret)
+            else
             {
-                ZSteps = GetStepFromZ(Properties.Settings.Default.ZStart);
+                intersection.X = X;
+                intersection.Y = Y;
+                PictureUserControl.m_UserControlFor3D.UpdatePositionPlane(intersection);
+                if (UserControlFor3D.IntersectionType.E_OUT != ret)
+                {
+                    ZSteps = GetStepFromZ(Properties.Settings.Default.JobStart);
+                }
             }
-
+            
+            //Thread.Sleep(100);
             return ZSteps;
         }
 
@@ -346,7 +364,7 @@ namespace MMDance
             Point3D intersection;
             double angle = GetAngleFromStep(BSteps);
             double Z = GetZFromStep(ZSteps);
-            int YSteps = GetStepFromY(Properties.Settings.Default.YStart);
+            int YSteps = GetStepFromY(Properties.Settings.Default.MillStart);
 
             UserControlFor3D.IntersectionType ret = PictureUserControl.
                 m_UserControlFor3D.GetIntersection(angle, Z, out intersection);
@@ -364,7 +382,7 @@ namespace MMDance
             }
             else if (UserControlFor3D.IntersectionType.E_OUT != ret)
             {
-                YSteps = GetStepFromY(Properties.Settings.Default.YStart);
+                YSteps = GetStepFromY(Properties.Settings.Default.MillStart);
             }
 
             return YSteps;
@@ -374,26 +392,27 @@ namespace MMDance
         
         int Get360GradSteps()
         {
-            return (int)(360/ Properties.Settings.Default.StepBgrad);
+            return (int)(360 / Properties.Settings.Default.StepYmm);
         }
         int GetStepFromAngle(double angle)
         {
-            double temp = angle / Properties.Settings.Default.StepBgrad;
+            double temp = angle / Properties.Settings.Default.StepYmm;
             return (int)temp;
         }
         double GetAngleFromStep(int step)
         {
-            double angle = step;
-            angle *= Properties.Settings.Default.StepBgrad;
-            return angle;
+            return GetYFromStep(step);
         }
-        int GetStepFromX(double angle)
+        int GetStepFromX(double X)
         {
-            return GetStepFromAngle(angle);
+            double ret = X / Properties.Settings.Default.StepXmm;
+            return (int)ret;
         }
         double GetXFromStep(int step)
         {
-            return GetAngleFromStep(step);
+            double X = step;
+            X *= Properties.Settings.Default.StepXmm;
+            return X;
         }
         double GetZFromStep(int step)
         {
@@ -422,9 +441,9 @@ namespace MMDance
         int GetMaxOnCircle()
         {
             int max_y = 0;
-            for (m_CurTask.b = 0; m_CurTask.b < Get360GradSteps(); m_CurTask.b += 1)
+            for (m_CurTask.y = 0; m_CurTask.y < Get360GradSteps(); m_CurTask.y += 1)
             {
-                m_CurTask.x = DoEngraving(m_CurTask.b, m_CurTask.z);
+                m_CurTask.x = DoEngraving(m_CurTask.y, m_CurTask.z);
                 if (m_CurTask.x > max_y)
                 {
                     max_y = m_CurTask.x;
@@ -434,41 +453,46 @@ namespace MMDance
         }
 
         bool StartFromBegin = true;
+        Rect3D GetBounds()
+        {
+            return PictureUserControl.m_UserControlFor3D.GetBounds();
+        }
         void DoPlane()
         {
-            
-            m_CurTask.z = DoEngravingPlane(m_CurTask.x, m_CurTask.b);
-            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+            Rect3D bounds = GetBounds();
+            m_CurTask.z = DoEngravingPlane(m_CurTask.x, m_CurTask.y);
+            GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
 
-            m_CurTask.x += GetStepFromX(UserControlFor3D.m_dFreza.Z - 1);;
+            m_CurTask.x +=  GetStepFromX(UserControlFor3D.m_dFreza.Z - 1); ;
 
-            if (m_CurTask.x > PictureUserControl.m_UserControlFor3D.GetMaxX())
+            double cur_x = GetXFromStep(m_CurTask.x);
+            if (cur_x > bounds.X + bounds.SizeX)
             {
-                m_CurTask.x = 0;
-                m_CurTask.b += GetStepFromY(UserControlFor3D.m_dFreza.Y - 1);
+                m_CurTask.x = GetStepFromX(bounds.X); 
+                m_CurTask.y +=  GetStepFromY(UserControlFor3D.m_dFreza.Y - 1);
             }
             m_counter++;
 
-            if (GetYFromStep(m_CurTask.b) > PictureUserControl.m_UserControlFor3D.GetMaxY())
+            if (GetYFromStep(m_CurTask.y) > bounds.Y + bounds.SizeY)
             {
                 StopMachine();
             }
         }
         void DoLongitudinal()
         {
-            m_CurTask.x = DoEngraving(m_CurTask.b, m_CurTask.z);
-            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+            m_CurTask.x = DoEngraving(m_CurTask.y, m_CurTask.z);
+            GoToXYZ(m_CurTask.z, m_CurTask.x, m_CurTask.y);
 
             if (StartFromBegin)
             {
                 int prev_z = m_CurTask.z;
                 m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
                 double cur_z_mm = GetZFromStep(m_CurTask.z);
-                if ( cur_z_mm > PictureUserControl.m_UserControlFor3D.GetMaxZ())
+                if ( cur_z_mm > GetBounds().Z + GetBounds().SizeZ)
                 {
                     m_CurTask.z = prev_z;
                     StartFromBegin = !StartFromBegin;
-                    m_CurTask.b += GetStepFromAngle(3.6);
+                    m_CurTask.y += GetStepFromAngle(3.6);
                 }
             }
             else
@@ -476,16 +500,16 @@ namespace MMDance
                 int prev_z = m_CurTask.z;
                 m_CurTask.z -= GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
                 double cur_z_mm = GetZFromStep(m_CurTask.z);
-                if (cur_z_mm < Properties.Settings.Default.ZStart)
+                if (cur_z_mm < Properties.Settings.Default.JobStart)
                 {
                     m_CurTask.z = prev_z;
                     StartFromBegin = !StartFromBegin;
-                    m_CurTask.b += GetStepFromAngle(3.6);
+                    m_CurTask.y += GetStepFromAngle(3.6);
                 }
             }
             m_counter++;
 
-            if (m_CurTask.b > Get360GradSteps())
+            if (m_CurTask.y > Get360GradSteps())
             {
                 StopMachine();
             }
@@ -495,28 +519,28 @@ namespace MMDance
             if (Properties.Settings.Default.Roughing)
             {
                 m_CurTask.x = GetMaxOnCircle();
-                for (m_CurTask.b = 0; m_CurTask.b < Get360GradSteps(); m_CurTask.b += 1)
+                for (m_CurTask.y = 0; m_CurTask.y < Get360GradSteps(); m_CurTask.y += 1)
                 {
-                    GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                    GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
                 }
             }
             else
             {
-                m_CurTask.x = DoEngraving(m_CurTask.b, m_CurTask.z);
-                GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+                m_CurTask.x = DoEngraving(m_CurTask.y, m_CurTask.z);
+                GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
             }
 
-            m_CurTask.b += 1;
+            m_CurTask.y += 1;
 
-            if (m_CurTask.b > Get360GradSteps())
+            if (m_CurTask.y > Get360GradSteps())
             {
-                m_CurTask.b = 0;
-                InitCurBPos();
+                m_CurTask.y = 0;
+                InitCurYPos();
                 m_CurTask.z += GetStepFromZ(UserControlFor3D.m_dFreza.Z - 1);
             }
             m_counter++;
 
-            if (GetZFromStep(m_CurTask.z) > PictureUserControl.m_UserControlFor3D.GetMaxZ())
+            if (GetZFromStep(m_CurTask.z) > GetBounds().Z + GetBounds().SizeZ)
             {
                 StopMachine();
             }
@@ -558,11 +582,11 @@ namespace MMDance
         }
         void GoToZeroes()
         {
-            m_CurTask.x = GetStepFromY(Properties.Settings.Default.YStart);
-            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+            m_CurTask.x = GetStepFromY(Properties.Settings.Default.MillStart);
+            GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
             m_CurTask.z = 0;
-            m_CurTask.b = 0;
-            GoToZX(m_CurTask.z, m_CurTask.x, m_CurTask.b);
+            m_CurTask.y = 0;
+            GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
