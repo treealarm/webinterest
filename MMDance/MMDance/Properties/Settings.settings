@@ -11,7 +11,7 @@
     <Setting Name="TimerMultiplierX" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="TimerMultiplierB" Type="System.Byte" Scope="User">
+    <Setting Name="TimerMultiplierY" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="StepMultiplierZ" Type="System.UInt16" Scope="User">
@@ -20,7 +20,7 @@
     <Setting Name="StepMultiplierY" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="StepMultiplierB" Type="System.UInt16" Scope="User">
+    <Setting Name="StepMultiplierY1" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="TimerStrike" Type="System.UInt16" Scope="User">
@@ -41,9 +41,6 @@
     <Setting Name="BlackColorMax" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="StepsPerPixel" Type="System.UInt16" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
     <Setting Name="ProfileDataSource" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -51,10 +48,10 @@
       <Value Profile="(Default)">0.0461</Value>
     </Setting>
     <Setting Name="StepYmm" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.00505</Value>
-    </Setting>
-    <Setting Name="StepBgrad" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.225</Value>
+    </Setting>
+    <Setting Name="StepXmm" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.00505</Value>
     </Setting>
     <Setting Name="BezierCurve" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -62,10 +59,10 @@
     <Setting Name="BezierCurveLimit" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="YStart" Type="System.Int32" Scope="User">
+    <Setting Name="MillStart" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
-    <Setting Name="ZStart" Type="System.Int32" Scope="User">
+    <Setting Name="JobStart" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Roughing" Type="System.Boolean" Scope="User">
@@ -76,6 +73,12 @@
     </Setting>
     <Setting Name="Plane" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StepMultiplierX" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="ZStart" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

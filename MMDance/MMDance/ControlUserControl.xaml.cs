@@ -35,16 +35,13 @@ namespace MMDance
         public void SetTimerSetting()
         {
             MainWindow wnd = MainWindow.GetMainWnd();
-
-            byte TimerMultiplierZ = Convert.ToByte(Properties.Settings.Default.TimerMultiplierZ);
-            byte TimerMultiplierX = Convert.ToByte(Properties.Settings.Default.TimerMultiplierX);
             wnd.SetTimerSettings(
                 Properties.Settings.Default.TimerRes, 
                 Properties.Settings.Default.TimerStrike,
                 new byte[]{
-                TimerMultiplierZ,
-                TimerMultiplierX,
-                Properties.Settings.Default.TimerMultiplierB,
+                Properties.Settings.Default.TimerMultiplierX,
+                Properties.Settings.Default.TimerMultiplierY,
+                Properties.Settings.Default.TimerMultiplierZ,
                 Properties.Settings.Default.TimerMultiplierW});
 
         }
@@ -60,8 +57,8 @@ namespace MMDance
             SetControlSettings();
             
             wnd.m_step_mult.m_uMult[MainWindow.Z_POS] = Properties.Settings.Default.StepMultiplierZ;
-            wnd.m_step_mult.m_uMult[MainWindow.X_POS] = Properties.Settings.Default.StepMultiplierY;
-            wnd.m_step_mult.m_uMult[MainWindow.B_POS] = Properties.Settings.Default.StepMultiplierB;
+            wnd.m_step_mult.m_uMult[MainWindow.X_POS] = Properties.Settings.Default.StepMultiplierX;
+            wnd.m_step_mult.m_uMult[MainWindow.Y_POS] = Properties.Settings.Default.StepMultiplierY;
             wnd.m_step_mult.m_uMult[MainWindow.W_POS] = Properties.Settings.Default.StepMultiplierW;
         }
 
@@ -71,25 +68,25 @@ namespace MMDance
             wnd.SetControlSettings(checkBoxOutpusEnergy.IsChecked==true);
         }
 
-        void PassSteps(int x = 0, int y = 0, int b = 0, int w = 0, bool update_pos = true)
+        void PassSteps(int x = 0, int y = 0, int z = 0, int w = 0, bool update_pos = true)
         {
             MainWindow wnd = MainWindow.GetMainWnd();
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
-            var_do_steps.m_uSteps[MainWindow.Z_POS] = x;
-            var_do_steps.m_uSteps[MainWindow.X_POS] = y;
-            var_do_steps.m_uSteps[MainWindow.B_POS] = b;
+            var_do_steps.m_uSteps[MainWindow.Z_POS] = z;
+            var_do_steps.m_uSteps[MainWindow.X_POS] = x;
+            var_do_steps.m_uSteps[MainWindow.Y_POS] = y;
             var_do_steps.m_uSteps[MainWindow.W_POS] = w;
             wnd.SetStepsToController(var_do_steps, update_pos);
         }
  
         private void Z_Plus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(Convert.ToInt32(XShift.Text));
+            PassSteps(0, 0, Convert.ToInt32(ZShift.Text));
         }
 
         private void Z_Minus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(-Convert.ToInt32(XShift.Text));
+            PassSteps(0, 0, -Convert.ToInt32(ZShift.Text));
         }
 
         private void Y_Plus_Click(object sender, RoutedEventArgs e)
@@ -102,14 +99,14 @@ namespace MMDance
             PassSteps(0, -Convert.ToInt32(YShift.Text));
         }
 
-        private void B_Plus_Click(object sender, RoutedEventArgs e)
+        private void X_Plus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, Convert.ToInt32(BShift.Text), 0, false);
+            PassSteps(Convert.ToInt32(XShift.Text), 0, 0, 0, false);
         }
 
-        private void B_Minus_Click(object sender, RoutedEventArgs e)
+        private void X_Minus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, -Convert.ToInt32(BShift.Text), 0, false);
+            PassSteps(-Convert.ToInt32(XShift.Text), 0, 0, 0, false);
         }
 
 
@@ -130,18 +127,6 @@ namespace MMDance
         private void checkBoxOutpusEnergy_Unchecked(object sender, RoutedEventArgs e)
         {
             SetControlSettings();
-        }
-
-        private void GoToZY_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow wnd = MainWindow.GetMainWnd();
-            wnd.GoToZX(Convert.ToInt32(GoToXEdit.Text), Convert.ToInt32(GoToYEdit.Text));
-        }
-
-        private void GoToBW_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow wnd = MainWindow.GetMainWnd();
-            wnd.GoToBW(Convert.ToInt32(GoToBEdit.Text), Convert.ToInt32(GoToWEdit.Text));
         }
 
         private void checkBoxPause_Checked(object sender, RoutedEventArgs e)
