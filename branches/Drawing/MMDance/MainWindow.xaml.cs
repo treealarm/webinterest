@@ -507,42 +507,68 @@ namespace MMDance
             }
             return false;
         }
+
+        bool HasNeighbour(ref xyz_coord cur_coords)
+        {
+            xyz_coord temp_pt = new xyz_coord();
+            for (int i = 0; i < m_selected_points.Count; i++)
+            {
+                temp_pt.x = m_selected_points[i].Key;
+                temp_pt.y = m_selected_points[i].Value;
+                if (IsNeighbour(cur_coords, temp_pt))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private bool DoEngraving(ref xyz_coord cur_coords, ref bool farMove)
         {
             if (newFormatedBitmapSource == null)
             {
                 return false;
             }
-            
-            xyz_coord temp_pt = new xyz_coord();
-            double cur_dist = (double)GetImageSize().Width*2 + GetImageSize().Height*2;
-            int pos_to_send = -1;
-            for (int i = 0; i < m_selected_points.Count; i++ )
-            {
-                temp_pt.x = m_selected_points[i].Key;
-                temp_pt.y = m_selected_points[i].Value;
-                if (IsNeighbour(cur_coords, temp_pt))
-                {
-                    pos_to_send = i;
-                    cur_dist = -1;
-                    break;
-                }
 
-                double dist = GetDistanse(cur_coords, temp_pt);
-                
-                if (dist < cur_dist)
-                {
-                    cur_dist = dist;
-                    pos_to_send = i;
-                }
-            }
-            if (pos_to_send >= 0)
+            xyz_coord temp_pt = new xyz_coord();
+            while (m_selected_points.Count > 0)
             {
-                cur_coords.x = m_selected_points[pos_to_send].Key;
-                cur_coords.y = m_selected_points[pos_to_send].Value;
-                m_selected_points.RemoveAt(pos_to_send);
-                farMove = cur_dist > 0;
-                return true;                
+                double cur_dist = (double)GetImageSize().Width * 2 + GetImageSize().Height * 2;
+                int pos_to_send = -1;
+                for (int i = 0; i < m_selected_points.Count; i++)
+                {
+                    temp_pt.x = m_selected_points[i].Key;
+                    temp_pt.y = m_selected_points[i].Value;
+                    if (IsNeighbour(cur_coords, temp_pt))
+                    {
+                        pos_to_send = i;
+                        cur_dist = -1;
+                        break;
+                    }
+
+                    double dist = GetDistanse(cur_coords, temp_pt);
+
+                    if (dist < cur_dist)
+                    {
+                        cur_dist = dist;
+                        pos_to_send = i;
+                    }
+                }
+                if (pos_to_send >= 0)
+                {
+                    temp_pt.x = m_selected_points[pos_to_send].Key;
+                    temp_pt.y = m_selected_points[pos_to_send].Value;
+
+                    m_selected_points.RemoveAt(pos_to_send);
+                    if (!HasNeighbour(ref temp_pt))
+                    {
+                        continue;
+                    }
+                    cur_coords.x = temp_pt.x;
+                    cur_coords.y = temp_pt.y;
+                    farMove = cur_dist > 0;
+                    return true;
+                }
             }
             return false;
         }
