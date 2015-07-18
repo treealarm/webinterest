@@ -28,7 +28,7 @@ namespace MMDance
     {
         const double MMPerBStep = 0.00505;
         const double MMPerXYStep = 0.0467;
-        const double MillLen = 50;
+        const double MillLen = 55;
         public ControlWrapper m_ControlWrapper = new ControlWrapper();
 
         public MainWindow()
