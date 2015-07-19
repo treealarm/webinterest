@@ -106,6 +106,7 @@ namespace MMDance
         Rect3D m_bounds = new Rect3D(); 
         public void Calculate(List<Point> listCross, int pos, int len, double angle)
         {
+            m_bounds = new Rect3D();
             if (len <= 0)
             {
                 return;
@@ -426,7 +427,7 @@ namespace MMDance
             E_OUT
         };
 
-        public static Point3D m_dFreza = new Point3D(5, 5, 8);
+        public static Point3D m_dFreza = new Point3D(3, 3, 3);
         public IntersectionType GetIntersection(double angle, double Z, out Point3D intersection)
         {
             IntersectionType ret = IntersectionType.E_OUT;
@@ -527,7 +528,7 @@ namespace MMDance
             Ray ray_base = GetRayPlane(X, Y);
 
 
-            double dist = -1;
+            double dist = Double.MaxValue;
 
             for (int i = 0; i < m_Model3DGroup.Children.Count; i++)
             {
@@ -543,10 +544,10 @@ namespace MMDance
                     continue;
                 }
 
-                if (!model.Bounds.Contains(new Point3D(X, Y, 0)))
-                {
-                    continue;
-                }
+                //if (!model.Bounds.Contains(new Point3D(X, Y, 0)))
+                //{
+                //    continue;
+                //}
                 ret = IntersectionType.E_NOTHING;
                 Point3DCollection points = geometry.Positions;
 
@@ -559,7 +560,7 @@ namespace MMDance
                         {
                             continue;
                         }
-                        if (t > dist && t >= 0)
+                        if (t < dist && t >= 0)
                         {
                             dist = t;
                         }
