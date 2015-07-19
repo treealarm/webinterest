@@ -126,6 +126,16 @@ namespace MMDance
             public int x = 0;//ход шпинделя or x
             public int y = 0;//угол or y
             public int w = 0;
+            public stanok_coord Clone()
+            {
+                stanok_coord p = new stanok_coord();
+                p.x = x;
+                p.y = y;
+                p.z = z;
+                p.w = w;
+
+                return p;
+            }
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 4 * ControlWrapper.MOTORS_COUNT), Serializable]
@@ -164,8 +174,8 @@ namespace MMDance
         stanok_coord m_cur_pos = new stanok_coord();
         stanok_coord m_cur_task = new stanok_coord();//Последняя отправленная на обработку координата
                                     //steps max x8 x16
-        public const int Z_POS = 2; //2225 //1150 - x16
-        public const int X_POS = 1; //1900 //950  -x16
+        public const int Z_POS = 1; //2225 //1150 - x16
+        public const int X_POS = 2; //1900 //950  -x16
         public const int Y_POS = 3; //12000 
         public const int W_POS = 0; //12000 
         //~0.38 мм на шаг x16 0.76 mm
@@ -259,17 +269,17 @@ namespace MMDance
 	        AddCommand(OutputPacketBuffer);
         }
 
-        public void GoToXYZ(int x = -1, int y = -1, int z = -1, int w = -1)
+        public void GoToXYZ(int x = Int32.MinValue, int y = Int32.MinValue, int z = Int32.MinValue, int w = Int32.MinValue)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
-            
-            if(z >= 0)
+
+            if (z > Int32.MinValue)
                 var_do_steps.m_uSteps[Z_POS] = z - m_cur_pos.z;
-            if(x >= 0)
+            if (x > Int32.MinValue)
                 var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
-            if (y >= 0)
+            if (y > Int32.MinValue)
                 var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
-            if (w >= 0)
+            if (w > Int32.MinValue)
                 var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
 
             string s;
@@ -305,7 +315,7 @@ namespace MMDance
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
             dispatcherTimer.Start();
-            GoToXYZ(-1, -1, m_CurTask.z);
+            GoToXYZ(Int32.MinValue, Int32.MinValue, m_CurTask.z);
         }
 
         void InitStartPos()
@@ -314,7 +324,8 @@ namespace MMDance
             {
                 m_cur_pos.x = GetStepFromX(GetBounds().X);
                 m_cur_pos.y = GetStepFromY(GetBounds().Y);
-                m_CurTask = m_cur_pos;
+                m_CurTask = m_cur_pos.Clone();
+                m_cur_pos.z = GetStepFromZ(Properties.Settings.Default.MillStart);
             }
             else
             {
@@ -341,7 +352,7 @@ namespace MMDance
 
             if (UserControlFor3D.IntersectionType.E_INTERSECTION == ret)
             {
-                ZSteps = GetStepFromY(intersection.Z);
+                ZSteps = GetStepFromZ(intersection.Z);
                 PictureUserControl.m_UserControlFor3D.UpdatePositionPlane(intersection);
             }
             else
@@ -463,13 +474,27 @@ namespace MMDance
             m_CurTask.z = DoEngravingPlane(m_CurTask.x, m_CurTask.y);
             GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
 
-            m_CurTask.x +=  GetStepFromX(UserControlFor3D.m_dFreza.Z - 1); ;
-
-            double cur_x = GetXFromStep(m_CurTask.x);
-            if (cur_x > bounds.X + bounds.SizeX)
+            if (StartFromBegin)
             {
-                m_CurTask.x = GetStepFromX(bounds.X); 
-                m_CurTask.y +=  GetStepFromY(UserControlFor3D.m_dFreza.Y - 1);
+                m_CurTask.x += GetStepFromX(UserControlFor3D.m_dFreza.X - 1); ;
+
+                double cur_x = GetXFromStep(m_CurTask.x);
+                if (cur_x > bounds.X + bounds.SizeX)
+                {
+                    m_CurTask.y += GetStepFromY(UserControlFor3D.m_dFreza.Y - 1);
+                    StartFromBegin = !StartFromBegin;
+                }
+            }
+            else
+            {
+                m_CurTask.x -= GetStepFromX(UserControlFor3D.m_dFreza.X - 1); ;
+                double cur_x = GetXFromStep(m_CurTask.x);
+                if (cur_x < bounds.X)
+                {
+                    m_CurTask.y += GetStepFromY(UserControlFor3D.m_dFreza.Y - 1);
+                    StartFromBegin = !StartFromBegin;
+                }
+                
             }
             m_counter++;
 
@@ -551,7 +576,7 @@ namespace MMDance
             {
                 return;
             }
-            //if (GetQueueLen() < 10)
+            if (GetQueueLen() < 10)
             {
                 if (Properties.Settings.Default.Plane)
                 {
@@ -579,14 +604,27 @@ namespace MMDance
             m_CurTask = new stanok_coord();
             //ControlUserControl.checkBoxPauseSoft.IsChecked = true;
             dispatcherTimer.Stop();
+            StartFromBegin = true;
         }
         void GoToZeroes()
         {
-            m_CurTask.x = GetStepFromY(Properties.Settings.Default.MillStart);
-            GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
-            m_CurTask.z = 0;
-            m_CurTask.y = 0;
-            GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
+            if (Properties.Settings.Default.Plane)
+            {
+                m_CurTask.z = GetStepFromZ(Properties.Settings.Default.MillStart);
+                GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
+                m_CurTask.x = GetStepFromX(GetBounds().X);
+                m_CurTask.y = GetStepFromY(GetBounds().Y);
+                GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
+            }
+            else
+            {
+                m_CurTask.x = GetStepFromY(Properties.Settings.Default.MillStart);
+                GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
+                m_CurTask.z = 0;
+                m_CurTask.y = 0;
+                GoToXYZ(m_CurTask.x, m_CurTask.y, m_CurTask.z);
+            }
+            
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
