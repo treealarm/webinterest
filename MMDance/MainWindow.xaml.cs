@@ -155,17 +155,17 @@ namespace MMDance
                                 && y < newFormatedBitmapSource.PixelHeight - 1)
                             {
                                 KeyValuePair<int, int>[] P = new KeyValuePair<int, int>[] 
-                            { 
-                                new KeyValuePair<int,int> ( x - 1, y ), 
-                                new KeyValuePair<int,int> ( x + 1, y ), 
-                                new KeyValuePair<int,int> ( x, y - 1 ), 
-                                new KeyValuePair<int,int> ( x, y + 1 )
-                                //,
-                                //new KeyValuePair<int,int> ( x + 1, y + 1 ),
-                                //new KeyValuePair<int,int> ( x + 1, y - 1 ),
-                                //new KeyValuePair<int,int> ( x - 1, y - 1 ),
-                                //new KeyValuePair<int,int> ( x - 1, y + 1 ),
-                            };
+                                { 
+                                    new KeyValuePair<int,int> ( x - 1, y ), 
+                                    new KeyValuePair<int,int> ( x + 1, y ), 
+                                    new KeyValuePair<int,int> ( x, y - 1 ), 
+                                    new KeyValuePair<int,int> ( x, y + 1 )
+                                    //,
+                                    //new KeyValuePair<int,int> ( x + 1, y + 1 ),
+                                    //new KeyValuePair<int,int> ( x + 1, y - 1 ),
+                                    //new KeyValuePair<int,int> ( x - 1, y - 1 ),
+                                    //new KeyValuePair<int,int> ( x - 1, y + 1 ),
+                                };
                                 for (int i = 0; i < P.Length; i++)
                                 {
                                     Color nColor = GetPixelColor(pixels, P[i].Key, P[i].Value, stride);
