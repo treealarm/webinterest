@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html height="100%">
 <head>
     <title>Ремонт в Зеленограде</title>
     <meta charset="utf-8">
@@ -31,7 +31,7 @@
                             Черновая отделка
                             <ul>
                                 <li linked_to="Styajka.html">Стяжка</li>
-                                <li>Штукатурка</li>
+                                <li linked_to="Shtukaturka.html">Штукатурка</li>
                                 <li>Возведение перегородок</li>
                                 <li>Гипсокартоновые потолки</li>
                             </ul>
@@ -83,16 +83,23 @@
                 </li>
             </ul>
         </div>
-
-        <div id="mainView">
-            <div data-bind="html: html"></div>
+        
+        <div id="mainView"  height="100%">
+            <object width="100%" height="100%" id="CurPage" type="text/html" data="Styajka.html" ></object>
         </div>
         <style>
-            #mainView {
+ 
+             html, body, .container 
+             {
+                height: 100%;
+             }
+             
+            #mainView,#example {
                 max-width: 600px;
                 margin: 30px auto;
-                padding-top: 50px;
+                height: 80%;
             }
+
             
             #megaStore {
                 max-width: 600px;
@@ -132,6 +139,8 @@
         </style>
         <script>
             $(document).ready(function () {
+
+                //load_page("Styajka.html");
                 function onOpen(e) {
 
                 }
@@ -140,8 +149,8 @@
 
                 }
                 function load_page(page) {
-                    var go_to = '<object type="text/html" data=\"'+page+'\" ></object>';
-                    document.getElementById("mainView").innerHTML = go_to;
+                    var go_to = '<object id=\"CurPage\" type="text/html" data=\"' + page + '\" ></object>';
+                    document.getElementById("mainView").innerHtml = go_to;
                 }
                 function onSelect(e) {
                     //var text = "Selected: " + $(e.item).children(".k-link").text();
@@ -152,6 +161,7 @@
                     var text = $(e.item)[0].attributes["linked_to"].value;
 
                     load_page(text);
+                    alert(text);
                 }
 
                 function onActivate(e) {
@@ -182,8 +192,8 @@
                 });
             });
         </script>
+              
     </div>
-
 
     
 </body>
