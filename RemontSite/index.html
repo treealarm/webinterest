@@ -85,7 +85,7 @@
         </div>
         
         <div id="mainView"  height="100%">
-            <object width="100%" height="100%" id="CurPage" type="text/html" data="Styajka.html" ></object>
+            <object width="100%" height="100%" id="CurPage" type="text/html" data="Styajka.html"/>
         </div>
         <style>
  
@@ -149,8 +149,9 @@
 
                 }
                 function load_page(page) {
-                    var go_to = '<object id=\"CurPage\" type="text/html" data=\"' + page + '\" ></object>';
-                    document.getElementById("mainView").innerHtml = go_to;
+                    //var go_to = '<object id=\"CurPage\" type="text/html" data=\"' + page + '\" />';
+                    CurPage.data = page;
+                    //document.getElementById("mainView").innerHtml = go_to;
                 }
                 function onSelect(e) {
                     //var text = "Selected: " + $(e.item).children(".k-link").text();
@@ -161,7 +162,7 @@
                     var text = $(e.item)[0].attributes["linked_to"].value;
 
                     load_page(text);
-                    alert(text);
+                    //alert(text);
                 }
 
                 function onActivate(e) {
