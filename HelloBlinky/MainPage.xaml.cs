@@ -8,14 +8,21 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 using Windows.Storage;
 using System.Threading.Tasks;
+using Windows.System;
+
 namespace Blinky
 {
     public sealed partial class MainPage : Page
     {
         private const int LED_PIN = 22;
+        private const int BUTTON_PIN = 3;
         private GpioPin pin;
         private GpioPinValue pinValue;
+
+        private GpioPin pin_btn;
+        private GpioPinValue pinValue_btn;
         private DispatcherTimer timer;
+        private DispatcherTimer timer_btn;
         private SolidColorBrush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
     
@@ -26,12 +33,21 @@ namespace Blinky
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
+
+            timer_btn = new DispatcherTimer();
+            timer_btn.Interval = TimeSpan.FromMilliseconds(500);
+            timer_btn.Tick += Timer_Tick_btn;
+
             InitGPIO();
             if (pin != null)
             {
                 timer.Start();
             }
 
+            if (pin_btn != null)
+            {
+                timer_btn.Start();
+            }
             ReadFile();
         }
 
@@ -95,17 +111,45 @@ namespace Blinky
             pin.Write(pinValue);
             pin.SetDriveMode(GpioPinDriveMode.Output);
 
+            pin_btn = gpio.OpenPin(BUTTON_PIN);
+            pin_btn.SetDriveMode(GpioPinDriveMode.InputPullUp);
+           
+
             GpioStatus.Text = "GPIO pin initialized correctly.";
 
         }
 
-           private void Timer_Tick(object sender, object e)
+        int btn_pressed = 0;
+        private void Timer_Tick_btn(object sender, object e)
+        {
+            pinValue_btn = pin_btn.Read();
+            if (pinValue_btn == GpioPinValue.Low)
+            {
+                pinValue = GpioPinValue.Low;
+                SetRelayOn();
+                btn_pressed++;
+                if(btn_pressed > 10)
+                {
+                    ShutdownManager.BeginShutdown(ShutdownKind.Shutdown, TimeSpan.FromSeconds(0.5));
+                }
+            }
+            else
+            {
+                btn_pressed = 0;
+            }
+        }
+
+        private void SetRelayOn()
+        {
+            pinValue = GpioPinValue.Low;
+            pin.Write(pinValue);
+            LED.Fill = redBrush;
+        }
+        private void Timer_Tick(object sender, object e)
         {
             if (pinValue == GpioPinValue.High)
             {
-                pinValue = GpioPinValue.Low;
-                pin.Write(pinValue);
-                LED.Fill = redBrush;
+                SetRelayOn();
                 timer.Interval = TimeSpan.FromSeconds(Convert.ToInt32(DelayOnText.Text));
             }
             else
