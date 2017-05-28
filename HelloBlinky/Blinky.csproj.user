@@ -6,6 +6,7 @@
     <RemoteDebugMachine>minwinpc</RemoteDebugMachine>
     <AuthenticationMode>Universal</AuthenticationMode>
     <RemoteDebugEnabled>true</RemoteDebugEnabled>
+    <RemoveNonLayoutFiles>false</RemoveNonLayoutFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <UseSimulator>true</UseSimulator>

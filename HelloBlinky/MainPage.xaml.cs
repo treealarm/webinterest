@@ -67,7 +67,10 @@ namespace Blinky
                 {
                     return;
                 }
-                DelayOnText.Text = await Windows.Storage.FileIO.ReadTextAsync(sampleFile);
+                string readed = await Windows.Storage.FileIO.ReadTextAsync(sampleFile);
+                Settings set = Settings.Deserialize<Settings>(readed);
+                DelayOnText.Text = set.DelayOn;
+                DelayOffText.Text = set.DelayOff;
             }
             catch (Exception ex)
             {
@@ -117,7 +120,11 @@ namespace Blinky
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            WriteFile(DelayOnText.Text);
+            Settings set = new Settings();
+            set.DelayOn = DelayOnText.Text;
+            set.DelayOff = DelayOffText.Text;
+            string text = Settings.Serialize(set);
+            WriteFile(text);
         }
     }
 }

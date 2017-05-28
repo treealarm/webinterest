@@ -15490,10 +15490,10 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "D:\\WORK_SPACE\\HelloBlinky\\CS\\Blinky.csproj",
+      "projectUniqueName": "D:\\WORK_SPACE\\GoogleSVN\\trunk\\HelloBlinky\\Blinky.csproj",
       "projectName": "Blinky",
-      "projectPath": "D:\\WORK_SPACE\\HelloBlinky\\CS\\Blinky.csproj",
-      "projectJsonPath": "D:\\WORK_SPACE\\HelloBlinky\\CS\\project.json",
+      "projectPath": "D:\\WORK_SPACE\\GoogleSVN\\trunk\\HelloBlinky\\Blinky.csproj",
+      "projectJsonPath": "D:\\WORK_SPACE\\GoogleSVN\\trunk\\HelloBlinky\\project.json",
       "projectStyle": "ProjectJson"
     },
     "dependencies": {
