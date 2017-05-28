@@ -135,6 +135,10 @@ namespace Blinky
             }
             else
             {
+                if (btn_pressed > 0)
+                {
+                    SetRelayOff();
+                }
                 btn_pressed = 0;
             }
         }
@@ -145,6 +149,12 @@ namespace Blinky
             pin.Write(pinValue);
             LED.Fill = redBrush;
         }
+        private void SetRelayOff()
+        {
+            pinValue = GpioPinValue.High;
+            pin.Write(pinValue);
+            LED.Fill = grayBrush;
+        }
         private void Timer_Tick(object sender, object e)
         {
             if (pinValue == GpioPinValue.High)
@@ -154,11 +164,8 @@ namespace Blinky
             }
             else
             {
-                pinValue = GpioPinValue.High;
-                pin.Write(pinValue);
-                LED.Fill = grayBrush;
-                timer.Interval = TimeSpan.FromSeconds(Convert.ToInt32(DelayOffText.Text));
-                
+                SetRelayOff();
+                timer.Interval = TimeSpan.FromSeconds(Convert.ToInt32(DelayOffText.Text));                
             }
         }
 
