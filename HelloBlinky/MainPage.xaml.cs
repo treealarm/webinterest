@@ -31,7 +31,7 @@ namespace Blinky
             InitializeComponent();
 
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(500);
+            timer.Interval = TimeSpan.FromMilliseconds(1000);
             timer.Tick += Timer_Tick;
 
             timer_btn = new DispatcherTimer();
@@ -107,7 +107,7 @@ namespace Blinky
             }
 
             pin = gpio.OpenPin(LED_PIN);
-            pinValue = GpioPinValue.High;
+            pinValue = GpioPinValue.Low;
             pin.Write(pinValue);
             pin.SetDriveMode(GpioPinDriveMode.Output);
 
@@ -128,7 +128,7 @@ namespace Blinky
                 pinValue = GpioPinValue.Low;
                 SetRelayOn();
                 btn_pressed++;
-                if(btn_pressed > 10)
+                if(btn_pressed > 20)
                 {
                     ShutdownManager.BeginShutdown(ShutdownKind.Shutdown, TimeSpan.FromSeconds(0.5));
                 }
