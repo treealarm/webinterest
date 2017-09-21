@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Microchip TCP/IP Stack Demo App</title>
+<link href="mchp.css" rel="stylesheet" type="text/css" />
+<script src="mchp.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="shadow-one"><div id="shadow-two"><div id="shadow-three"><div id="shadow-four">
+<div id="page">
+
+<div style="padding:0 0 5px 5px"><img src="mchp.gif" alt="Microchip" /></div>
+
+<div id="title"><div class="right">ENet</div><span id="hello">&nbsp;</span></div>
+
+<div id="menu">
+<a href="index.htm">Главная</a>
+<a href="protect/config.htm">Сетевые настройки</a>
+<a href="protect/setting.htm">Дополнительно</a>
+<a href="vars.htm">Переменная</a>
+<a href="protect/cards.htm">Карточки</a>
+</div>
+<div id="content">
+
+<h1>Добро пожаловать!</h1>
+
+<table style="padding-left: 10px;">
+<tr><td align="right"><b>Версия:</b></td><td>&nbsp;</td><td>~version~</td></tr>
+<tr><td align="right"><b>Дата сборки:</b></td><td>&nbsp;</td><td>~builddate~</td></tr>
+<tr><td align="right"><b>Сервер сбора информации:</b></td><td>&nbsp;</td><td>
+    <a href="http://~host_cl~">~host_cl~</a></td></tr>
+</table>
+
+<div id="status">
+	<div id="loading" style="display:none">Error:<br />Connection to demo board was lost.</div>
+	<div id="display">
+		<span style="float:right;font-size:9px;font-weight:normal;padding-top:8px;text-indent:0px">(Вкл-Выкл)</span>
+		<p>Цифровые выходы:<br /><span class="leds">
+		<a id="led7" onclick="newAJAXCommand('leds.cgi?led=7');">&bull;</a>
+		<a id="led6" onclick="newAJAXCommand('leds.cgi?led=6');">&bull;</a>
+		<a id="led5" onclick="newAJAXCommand('leds.cgi?led=5');">&bull;</a>
+		<a id="led4" onclick="newAJAXCommand('leds.cgi?led=4');">&bull;</a>
+		<a id="led3" onclick="newAJAXCommand('leds.cgi?led=3');">&bull;</a>
+		<a id="led2" onclick="newAJAXCommand('leds.cgi?led=2');">&bull;</a>
+		<a id="led1" onclick="newAJAXCommand('leds.cgi?led=1');">&bull;</a>
+		<a id="led0" onclick="newAJAXCommand('leds.cgi?led=0');">&bull;</a>
+		</span></p>
+		<p>Цифровые входы:<br />
+		<span id="btn3">?</span> &nbsp;
+		<span id="btn2">?</span> &nbsp;
+		<span id="btn1">?</span> &nbsp;
+		<span id="btn0">?</span></p>
+		<p>Аналоговый вход 0: <span id="pot0" style="font-weight:normal">?</span></p>
+		<p>Аналоговый вход 1: <span id="pot1" style="font-weight:normal">?</span></p>
+		<p>Аналоговый вход 2: <span id="pot2" style="font-weight:normal">?</span></p>
+		<p>Таймер: <span id="time0" style="font-weight:normal">?</span></p>
+		<p>Считыватель: <span id="reader0" style="font-weight:normal">?</span></p>
+	</div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+<!--
+// Parses the xmlResponse from status.xml and updates the status box
+function updateStatus(xmlData) {
+	var mainstat = document.getElementById('display').style.display;
+	var loadstat = document.getElementById('loading').style.display;
+
+	// Check if a timeout occurred
+	if(!xmlData)
+	{
+		mainstat = 'none';
+		loadstat = 'inline';
+		return;
+	}
+
+	// Make sure we're displaying the status display
+	mainstat = 'inline';
+	loadstat = 'none';
+
+	// Loop over all the LEDs
+	for(i = 0; i < 8; i++)
+		document.getElementById('led' + i).style.color = (getXMLValue(xmlData, 'led' + i) == '1') ? '#090' : '#ddd';
+
+	// Loop over all the buttons
+	for(i = 0; i < 4; i++)
+		document.getElementById('btn' + i).innerHTML = (getXMLValue(xmlData, 'btn' + i) == 'up') ? '&Lambda;' : 'V';
+
+	// Update the POT value
+document.getElementById('pot0').innerHTML = getXMLValue(xmlData, 'pot0');
+document.getElementById('pot1').innerHTML = getXMLValue(xmlData, 'pot1');
+document.getElementById('pot2').innerHTML = getXMLValue(xmlData, 'pot2');
+document.getElementById('time0').innerHTML = getXMLValue(xmlData, 'time0');
+document.getElementById('reader0').innerHTML = getXMLValue(xmlData, 'reader0');
+}
+window.setTimeout("newAJAXCommand('status.xml', updateStatus, true)", 500);
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+document.getElementById('hello').innerHTML = "~hellomsg~";
+//-->
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer">Copyright &copy; 2010 ENet.</div>
+
+</div></div></div></div></div>
+
+</body>
+</html>

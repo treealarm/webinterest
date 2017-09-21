@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Microchip TCP/IP Stack Demo App</title>
+<link href="../mchp.css" rel="stylesheet" type="text/css" />
+<script src="../mchp.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="shadow-one"><div id="shadow-two"><div id="shadow-three"><div id="shadow-four">
+<div id="page">
+
+<div style="padding:0 0 5px 5px"><img src="../mchp.gif" alt="Microchip" /></div>
+
+<div id="title"><div class="right">ENet</div><span id="hello">&nbsp;</span></div>
+
+<div id="menu">
+<a href="../index.htm">Главная</a>
+<a href="../protect/config.htm">Сетевые настройки</a>
+<a href="../protect/setting.htm">Дополнительно</a>
+</div>
+
+<div id="content">
+
+<h1>Сетевые настройки</h1>
+<p>Эта страница поможет вам сконфигурировать сеть.</p>
+<div class="result fail" style="display:~status_fail~">
+    Ошибка: Неправильный ввод.Повторите попытку
+</div>
+<p class="error">
+<b>Внимание:</b> Неправильные настройки могут вести к потере связи с устройством.</p>
+<p>Введите настройки сети устройства:</p>
+
+<form method="post" action="/protect/config.htm" name="config">
+<fieldset>
+<div><label>MAC Address:</label>
+<input type="text" name="mac" value="~config_mac~" /></div>
+<div><label>Host Name:</label>
+<input type="text" name="host" value="~config_hostname~" /></div>
+<div>&nbsp;</div>
+
+<div>
+<input type="checkbox" class="sm" name="dhcp" value="1" onclick="configIPBoxes()" ~config_dhcpchecked~ /> Enable DHCP</div>
+<div><label>IP Address:</label>
+<td><input type="text" name="ip" value="~config_ip~" /></div>
+<div><label>Gateway:</label>
+<td><input type="text" name="gw" value="~config_gw~" /></div>
+<div><label>Subnet Mask:</label>
+<td><input type="text" name="sub" value="~config_subnet~" /></div>
+<div><label>Primary DNS:</label>
+<td><input type="text" name="dns1" value="~config_dns1~" /></div>
+<div><label>Secondary DNS:</label>
+<input type="text" name="dns2" value="~config_dns2~" /></div>
+<div><input type="submit" class="sm" value="Сохранить" /></div>
+</fieldset>
+</form>
+</div>
+
+<script language="javascript">
+<!--
+function configIPBoxes() {
+	e = document.forms.config;
+	st = e.dhcp.checked;
+	e.ip.disabled = st;
+	e.gw.disabled = st;
+	e.sub.disabled = st;
+	e.dns1.disabled = st;
+	e.dns2.disabled = st;
+}
+
+configIPBoxes();
+document.getElementById('hello').innerHTML = "~hellomsg~";
+//-->
+</script>
+<div class="spacer">&nbsp;</div>
+<div id="footer">Copyright &copy; 2010 ENet.</div>
+
+</div></div></div></div></div>
+
+</body>
+</html>

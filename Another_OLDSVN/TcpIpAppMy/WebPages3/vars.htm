@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Microchip TCP/IP Stack Demo App</title>
+<link href="mchp.css" rel="stylesheet" type="text/css" />
+<script src=mchp.js" type="text/javascript"></script>
+    <style type="text/css">
+        .style1
+        {
+        }
+        </style>
+</head>
+
+<body>
+<div id="shadow-one"><div id="shadow-two"><div id="shadow-three"><div id="shadow-four">
+<div id="page">
+
+<div style="padding:0 0 5px 5px"><img src="mchp.gif" alt="Microchip" /></div>
+
+<div id="title"><div class="right">ENet</div><span id="hello">&nbsp;</span></div>
+
+<div id="menu">
+<a href="/index.htm">Главная</a>
+<a href="/protect/config.htm">Сетевые настройки</a>
+<a href="/protect/setting.htm">Дополнительно</a>
+<a href="/vars.htm">Переменная</a>
+</div>
+
+<div id="content">
+
+<h1>Выставить значение</h1>
+<form method="get" action="vars.htm" name="vars">
+<table 
+        style="width: 100%; height: 102px;" align="left" border="solid">
+    <tr>
+        <td class="style1" colspan="2">
+
+            &nbsp;</td>
+            
+    </tr>
+    <tr>
+        <td class="style1">
+
+            Имя переменной</td>
+        <td>
+            <input type="text" name="var_name" value="~var_name~" /></td>
+            
+    </tr>
+    <tr>
+        <td class="style1">
+
+            Значение</td>
+        <td>
+            <input type="text" name="var_val" value="~var_val~"/></td>
+            
+    </tr>
+    <tr>
+        <td class="style1">
+            &nbsp;</td>
+        <td>
+<input type="submit" class="sm" value="Сохранить" /></td>
+    </tr>
+    </table>
+    </p>
+&nbsp;</form>
+</div>
+
+<script language="javascript">
+<!--
+    document.getElementById('hello').innerHTML = "~hellomsg~";
+//-->
+</script>
+<div class="spacer">&nbsp;</div>
+<div id="footer">Copyright © 2010 ENet 
+</div></div></div></div></div>
+
+</body>
+</html>

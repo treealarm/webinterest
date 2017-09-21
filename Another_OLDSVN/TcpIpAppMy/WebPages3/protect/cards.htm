@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Cards</title>
+<link href="../mchp.css" rel="stylesheet" type="text/css" />
+<script src="../mchp.js" type="text/javascript"></script>
+    <style type="text/css">
+        .style1
+        {
+        }
+        </style>
+</head>
+
+<body>
+<div id="shadow-one"><div id="shadow-two"><div id="shadow-three"><div id="shadow-four">
+<div id="page">
+
+<div style="padding:0 0 5px 5px"><img src="../mchp.gif" alt="Enet" /></div>
+
+<div id="title"><div class="right">ENet</div><span id="hello">&nbsp;</span></div>
+
+<div id="menu">
+<a href="../index.htm">Главная</a>
+<a href="../protect/config.htm">Сетевые настройки</a>
+<a href="../protect/setting.htm">Дополнительно</a>
+<a href="../protect/cards.htm">Карточки</a>
+</div>
+
+<div id="content">
+
+<h1>Карточки</h1>
+<form method="get" action="/protect/cards.htm" name="cards">
+<table 
+        style="width: 100%; height: 102px;" align="left" border="solid">
+    <tr>
+        <td class="style1" colspan="2">
+
+            &nbsp;</td>
+            
+    </tr>
+    <tr>
+        <td class="style1">
+
+            порядковый номер</td>
+        <td>
+            <input type="text" name="card_position" value="~card_position~" 
+                style="width: 152px" /></td>
+            
+    </tr>
+    <tr>
+        <td class="style1">
+
+            код объекта</td>
+        <td>
+            <input type="text" name="facility_code" value="~facility_code~" 
+                style="width: 152px" /></td>
+            
+    </tr>
+    <tr>
+        <td class="style1">
+
+            номер карточки</td>
+        <td>
+            <input type="text" name="card_code" value="~card_code~" 
+                style="width: 149px" /></td>
+            
+    </tr>
+    <tr>
+        <td class="style1">
+            &nbsp;</td>
+        <td>
+<input type="submit" class="sm" value="Сохранить" /></td>
+    </tr>
+    
+    </table>
+    </p>
+&nbsp;</form>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+  <table>
+     <tr>
+        <td><h4>Карточки в памяти</h4></td>
+    </tr>
+    ~card_list~
+ </table>
+</div>
+
+
+
+    <br />
+
+
+<div class="spacer">&nbsp;</div>
+<div id="footer">Copyright © 2010 ENet 
+</div></div></div></div></div>
+
+    </div>
+    <p>
+        &nbsp;</p>
+
+</body>
+</html>
