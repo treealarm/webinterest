@@ -5,10 +5,12 @@ using System.Text;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
+using System.IO;
 
 namespace WindowsService1
 {
-    [ServiceContract]
+    [ServiceContract(Namespace = "")]
+    [XmlSerializerFormat]
     public interface IHelloWorldService
     {
         [OperationContract]
@@ -17,7 +19,11 @@ namespace WindowsService1
 
         [OperationContract]
         [WebGet]
-        void SetDataCenter(string newIp);
+        string SetDataCenter(string newIp);
+
+        [OperationContract]
+        [WebGet(BodyStyle = WebMessageBodyStyle.Bare)]
+        Stream Form();
     }
 
     public class HelloWorldService : IHelloWorldService
@@ -37,7 +43,7 @@ namespace WindowsService1
         }
 
         //http://localhost:8000/DataCenter/SetDataCenter?newIp=127.0.0.1
-        public void SetDataCenter(string newIp)
+        public string SetDataCenter(string newIp)
         {
             try
             {
@@ -46,7 +52,15 @@ namespace WindowsService1
             }
             catch (Exception ex)
             {
+                return "ERROR";
             }
+            return "OK";
+        }
+
+        public Stream Form()
+        {
+            WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
+            return new MemoryStream(Encoding.UTF8.GetBytes(Properties.Resources.index));
         }
     }
 }
