@@ -23,7 +23,7 @@ namespace WindowsService1
 
         protected override void OnStart(string[] args)
         {
-            //System.Diagnostics.Debugger.Launch();
+            System.Diagnostics.Debugger.Launch();
             EventLog.WriteEntry("OnStart");
 
             if (serviceHost != null)
