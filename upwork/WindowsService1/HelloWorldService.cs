@@ -13,14 +13,14 @@ namespace WindowsService1
     {
         [OperationContract]
         [WebGet]
-        string SayHello();
+        string SayHello(string test);
     }
 
     public class HelloWorldService : IHelloWorldService
     {
-        public string SayHello()
+        public string SayHello(string test)
         {
-            return "hello world";
+            return "hello world " + test;
         }
     }
 }
