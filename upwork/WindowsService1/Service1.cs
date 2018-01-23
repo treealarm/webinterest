@@ -6,25 +6,60 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.ServiceModel;
+using System.ServiceModel.Description;
 
 namespace WindowsService1
 {
     public partial class AService1 : ServiceBase
     {
+
         public AService1()
         {
             InitializeComponent();
         }
 
+        public ServiceHost serviceHost = null;
+
         protected override void OnStart(string[] args)
         {
-            //System.Diagnostics.Debugger.Launch();
+            System.Diagnostics.Debugger.Launch();
             EventLog.WriteEntry("OnStart");
+
+            if (serviceHost != null)
+            {
+                serviceHost.Close();
+            }
+
+            try
+            {
+            // Create a ServiceHost for the WcfCalculatorService type and provide the base address.
+                serviceHost = new ServiceHost(typeof(HelloWorldService));
+
+            // Open the ServiceHostBase to create listeners and start listening for messages.
+            
+                serviceHost.Open();
+            }
+            catch (Exception ex)
+            {
+                EventLog.WriteEntry(ex.Message);
+            }
         }
 
         protected override void OnStop()
         {
             EventLog.WriteEntry("OnStop");
+            if (serviceHost != null)
+            {
+                try
+                {
+                    serviceHost.Close();
+                    serviceHost = null;
+                }
+                catch (Exception ex)
+                {
+                }
+            }
         }
 
         protected override void OnShutdown()
