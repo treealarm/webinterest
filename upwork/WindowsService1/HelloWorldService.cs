@@ -59,8 +59,9 @@ namespace WindowsService1
 
         public Stream Form()
         {
+            string html = Properties.Resources.index.Replace("newip_val", AppSettings.Default.DataCenter);
             WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
-            return new MemoryStream(Encoding.UTF8.GetBytes(Properties.Resources.index));
+            return new MemoryStream(Encoding.UTF8.GetBytes(html));
         }
     }
 }
