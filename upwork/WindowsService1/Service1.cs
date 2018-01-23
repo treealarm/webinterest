@@ -23,7 +23,7 @@ namespace WindowsService1
 
         protected override void OnStart(string[] args)
         {
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
             EventLog.WriteEntry("OnStart");
 
             if (serviceHost != null)
@@ -33,6 +33,7 @@ namespace WindowsService1
 
             try
             {
+                AppSettings.Default.Reload();
             // Create a ServiceHost for the WcfCalculatorService type and provide the base address.
                 serviceHost = new ServiceHost(typeof(HelloWorldService));
 

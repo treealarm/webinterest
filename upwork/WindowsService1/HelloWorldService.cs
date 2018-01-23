@@ -5,7 +5,6 @@ using System.Text;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
-using WindowsService1.Properties;
 
 namespace WindowsService1
 {
@@ -29,7 +28,7 @@ namespace WindowsService1
             string s = string.Empty;
             try
             {
-                s = Properties.Settings.Default["DataCenter"].ToString();
+                s = AppSettings.Default.DataCenter.ToString();
             }
             catch (Exception ex)
             {
@@ -42,8 +41,8 @@ namespace WindowsService1
         {
             try
             {
-                Properties.Settings.Default["DataCenter"] = newIp;
-                Properties.Settings.Default.Save();
+                AppSettings.Default.DataCenter = newIp;
+                AppSettings.Default.Save();
             }
             catch (Exception ex)
             {
