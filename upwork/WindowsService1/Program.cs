@@ -11,12 +11,15 @@ namespace WindowsService1
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        /// 
+        public static AService1 g_AService = null;
         static void Main()
         {
             ServiceBase[] ServicesToRun;
+            g_AService = new AService1();
             ServicesToRun = new ServiceBase[] 
 			{ 
-				new AService1() 
+				g_AService
 			};
             ServiceBase.Run(ServicesToRun);
         }
