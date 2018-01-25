@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="HelloWorldService.cs" />
     <Compile Include="IHelloWorldServiceInterface.cs" />
+    <Compile Include="IWorkstationServiceLog.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>

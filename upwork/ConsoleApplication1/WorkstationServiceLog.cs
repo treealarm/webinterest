@@ -16,17 +16,23 @@ namespace ConsoleApplication1
         public void WorkstationServiceLog(Stream input)
         {
             string body = new StreamReader(input).ReadToEnd();
-            NameValueCollection nvc = HttpUtility.ParseQueryString(body);
+
+            body = HttpUtility.UrlDecode(body);
+
+            NameValueCollection nvc = HttpUtility.ParseQueryString(HttpUtility.UrlDecode(body));
             try
             {
                 string Workstation = nvc["Workstation"];
                 string User = nvc["User"];
                 string Event = nvc["Event"];
                 DateTime Time = new DateTime();
-                DateTime.TryParse(nvc["Time"], out Time); 
+                DateTime.TryParse(nvc["Time"], out Time);
+
+                Console.WriteLine(nvc.ToString());
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
             }
         }
     }

@@ -10,6 +10,8 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Runtime.InteropServices;
 using System.ServiceModel.Web;
+using ConsoleApplication1;
+using System.IO;
 
 namespace WindowsService1
 {
@@ -62,6 +64,49 @@ namespace WindowsService1
                 m_states[state] = pState;
             }
 
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.ASPDataCenter))
+            {
+                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:52323/api/WorkstationServiceLog");
+                //request.Method = "POST";
+                //request.ContentType = "application/x-www-form-urlencoded";
+                //request.AllowAutoRedirect = false;
+
+                ////Put the post data into the request
+                //byte[] data = (new ASCIIEncoding()).GetBytes("workstation=efjcnwmc&User=voemk&Event=cfhwb&time=1-1-2030");
+                //request.ContentLength = data.Length;
+                //Stream reqStream = request.GetRequestStream();
+                //reqStream.Write(data, 0, data.Length);
+                //reqStream.Close();
+
+                using (WebChannelFactory<IWorkstationServiceLog> myChannelFactory =
+                                                    new WebChannelFactory<IWorkstationServiceLog>(
+                                                        new Uri(Properties.Settings.Default.ASPDataCenter)))
+                {
+                    IWorkstationServiceLog client = null;
+
+                    try
+                    {
+                        client = myChannelFactory.CreateChannel();
+                        MemoryStream stream = new MemoryStream();
+                        StreamWriter writer = new StreamWriter(stream);
+                        string s = string.Format("workstation={0}&User={1}&Event={2}&time={3}",
+                            pState.MachineName, pState.UserName, pState.State, pState.timestamp);
+                        writer.Write(s);
+                        writer.Flush();
+                        stream.Position = 0;
+
+                        client.WorkstationServiceLog(stream);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        if (client != null)
+                        {
+                            ((ICommunicationObject)client).Abort();
+                        }
+                    }
+                }
+            }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.DataCenter))
             {
                 using (WebChannelFactory<IHelloWorldService> myChannelFactory = 
