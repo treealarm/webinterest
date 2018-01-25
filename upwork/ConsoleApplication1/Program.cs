@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WindowsService1;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Runtime.InteropServices;
