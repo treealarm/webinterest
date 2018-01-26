@@ -24,17 +24,6 @@ namespace WindowsFormsApplication1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:52323/api/WorkstationServiceLog");
-            //request.Method = "POST";
-            //request.ContentType = "application/x-www-form-urlencoded";
-            //request.AllowAutoRedirect = false;
-
-            ////Put the post data into the request
-            //byte[] data = (new ASCIIEncoding()).GetBytes("workstation=efjcnwmc&User=voemk&Event=cfhwb&time=1-1-2030");
-            //request.ContentLength = data.Length;
-            //Stream reqStream = request.GetRequestStream();
-            //reqStream.Write(data, 0, data.Length);
-            //reqStream.Close();
 
             using (WebChannelFactory<IWorkstationServiceLog> myChannelFactory =
                                                 new WebChannelFactory<IWorkstationServiceLog>(

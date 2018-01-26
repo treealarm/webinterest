@@ -13,27 +13,9 @@ namespace ConsoleApplication1
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "WorkstationServiceLog" in both code and config file together.
     public class WorkstationServiceLogImp : IWorkstationServiceLog
     {
-        public void WorkstationServiceLog(Stream input)
+        public void WorkstationServiceLog(string Workstation, string User, string Event, DateTime Time)
         {
-            string body = new StreamReader(input).ReadToEnd();
 
-            body = HttpUtility.UrlDecode(body);
-
-            NameValueCollection nvc = HttpUtility.ParseQueryString(HttpUtility.UrlDecode(body));
-            try
-            {
-                string Workstation = nvc["Workstation"];
-                string User = nvc["User"];
-                string Event = nvc["Event"];
-                DateTime Time = new DateTime();
-                DateTime.TryParse(nvc["Time"], out Time);
-
-                Console.WriteLine(nvc.ToString());
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
         }
     }
 }

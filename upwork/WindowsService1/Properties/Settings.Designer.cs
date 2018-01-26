@@ -25,18 +25,6 @@ namespace WindowsService1.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
-        public string DataCenter {
-            get {
-                return ((string)(this["DataCenter"]));
-            }
-            set {
-                this["DataCenter"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:52323/api")]
         public string ASPDataCenter {
             get {

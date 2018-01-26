@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using System.ServiceModel.Web;
 using ConsoleApplication1;
 using System.IO;
+using System.Security.Principal;
+using System.Web.Script.Serialization;
 
 namespace WindowsService1
 {
@@ -26,6 +28,26 @@ namespace WindowsService1
         public ServiceHost serviceHost = null;
 
         public Dictionary<string, ServiceState> m_states = new Dictionary<string, ServiceState>();
+
+        public static string API_PATH = string.Empty;
+        public static string EVENTS_SOURCE = "WS_EVENT";
+        public static EventLog m_EventLog = new EventLog("AService1Events", System.Environment.MachineName, EVENTS_SOURCE);
+
+        public void ReadApiPath()
+        {
+            try
+            {
+                API_PATH = Properties.Settings.Default.ASPDataCenter;
+            }
+            catch (Exception ex)
+            {
+                EventLog.WriteEntry("ReadApiPath:" + ex.Message);
+            }
+            if (string.IsNullOrEmpty(API_PATH))
+            {
+                
+            }
+        }
         protected override void OnStart(string[] args)
         {
             EventLog.WriteEntry("Starting");
@@ -33,7 +55,17 @@ namespace WindowsService1
             #if (DEBUG)
             System.Diagnostics.Debugger.Launch();
             #endif
-            
+            try
+            {
+                m_EventLog.MaximumKilobytes = 64;
+                m_EventLog.ModifyOverflowPolicy( OverflowAction.OverwriteOlder, 1);
+            }
+            catch(Exception ex)
+            {
+                EventLog.WriteEntry(ex.Message);
+            }
+            ReadApiPath();
+
             if (serviceHost != null)
             {
                 serviceHost.Close();
@@ -41,7 +73,8 @@ namespace WindowsService1
 
             try
             {
-                serviceHost = new ServiceHost(typeof(HelloWorldService));
+
+                serviceHost = new ServiceHost(typeof(LocalWorkstationState));                
 
                 serviceHost.Open();
 
@@ -53,10 +86,12 @@ namespace WindowsService1
             }
         }
 
+        EventInstance myInfoEvent = new EventInstance(0, 0, EventLogEntryType.Information);
+
         protected void SetState(string state, int sessionId = -1)
         {
-            EventLog.WriteEntry(state);
             string username = GetUsername(sessionId);
+            
 
             ServiceState pState = new ServiceState(state, username);
             lock (m_states)
@@ -64,9 +99,19 @@ namespace WindowsService1
                 m_states[state] = pState;
             }
 
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.ASPDataCenter))
+            
+            if (EventLog.SourceExists(EVENTS_SOURCE))
             {
-                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:52323/api/WorkstationServiceLog");
+                string[] insertStrings = { new JavaScriptSerializer().Serialize(pState)};
+                byte[] binaryData = {};
+                m_EventLog.WriteEvent(myInfoEvent, binaryData, insertStrings);
+            }
+
+            ReadApiPath();
+
+            if (!string.IsNullOrEmpty(API_PATH))
+            {
+                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:52323/api");
                 //request.Method = "POST";
                 //request.ContentType = "application/x-www-form-urlencoded";
                 //request.AllowAutoRedirect = false;
@@ -87,43 +132,11 @@ namespace WindowsService1
                     try
                     {
                         client = myChannelFactory.CreateChannel();
-                        MemoryStream stream = new MemoryStream();
-                        StreamWriter writer = new StreamWriter(stream);
-                        string s = string.Format("workstation={0}&User={1}&Event={2}&time={3}",
-                            pState.MachineName, pState.UserName, pState.State, pState.timestamp);
-                        writer.Write(s);
-                        writer.Flush();
-                        stream.Position = 0;
-
-                        client.WorkstationServiceLog(stream);
+                        client.WorkstationServiceLog(pState.MachineName, pState.UserName, pState.State, pState.timestamp);
 
                     }
                     catch (Exception ex)
                     {
-                        if (client != null)
-                        {
-                            ((ICommunicationObject)client).Abort();
-                        }
-                    }
-                }
-            }
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.DataCenter))
-            {
-                using (WebChannelFactory<IHelloWorldService> myChannelFactory = 
-                    new WebChannelFactory<IHelloWorldService>(
-                        new Uri("http://" + Properties.Settings.Default.DataCenter + ":8000/DataCenter/")))
-                {
-                    IHelloWorldService client = null;
-
-                    try
-                    {
-                        client = myChannelFactory.CreateChannel();
-                        client.SetStatus(pState);
-                    }
-                    catch (Exception ex)
-                    {
-                        EventLog.WriteEntry(ex.Message);
-
                         if (client != null)
                         {
                             ((ICommunicationObject)client).Abort();
@@ -132,6 +145,7 @@ namespace WindowsService1
                 }
             }
         }
+
         protected override void OnStop()
         {
             SetState("OnStop");
@@ -233,7 +247,7 @@ namespace WindowsService1
         {
             if (sessionId < 0)
             {
-                return string.Empty;
+                return String.Empty;                
             }
             IntPtr buffer;
             int strLen;

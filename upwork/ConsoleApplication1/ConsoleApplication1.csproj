@@ -48,7 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IWorkstationServiceLog.cs" />
+    <Compile Include="..\WindowsService1\IWorkstationServiceLog.cs">
+      <Link>IWorkstationServiceLog.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkstationServiceLog.cs" />

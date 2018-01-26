@@ -12,28 +12,12 @@ using System.IO;
 //[21:14:49] cubicles97: m-d-yyyy
 namespace ConsoleApplication1
 {
-    [DataContract]
-    public class WorkstationServiceEventLogEntity
-    {
-        [DataMember]
-        public string Workstation { get; set; }
-        [DataMember]
-        public string User { get; set; }
-        [DataMember]
-        public string Event { get; set; }
-        [DataMember]
-        public DateTime Time { get; set; }
-    }
-
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IWorkstationServiceLog" in both code and config file together.
     [ServiceContract(Namespace = "")]
     public interface IWorkstationServiceLog
     {
         [OperationContract]
-        [WebInvoke(
-            Method = "POST",
-            BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "/WorkstationServiceLog")]
-        void WorkstationServiceLog(Stream data);
+        [WebGet]
+        void WorkstationServiceLog(string Workstation, string User, string Event, DateTime Time);
     }
 }

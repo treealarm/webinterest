@@ -63,11 +63,13 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -76,8 +78,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HelloWorldService.cs" />
-    <Compile Include="IHelloWorldServiceInterface.cs" />
+    <Compile Include="LocalWorkstationState.cs" />
+    <Compile Include="ILocalWorkstationState.cs" />
     <Compile Include="IWorkstationServiceLog.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
