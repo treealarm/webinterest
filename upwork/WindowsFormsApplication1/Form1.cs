@@ -11,6 +11,7 @@ using System.IO;
 using System.ServiceModel.Web;
 using System.ServiceModel;
 using System.Management;
+using System.Diagnostics;
 
 namespace WindowsFormsApplication1
 {
@@ -52,8 +53,17 @@ namespace WindowsFormsApplication1
             return username;
         } // end String getUsername()
 
+        public static string EVENTS_SOURCE = "WS_EVENT";
+        public static EventLog m_EventLog = new EventLog("AService1Events", System.Environment.MachineName, EVENTS_SOURCE);
+        EventInstance myInfoEvent = new EventInstance(0, 0, EventLogEntryType.Information);
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            string[] insertStrings = { "fff" };
+            byte[] binaryData = { };
+            //m_EventLog.WriteEvent(myInfoEvent, binaryData, insertStrings);
+
+            System.Diagnostics.EventLog.Delete("AService1Events");
             this.Text = getUsername();   
         }
     }

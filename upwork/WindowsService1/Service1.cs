@@ -30,7 +30,8 @@ namespace WindowsService1
 
         public static string API_PATH = string.Empty;
         public static string EVENTS_SOURCE = "WS_EVENT";
-        public static EventLog m_EventLog = new EventLog("AService1Events", System.Environment.MachineName, EVENTS_SOURCE);
+        public static EventLog m_EventLog = null;
+        EventInstance myInfoEvent = new EventInstance(0, 0, EventLogEntryType.Information);
 
         public void ReadApiPath()
         {
@@ -56,8 +57,16 @@ namespace WindowsService1
             #endif
             try
             {
-                m_EventLog.MaximumKilobytes = 64;
-                m_EventLog.ModifyOverflowPolicy( OverflowAction.OverwriteOlder, 1);
+                m_EventLog = new EventLog("AService1Events", System.Environment.MachineName, EVENTS_SOURCE);
+                if (EventLog.SourceExists(EVENTS_SOURCE))
+                {
+                    m_EventLog.MaximumKilobytes = 64;
+                    m_EventLog.ModifyOverflowPolicy(OverflowAction.OverwriteOlder, 1);
+                }
+                else
+                {
+                    m_EventLog.WriteEntry("BEGIN");
+                }
             }
             catch(Exception ex)
             {
@@ -84,8 +93,6 @@ namespace WindowsService1
                 EventLog.WriteEntry(ex.Message);
             }
         }
-
-        EventInstance myInfoEvent = new EventInstance(0, 0, EventLogEntryType.Information);
 
         protected void SetState(string state, int sessionId = -1)
         {
