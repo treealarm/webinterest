@@ -14,6 +14,7 @@ using ConsoleApplication1;
 using System.IO;
 using System.Security.Principal;
 using System.Web.Script.Serialization;
+using System.Management;
 
 namespace WindowsService1
 {
@@ -26,8 +27,6 @@ namespace WindowsService1
         }
 
         public ServiceHost serviceHost = null;
-
-        public Dictionary<string, ServiceState> m_states = new Dictionary<string, ServiceState>();
 
         public static string API_PATH = string.Empty;
         public static string EVENTS_SOURCE = "WS_EVENT";
@@ -94,11 +93,6 @@ namespace WindowsService1
             
 
             ServiceState pState = new ServiceState(state, username);
-            lock (m_states)
-            {
-                m_states[state] = pState;
-            }
-
             
             if (EventLog.SourceExists(EVENTS_SOURCE))
             {
@@ -195,21 +189,6 @@ namespace WindowsService1
                             break;
                         }
 
-                    case SessionChangeReason.ConsoleConnect:
-                        SetState("ConsoleConnect", sessionId);
-                        break;
-
-                    case SessionChangeReason.ConsoleDisconnect:
-                        SetState("ConsoleDisconnect", sessionId);
-                        break;
-
-                    case SessionChangeReason.RemoteConnect:
-                        SetState("RemoteConnect", sessionId);
-                        break;
-
-                    case SessionChangeReason.RemoteDisconnect:
-                        SetState("RemoteDisconnect", sessionId);
-                        break;
 
                     case SessionChangeReason.SessionLock:
                         SetState("SessionLock", sessionId);
@@ -219,9 +198,25 @@ namespace WindowsService1
                         SetState("SessionUnlock", sessionId);
                         break;
 
-                    case SessionChangeReason.SessionRemoteControl:
-                        SetState("SessionRemoteControl", sessionId);
-                        break;
+                    //case SessionChangeReason.SessionRemoteControl:
+                    //    SetState("SessionRemoteControl", sessionId);
+                    //    break;
+                    
+                    //case SessionChangeReason.ConsoleConnect:
+                    //    SetState("ConsoleConnect", sessionId);
+                    //    break;
+
+                    //case SessionChangeReason.ConsoleDisconnect:
+                    //    SetState("ConsoleDisconnect", sessionId);
+                    //    break;
+
+                    //case SessionChangeReason.RemoteConnect:
+                    //    SetState("RemoteConnect", sessionId);
+                    //    break;
+
+                    //case SessionChangeReason.RemoteDisconnect:
+                    //    SetState("RemoteDisconnect", sessionId);
+                    //    break;
 
                 }
 
@@ -247,7 +242,7 @@ namespace WindowsService1
         {
             if (sessionId < 0)
             {
-                return String.Empty;                
+                return getWMIUsername();
             }
             IntPtr buffer;
             int strLen;
@@ -267,5 +262,34 @@ namespace WindowsService1
             }
             return username;
         }
+
+        private static string getWMIUsername()
+        {
+            string username = string.Empty;
+            try
+            {
+                // Define WMI scope to look for the Win32_ComputerSystem object
+                ManagementScope ms = new ManagementScope("\\\\.\\root\\cimv2");
+                ms.Connect();
+
+                ObjectQuery query = new ObjectQuery
+                        ("SELECT * FROM Win32_ComputerSystem");
+                ManagementObjectSearcher searcher =
+                        new ManagementObjectSearcher(ms, query);
+
+                // This loop will only run at most once.
+                foreach (ManagementObject mo in searcher.Get())
+                {
+                    // Extract the username
+                    username += mo["UserName"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+            return username;
+        } // end String getUsername()
     }
 }

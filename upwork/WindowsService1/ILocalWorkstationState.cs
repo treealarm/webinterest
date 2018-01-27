@@ -21,11 +21,6 @@ namespace WindowsService1
 
         [OperationContract]
         [WebGet]
-        [ServiceKnownType(typeof(ServiceState))] 
-        List<ServiceState> GetLocalData();
-
-        [OperationContract]
-        [WebGet]
         [ServiceKnownType(typeof(ServiceState))]
         List<ServiceState> GetEvents(int pastNumberOfMinutes, string username, string eventname);
     }

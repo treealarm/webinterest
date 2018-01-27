@@ -8,9 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
-using ConsoleApplication1;
 using System.ServiceModel.Web;
 using System.ServiceModel;
+using System.Management;
 
 namespace WindowsFormsApplication1
 {
@@ -22,38 +22,39 @@ namespace WindowsFormsApplication1
             
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        public String getUsername()
         {
-
-            using (WebChannelFactory<IWorkstationServiceLog> myChannelFactory =
-                                                new WebChannelFactory<IWorkstationServiceLog>(
-                                                    new Uri("http://localhost:52323/api")))
+            string username = string.Empty;
+            try
             {
-                IWorkstationServiceLog client = null;
+                // Define WMI scope to look for the Win32_ComputerSystem object
+                ManagementScope ms = new ManagementScope("\\\\.\\root\\cimv2");
+                ms.Connect();
 
-                try
-                {
-                    client = myChannelFactory.CreateChannel();
-                    MemoryStream stream = new MemoryStream();
-                    StreamWriter writer = new StreamWriter(stream, Encoding.ASCII);
-                    string s = string.Format("workstation={0}&User={1}&Event={2}&time={3}",
-                            "MachineName", "UserName", "State", DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss"));
-                    
-                    writer.Write(s);
-                    writer.Flush();
-                    stream.Position = 0;
+                ObjectQuery query = new ObjectQuery
+                        ("SELECT * FROM Win32_ComputerSystem");
+                ManagementObjectSearcher searcher =
+                        new ManagementObjectSearcher(ms, query);
 
-                    client.WorkstationServiceLog(stream);
-                    
-                }
-                catch (Exception ex)
+                // This loop will only run at most once.
+                foreach (ManagementObject mo in searcher.Get())
                 {
-                    if (client != null)
-                    {
-                        ((ICommunicationObject)client).Abort();
-                    }
+                    // Extract the username
+                    username += mo["UserName"].ToString();
                 }
             }
+            catch (Exception)
+            {
+                // The system currently has no users who are logged on
+                // Set the username to "SYSTEM" to denote that
+                username = "SYSTEM";
+            }
+            return username;
+        } // end String getUsername()
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.Text = getUsername();   
         }
     }
 }

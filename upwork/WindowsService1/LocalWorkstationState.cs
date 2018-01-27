@@ -46,20 +46,6 @@ namespace WindowsService1
             return "OK";
         }
 
-
-        public List<ServiceState> GetLocalData()
-        {
-            List<ServiceState> list = new List<ServiceState>();
-            lock (GetService().m_states)
-            {
-                foreach (KeyValuePair<string, ServiceState> item in GetService().m_states)
-                {
-                    list.Add(item.Value);
-                }
-                return list;
-            }
-        }
-
         public List<ServiceState> GetEvents(int pastNumberOfMinutes, string username, string eventname)
         {
             List<ServiceState> list = new List<ServiceState>();
@@ -74,6 +60,8 @@ namespace WindowsService1
 
             }
 
+            coll = coll.OrderByDescending(time => time.TimeGenerated);
+
             var jsSerializer = new JavaScriptSerializer();
             foreach (EventLogEntry e in coll)
             {
@@ -82,7 +70,27 @@ namespace WindowsService1
                     if (e.ReplacementStrings.Count() > 0)
                     {
                         ServiceState state = jsSerializer.Deserialize<ServiceState>(e.ReplacementStrings[0]);
+                        state.timestamp = state.timestamp.ToLocalTime();
+                        if (!string.IsNullOrEmpty(username))
+                        {
+                            if (!state.UserName.ToLower().Contains(username.ToLower()))
+                            {
+                                continue;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(eventname))
+                        {
+                            if (!state.State.ToLower().Contains(eventname.ToLower()))
+                            {
+                                continue;
+                            }
+                        }
                         list.Add(state);
+                        if (pastNumberOfMinutes == 0)
+                        {
+                            break;
+                        }
                     }
                 }
                 catch (Exception ex)
