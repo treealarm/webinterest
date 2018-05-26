@@ -27,8 +27,8 @@ namespace MMDance
     public partial class MainWindow : Window
     {
         const double MMPerBStep = 0.00505;
-        const double MMPerXYStep = 0.0467;
-        const double MillLen = 55;
+        const double MMPerXYStep = 0.0467*4.0;
+        const double MillLen = 52;
         public ControlWrapper m_ControlWrapper = new ControlWrapper();
 
         public MainWindow()
@@ -155,17 +155,17 @@ namespace MMDance
                                 && y < newFormatedBitmapSource.PixelHeight - 1)
                             {
                                 KeyValuePair<int, int>[] P = new KeyValuePair<int, int>[] 
-                                { 
-                                    new KeyValuePair<int,int> ( x - 1, y ), 
-                                    new KeyValuePair<int,int> ( x + 1, y ), 
-                                    new KeyValuePair<int,int> ( x, y - 1 ), 
-                                    new KeyValuePair<int,int> ( x, y + 1 )
-                                    //,
-                                    //new KeyValuePair<int,int> ( x + 1, y + 1 ),
-                                    //new KeyValuePair<int,int> ( x + 1, y - 1 ),
-                                    //new KeyValuePair<int,int> ( x - 1, y - 1 ),
-                                    //new KeyValuePair<int,int> ( x - 1, y + 1 ),
-                                };
+                            { 
+                                new KeyValuePair<int,int> ( x - 1, y ), 
+                                new KeyValuePair<int,int> ( x + 1, y ), 
+                                new KeyValuePair<int,int> ( x, y - 1 ), 
+                                new KeyValuePair<int,int> ( x, y + 1 )
+                                //,
+                                //new KeyValuePair<int,int> ( x + 1, y + 1 ),
+                                //new KeyValuePair<int,int> ( x + 1, y - 1 ),
+                                //new KeyValuePair<int,int> ( x - 1, y - 1 ),
+                                //new KeyValuePair<int,int> ( x - 1, y + 1 ),
+                            };
                                 for (int i = 0; i < P.Length; i++)
                                 {
                                     Color nColor = GetPixelColor(pixels, P[i].Key, P[i].Value, stride);
