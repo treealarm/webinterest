@@ -20,10 +20,13 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column = "0" Grid.Row = "0" VerticalAlignment="Top" Height="Auto" Margin="5" Background="#23000000">
-            <Button Content="Открыть файл" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenFile" Click="buttonOpenFile_Click" Width="Auto"/>
+            <Button Content="Open Image" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenFile" Click="buttonOpenFile_Click" Width="Auto"/>
+            <Button Content="Open GCode" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenGCode"  Width="Auto" Click="buttonOpenGCode_Click" />
             <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenDevice" Click="buttonOpenDevice_Click" />
-            <Button Content="Начать" Height="23" HorizontalAlignment="Stretch" Name="buttonStartWork" Click="buttonStartWork_Click" />
             <Button Content="Применить таймер" Height="23" HorizontalAlignment="Stretch" Name="buttonUpdateTimer" Click="buttonUpdateTimer_Click" />
+            <Button Content="Начать" Height="23" HorizontalAlignment="Stretch" Name="buttonStartWork" Click="buttonStartWork_Click" />
+            <Button Content="Emulation" Height="23" HorizontalAlignment="Stretch" Name="buttonEmulate" Click="buttonEmulate_Click" />
+            
             <CheckBox Content="Включить приводы" Height="16" HorizontalAlignment="Left" Name="checkBoxOutpusEnergy" VerticalAlignment="Top" Checked="checkBoxOutpusEnergy_Checked" Unchecked="checkBoxOutpusEnergy_Unchecked" />
             <CheckBox Content="Пауза контроллер" Height="16" HorizontalAlignment="Left" Name="checkBoxPause" VerticalAlignment="Top" Unchecked="checkBoxPause_Unchecked" Checked="checkBoxPause_Checked" />
             <CheckBox Content="Пауза софт" Height="16" HorizontalAlignment="Left" Name="checkBoxPauseSoft" VerticalAlignment="Top" Checked="checkBoxPauseSoft_Checked" Unchecked="checkBoxPauseSoft_Unchecked" />

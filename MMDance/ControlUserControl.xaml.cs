@@ -46,6 +46,7 @@ namespace MMDance
         {
             m_nFastMode = -1;
             MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.m_bEmulation = false;
             wnd.Start();
         }
 
@@ -223,6 +224,30 @@ namespace MMDance
         private void checkBoxContour_Unchecked(object sender, RoutedEventArgs e)
         {
             OnSelectionChanged();
+        }
+
+        private void buttonEmulate_Click(object sender, RoutedEventArgs e)
+        {
+            m_nFastMode = -1;
+            MainWindow wnd = MainWindow.GetMainWnd();
+            wnd.m_bEmulation = true;
+            wnd.Start();
+        }
+
+        private void buttonOpenGCode_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = MainWindow.GetMainWnd();
+            OpenFileDialog op = new OpenFileDialog();
+            op.InitialDirectory = op.FileName;
+            op.Title = "Open G-Code";
+            op.Filter = "All supported |*.*";
+            if (op.ShowDialog() == true)
+            {
+                if (wnd.OnGCodeFileOpen(op.FileName))
+                {
+                    Properties.Settings.Default.GCodeFile = op.FileName;
+                }
+            }
         }
     }
 }

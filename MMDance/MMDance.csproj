@@ -38,6 +38,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -67,11 +69,25 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GCode\clsCadRect.cs" />
+    <Compile Include="GCode\clsDisplayList.cs" />
+    <Compile Include="GCode\clsMachine.cs" />
+    <Compile Include="GCode\clsMotion.cs" />
+    <Compile Include="GCode\clsMotionRecord.cs" />
+    <Compile Include="GCode\clsProcessor.cs" />
+    <Compile Include="GCode\clsSettings.cs" />
     <Compile Include="ControlUserControl.xaml.cs">
       <DependentUpon>ControlUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ControlWrapper.cs" />
     <Compile Include="DistanceComparer.cs" />
+    <Compile Include="GCode\clsToolLayer.cs" />
+    <Compile Include="GCode\MG_CS_BasicViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCode\MG_CS_BasicViewer.designer.cs">
+      <DependentUpon>MG_CS_BasicViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -99,6 +115,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="GCode\MG_CS_BasicViewer.resx">
+      <DependentUpon>MG_CS_BasicViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -110,7 +129,12 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="GCode\Lathe.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GCode\Mill.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

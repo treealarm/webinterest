@@ -18,6 +18,8 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
 
+using GCode;
+using MacGen;
 
 namespace MMDance
 {
@@ -40,7 +42,7 @@ namespace MMDance
             }
 
 
-            OnFileOpen(Properties.Settings.Default.PicFile);
+            //OnFileOpen(Properties.Settings.Default.PicFile);
             WorkingThread = new Thread(new ThreadStart(ProcessCommand));
             WorkingThread.SetApartmentState(ApartmentState.STA);
             WorkingThread.Start();
@@ -376,16 +378,18 @@ namespace MMDance
 
         public void UpdateCurrentPosition()
         {
-            if (newFormatedBitmapSource == null)
+            ImageSource image = PictureUserControl.loaded_image.Source;
+            if (image == null)
             {
                 return;
             }
             try
             {
-                double xratio = PictureUserControl.image_canvas.ActualWidth / newFormatedBitmapSource.PixelWidth;
-                double yratio = PictureUserControl.image_canvas.ActualHeight / newFormatedBitmapSource.PixelHeight;
-                PictureUserControl.UpdateCurrentPosition(m_cur_pos.x * xratio * MMPerXYStep,
-                    (newFormatedBitmapSource.PixelHeight - m_cur_pos.y * MMPerXYStep - 1) * yratio);
+                double xratio = PictureUserControl.image_canvas.ActualWidth / image.Width;
+                double yratio = PictureUserControl.image_canvas.ActualHeight / image.Height;
+                PictureUserControl.UpdateCurrentPosition((m_cur_pos.x * MMPerXYStep - mProcessor.min_x) * xratio,
+                    (image.Height - (m_cur_pos.y * MMPerXYStep - mProcessor.min_y
+                    ) - 1) * yratio);
             }
             catch (Exception e)
             {
@@ -442,12 +446,12 @@ namespace MMDance
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
 
-            if (x >= 0)
+            //if (x >= 0)
             {
                 var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
             }
 
-            if (y >= 0)
+            //if (y >= 0)
             {
                 var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
             }
@@ -465,11 +469,11 @@ namespace MMDance
             }
             
             
-            if (b >= 0)
+            //if (b >= 0)
             {
                 var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
             }
-            if (w >= 0)
+            //if (w >= 0)
             {
                 var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
             }
@@ -523,59 +527,28 @@ namespace MMDance
             return false;
         }
 
-        private bool DoEngraving(ref xyz_coord cur_coords, ref bool farMove)
+        private bool DoEngraving()
         {
-            if (newFormatedBitmapSource == null)
+            if (MotionBlocks.Count <= 0 || m_counter < 0 || m_counter >= MotionBlocks.Count)
             {
                 return false;
             }
 
-            xyz_coord temp_pt = new xyz_coord();
-            while (m_selected_points.Count > 0)
-            {
-                double cur_dist = (double)GetImageSize().Width * 2 + GetImageSize().Height * 2;
-                int pos_to_send = -1;
-                for (int i = 0; i < m_selected_points.Count; i++)
-                {
-                    temp_pt.x = m_selected_points[i].Key;
-                    temp_pt.y = m_selected_points[i].Value;
-                    if (IsNeighbour(cur_coords, temp_pt))
-                    {
-                        pos_to_send = i;
-                        cur_dist = -1;
-                        break;
-                    }
+            clsMotionRecord cur_rec = MotionBlocks[m_counter];
 
-                    double dist = GetDistanse(cur_coords, temp_pt);
+            GoToXY(
+                GetStepsFromXYmm(cur_rec.Xpos),
+                GetStepsFromXYmm(cur_rec.Ypos),
+                GetStepsFromBmm(cur_rec.Zpos));
 
-                    if (dist < cur_dist)
-                    {
-                        cur_dist = dist;
-                        pos_to_send = i;
-                    }
-                }
-                if (pos_to_send >= 0)
-                {
-                    temp_pt.x = m_selected_points[pos_to_send].Key;
-                    temp_pt.y = m_selected_points[pos_to_send].Value;
+            m_counter++;
+            ControlUserControl.textBlockCounter.Text = m_counter.ToString();
 
-                    m_selected_points.RemoveAt(pos_to_send);
-                    if (!HasNeighbour(ref temp_pt))
-                    {
-                        continue;
-                    }
-                    cur_coords.x = temp_pt.x;
-                    cur_coords.y = temp_pt.y;
-                    farMove = cur_dist > 0;
-                    return true;
-                }
-            }
-            return false;
+            return true;
         }
 
         public void Start()
         {
-            m_CurTask = new xyz_coord();
             m_counter = 0;
             if (newFormatedBitmapSource != null)
             {
@@ -588,7 +561,6 @@ namespace MMDance
             dispatcherTimer.Start(); 
         }
 
-        xyz_coord m_CurTask = new xyz_coord();
         int GetStepsFromBmm(double Bmm)
         {
             double ret = Bmm / MMPerBStep;
@@ -599,6 +571,7 @@ namespace MMDance
             double ret = XYmm / MMPerXYStep;
             return (int)ret;
         }
+        public bool m_bEmulation = false;
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (m_bPauseSoft)
@@ -606,34 +579,27 @@ namespace MMDance
                 return;
             }
 
+            if (m_bEmulation)
+            {
+                //Thread.Sleep(1);
+                lock (m_out_list)
+                m_out_list.Clear();
+            }
             if (GetQueueLen() < 10)
             {
-                bool FarMove = true;
-                if (DoEngraving(ref m_CurTask, ref FarMove))
+                if (DoEngraving())
                 {
-                    if (FarMove)
-                    {
-                        GoToXY(-1, -1, 0);
-                        GoToXY(GetStepsFromXYmm(m_CurTask.x), GetStepsFromXYmm(m_CurTask.y), 0);
-                    }
-                    m_CurTask.b = GetStepsFromBmm(MillLen);//down
-                    GoToXY(
-                        GetStepsFromXYmm(m_CurTask.x),
-                        GetStepsFromXYmm(m_CurTask.y),
-                        m_CurTask.b);
                     
-                    m_counter++;
-                    ControlUserControl.textBlockCounter.Text = m_counter.ToString();
                 }
                 else
                 {
                     Thread.Sleep(1000);
                     GoToXY(-1, -1, 0);
                     GoToXY(0, 0);
-                    m_CurTask = new xyz_coord();
                     ControlUserControl.checkBoxPauseSoft.IsChecked = true;
                     dispatcherTimer.Stop();
                     //ControlUserControl.checkBoxOutpusEnergy.IsChecked = false;
+                    m_bEmulation = false;
                 }
             }
         } 
@@ -650,6 +616,79 @@ namespace MMDance
         static public MainWindow GetMainWnd()
         {
             return (MainWindow)System.Windows.Application.Current.Windows[0];
+        }
+
+
+        private string mCncFile = string.Empty;
+        private clsProcessor mProcessor = clsProcessor.Instance();
+        private clsSettings mSetup = new clsSettings();
+        public static List<clsMotionRecord> MotionBlocks = new List<clsMotionRecord>();
+
+        private void ProcessFile(string fileName)
+        {
+            mSetup = new clsSettings();
+            MG_CS_BasicViewer.MotionBlocks.Clear();
+            mProcessor.Init(mSetup.Machine);
+            mProcessor.ProcessFile(fileName, MotionBlocks);
+        } 
+
+        public bool OnGCodeFileOpen(string fileName)
+        {
+            try
+            {
+                mCncFile = fileName;
+                mSetup.MatchMachineToFile(mCncFile);
+                ProcessFile(mCncFile);
+                DrawRelief();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void DrawRelief()
+        {
+            int width = (int)(mProcessor.max_x - mProcessor.min_x);
+            int height = (int)(mProcessor.max_y - mProcessor.min_y);
+
+            var target = new RenderTargetBitmap(width, height,
+                96,96, PixelFormats.Pbgra32);
+
+            PictureUserControl.loaded_image.Source = target;
+
+            var visual = new DrawingVisual();
+
+
+            using (var r = visual.RenderOpen())
+            {
+                for (int i = 0; i < MotionBlocks.Count; i++)
+                {
+                    //double xratio = PictureUserControl.image_canvas.ActualWidth / newFormatedBitmapSource.PixelWidth;
+                    //double yratio = PictureUserControl.image_canvas.ActualHeight / newFormatedBitmapSource.PixelHeight;
+
+                    //PictureUserControl.UpdateCurrentPosition((m_cur_pos.x * MMPerXYStep - mProcessor.min_x) * xratio,
+                    //    (newFormatedBitmapSource.PixelHeight - (m_cur_pos.y * MMPerXYStep - mProcessor.min_y
+                    //    ) - 1) * yratio);
+
+                    Point pt1 = new Point(MotionBlocks[i].Xold - mProcessor.min_x, MotionBlocks[i].Yold - mProcessor.min_y);
+                    Point pt2 = new Point(MotionBlocks[i].Xpos - mProcessor.min_x, MotionBlocks[i].Ypos - mProcessor.min_y);
+                    byte Zold = (byte)(255 * MotionBlocks[i].Zold / 10);
+                    byte Zpos = (byte)(255 * MotionBlocks[i].Zpos / 10);
+
+                    LinearGradientBrush aGradientBrush =
+                        new LinearGradientBrush(Color.FromRgb(Zold, Zold, Zold), Color.FromRgb(Zpos, Zpos, Zpos),
+                    new Point(0, 0), new Point(1, 1));
+
+                    r.DrawLine(new Pen(aGradientBrush, 1),
+                    pt1,
+                    pt2);
+                }
+            }
+
+            target.Render(visual);
+            
         }
     }
 }
