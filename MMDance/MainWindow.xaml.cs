@@ -36,6 +36,7 @@ namespace MMDance
 
         public MainWindow()
         {
+            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             InitializeComponent();
             for (int motor = 0; motor < ControlWrapper.MOTORS_COUNT; motor++)
             {
