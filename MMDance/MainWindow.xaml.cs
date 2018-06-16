@@ -17,6 +17,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
+using System.Numerics;
 
 using GCode;
 using MacGen;
@@ -536,10 +537,35 @@ namespace MMDance
 
             clsMotionRecord cur_rec = MotionBlocks[m_counter];
 
+            if (cur_rec.MotionType == Motion.LINE)
+            {
+                Vector3 vec_start = new Vector3(cur_rec.Xold, cur_rec.Yold, cur_rec.Zold);
+                Vector3 vec_end = new Vector3(cur_rec.Xpos, cur_rec.Ypos, cur_rec.Zpos);
+                Vector3 vecSub = vec_end - vec_start;
+                float[] mid_coord = new float[] { vecSub.X, vecSub.Y, vecSub.Z };
+                Array.Sort(mid_coord);
+                if (mid_coord[1] > 0.2)
+                {
+                    float steps = mid_coord[1] / 0.2f;
+                    float step = 1.0f / steps;
+                    for (float i = step; i < 1.0f; i += step)
+                    {
+                        Vector3 interpolation = Vector3.Lerp(vec_start, vec_end, i);
+                        GoToXY(
+                            GetStepsFromXYmm(interpolation.X),
+                            GetStepsFromXYmm(interpolation.Y),
+                            GetStepsFromBmm(interpolation.Z));
+                    }
+                }
+            }
+            
+            
             GoToXY(
                 GetStepsFromXYmm(cur_rec.Xpos),
                 GetStepsFromXYmm(cur_rec.Ypos),
                 GetStepsFromBmm(cur_rec.Zpos));
+            
+            
 
             m_counter++;
             ControlUserControl.textBlockCounter.Text = m_counter.ToString();
@@ -660,7 +686,8 @@ namespace MMDance
 
             var visual = new DrawingVisual();
 
-
+            SolidColorBrush red = new SolidColorBrush(Color.FromRgb(255,0,0));
+            SolidColorBrush green = new SolidColorBrush(Color.FromRgb(0, 255, 0));
             using (var r = visual.RenderOpen())
             {
                 for (int i = 0; i < MotionBlocks.Count; i++)
@@ -677,6 +704,7 @@ namespace MMDance
                     byte Zold = (byte)(255 * MotionBlocks[i].Zold / 10);
                     byte Zpos = (byte)(255 * MotionBlocks[i].Zpos / 10);
 
+                    
                     LinearGradientBrush aGradientBrush =
                         new LinearGradientBrush(Color.FromRgb(Zold, Zold, Zold), Color.FromRgb(Zpos, Zpos, Zpos),
                     new Point(0, 0), new Point(1, 1));
@@ -684,6 +712,8 @@ namespace MMDance
                     r.DrawLine(new Pen(aGradientBrush, 1),
                     pt1,
                     pt2);
+                    //r.DrawEllipse(red, new Pen(red, 1), pt1, 1, 1);
+                    //r.DrawEllipse(green, new Pen(green, 1), pt2, 1, 1);
                 }
             }
 
@@ -692,3 +722,5 @@ namespace MMDance
         }
     }
 }
+
+//https://www.redblobgames.com/grids/line-drawing.html
