@@ -346,10 +346,17 @@ namespace MMDance
 
             clsMotionRecord cur_rec = MotionBlocks[m_counter];
 
+            Vector3 vec_start = new Vector3(cur_rec.Xold, cur_rec.Yold, cur_rec.Zold);
+            Vector3 vec_end = new Vector3(cur_rec.Xpos, cur_rec.Ypos, cur_rec.Zpos);
+            if(vec_start == vec_end)
+            {
+                m_counter++;
+                ControlUserControl.textBlockCounter.Text = m_counter.ToString();
+                return true;
+            }
+
             if (cur_rec.MotionType == Motion.LINE)
             {
-                Vector3 vec_start = new Vector3(cur_rec.Xold, cur_rec.Yold, cur_rec.Zold);
-                Vector3 vec_end = new Vector3(cur_rec.Xpos, cur_rec.Ypos, cur_rec.Zpos);
                 Vector3 vecSub = vec_end - vec_start;
                 float[] mid_coord = new float[] { vecSub.X, vecSub.Y, vecSub.Z };
                 Array.Sort(mid_coord);
