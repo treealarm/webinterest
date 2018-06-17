@@ -443,7 +443,7 @@ namespace MMDance
             UpdateCurrentPosition();
         }
 
-        int m_nTimerCounter = 0;
+        
         public void GoToXY(int x, int y, int b = -1, int w = -1)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
@@ -458,19 +458,6 @@ namespace MMDance
                 var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
             }
 
-            if (Math.Abs(var_do_steps.m_uSteps[X_POS]) > 10 || Math.Abs(var_do_steps.m_uSteps[Y_POS]) > 10)
-            {
-                ControlUserControl.SetTimerSetting(1);
-                m_nTimerCounter = 0;
-            }
-            m_nTimerCounter++;
-            if (m_nTimerCounter > 2)
-            {
-                ControlUserControl.SetTimerSetting(0);
-                m_nTimerCounter = 0;
-            }
-            
-            
             //if (b >= 0)
             {
                 var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
