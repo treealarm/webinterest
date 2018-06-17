@@ -193,7 +193,7 @@ namespace MMDance.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
         public double HomeZ {
             get {
                 return ((double)(this["HomeZ"]));
