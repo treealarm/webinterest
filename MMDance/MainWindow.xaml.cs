@@ -426,7 +426,7 @@ namespace MMDance
             {
                 m_cur_pos.y += steps.m_uSteps[Y_POS];
                 m_cur_pos.x += steps.m_uSteps[X_POS];
-                m_cur_pos.b += steps.m_uSteps[B_POS];
+                m_cur_pos.b -= steps.m_uSteps[B_POS];
                 m_cur_pos.w += steps.m_uSteps[W_POS];
             }
 
@@ -460,7 +460,7 @@ namespace MMDance
 
             //if (b >= 0)
             {
-                var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
+                var_do_steps.m_uSteps[B_POS] = m_cur_pos.b - b;
             }
             //if (w >= 0)
             {
@@ -472,7 +472,7 @@ namespace MMDance
         public void GoToBW(int b, int w)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
-            var_do_steps.m_uSteps[B_POS] = b - m_cur_pos.b;
+            var_do_steps.m_uSteps[B_POS] = m_cur_pos.b - b;
             var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
             SetStepsToController(var_do_steps);
         }

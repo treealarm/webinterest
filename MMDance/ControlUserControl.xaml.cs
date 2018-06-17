@@ -132,12 +132,12 @@ namespace MMDance
 
         private void B_Plus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, Convert.ToInt32(BShift.Text), 0, false);
+            PassSteps(0, 0, -Convert.ToInt32(BShift.Text), 0, false);
         }
 
         private void B_Minus_Click(object sender, RoutedEventArgs e)
         {
-            PassSteps(0, 0, -Convert.ToInt32(BShift.Text), 0, false);
+            PassSteps(0, 0, Convert.ToInt32(BShift.Text), 0, false);
         }
 
 
