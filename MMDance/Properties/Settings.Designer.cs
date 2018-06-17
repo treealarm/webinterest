@@ -121,18 +121,6 @@ namespace MMDance.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string PicFile {
-            get {
-                return ((string)(this["PicFile"]));
-            }
-            set {
-                this["PicFile"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public byte TimerMultiplierW {
             get {
@@ -200,6 +188,18 @@ namespace MMDance.Properties {
             }
             set {
                 this["GCodeFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double HomeZ {
+            get {
+                return ((double)(this["HomeZ"]));
+            }
+            set {
+                this["HomeZ"] = value;
             }
         }
     }

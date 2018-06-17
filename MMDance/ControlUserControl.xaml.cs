@@ -25,44 +25,19 @@ namespace MMDance
             InitializeComponent();
         }
 
-        private void buttonOpenFile_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow wnd = MainWindow.GetMainWnd();
-            OpenFileDialog op = new OpenFileDialog();
-            op.Title = "Открыть изображение";
-            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bmp|" +
-                "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-                "Portable Network Graphic (*.png)|*.png";
-            if (op.ShowDialog() == true)
-            {
-                if (wnd.OnFileOpen(op.FileName))
-                {
-                    Properties.Settings.Default.PicFile = op.FileName;
-                }                
-            }
-        }
-
         private void buttonStartWork_Click(object sender, RoutedEventArgs e)
         {
-            m_nFastMode = -1;
             MainWindow wnd = MainWindow.GetMainWnd();
             wnd.m_bEmulation = false;
             wnd.Start();
         }
 
-        int m_nFastMode = -1;
-        public void SetTimerSetting(int nFastMode = 1)
+        public void SetTimerSetting()
         {
-            if(m_nFastMode == nFastMode)
-            {
-                return;
-            }
             MainWindow wnd = MainWindow.GetMainWnd();
 
-            byte TimerMultiplierX = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierX :
-                            Properties.Settings.Default.TimerMultiplierX*5);
-            byte TimerMultiplierY = Convert.ToByte(nFastMode == 1 ? Properties.Settings.Default.TimerMultiplierY :
-                            Properties.Settings.Default.TimerMultiplierY * 5);
+            byte TimerMultiplierX = Convert.ToByte(Properties.Settings.Default.TimerMultiplierX);
+            byte TimerMultiplierY = Convert.ToByte(Properties.Settings.Default.TimerMultiplierY);
             wnd.SetTimerSettings(
                 Properties.Settings.Default.TimerRes, 
                 Properties.Settings.Default.TimerStrike,
@@ -75,7 +50,6 @@ namespace MMDance
         }
         private void buttonOpenDevice_Click(object sender, RoutedEventArgs e)
         {
-            m_nFastMode = -1;
             MainWindow wnd = MainWindow.GetMainWnd();
             if (!wnd.m_ControlWrapper.Connect())
             {
@@ -89,7 +63,7 @@ namespace MMDance
             wnd.m_step_mult.m_uMult[MainWindow.Y_POS] = Properties.Settings.Default.StepMultiplierY;
             wnd.m_step_mult.m_uMult[MainWindow.B_POS] = Properties.Settings.Default.StepMultiplierB;
             wnd.m_step_mult.m_uMult[MainWindow.W_POS] = Properties.Settings.Default.StepMultiplierW;
-
+            
             wnd.SetCruisersToController();
         }
 
@@ -195,40 +169,13 @@ namespace MMDance
             wnd.SetPauseSoft(checkBoxPauseSoft.IsChecked == true);
         }
 
-        public void OnSelectionChanged()
-        {
-            PictureColors colors = listViewColors.SelectedItem as PictureColors;
-            if (colors != null)
-            {
-                MainWindow.GetMainWnd().SelectionChanged(colors.color, checkBoxContour.IsChecked == true);
-            }
-        }
-        private void listViewColors_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0)
-            {
-                OnSelectionChanged();                
-            }            
-        }
-
         private void buttonUpdateTimer_Click(object sender, RoutedEventArgs e)
         {
             SetTimerSetting();
         }
 
-        private void checkBoxContour_Checked(object sender, RoutedEventArgs e)
-        {
-            OnSelectionChanged();
-        }
-
-        private void checkBoxContour_Unchecked(object sender, RoutedEventArgs e)
-        {
-            OnSelectionChanged();
-        }
-
         private void buttonEmulate_Click(object sender, RoutedEventArgs e)
         {
-            m_nFastMode = -1;
             MainWindow wnd = MainWindow.GetMainWnd();
             wnd.m_bEmulation = true;
             wnd.Start();

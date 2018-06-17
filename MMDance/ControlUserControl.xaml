@@ -20,7 +20,6 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column = "0" Grid.Row = "0" VerticalAlignment="Top" Height="Auto" Margin="5" Background="#23000000">
-            <Button Content="Open Image" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenFile" Click="buttonOpenFile_Click" Width="Auto"/>
             <Button Content="Open GCode" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenGCode"  Width="Auto" Click="buttonOpenGCode_Click" />
             <Button Content="Открыть устройство" Height="23" HorizontalAlignment="Stretch" Name="buttonOpenDevice" Click="buttonOpenDevice_Click" />
             <Button Content="Применить таймер" Height="23" HorizontalAlignment="Stretch" Name="buttonUpdateTimer" Click="buttonUpdateTimer_Click" />
@@ -30,7 +29,6 @@
             <CheckBox Content="Включить приводы" Height="16" HorizontalAlignment="Left" Name="checkBoxOutpusEnergy" VerticalAlignment="Top" Checked="checkBoxOutpusEnergy_Checked" Unchecked="checkBoxOutpusEnergy_Unchecked" />
             <CheckBox Content="Пауза контроллер" Height="16" HorizontalAlignment="Left" Name="checkBoxPause" VerticalAlignment="Top" Unchecked="checkBoxPause_Unchecked" Checked="checkBoxPause_Checked" />
             <CheckBox Content="Пауза софт" Height="16" HorizontalAlignment="Left" Name="checkBoxPauseSoft" VerticalAlignment="Top" Checked="checkBoxPauseSoft_Checked" Unchecked="checkBoxPauseSoft_Unchecked" />
-            <CheckBox Content="Контур" Height="16" HorizontalAlignment="Left" Name="checkBoxContour" Checked="checkBoxContour_Checked" Unchecked="checkBoxContour_Unchecked" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockInfo" Text="->>>" VerticalAlignment="Top" />
             <TextBlock Height="23" HorizontalAlignment="Left" Name="textBlockCounter" Text="->>>" VerticalAlignment="Top" />
         </StackPanel>
@@ -205,20 +203,9 @@
                 <StackPanel Orientation="Horizontal"></StackPanel>
             </StackPanel>
         </Grid>
-    <DataGrid Grid.ColumnSpan="3" Grid.Row="7" Height="Auto" HorizontalAlignment="Left"  
-              Name="listViewColors" VerticalAlignment="Top" MinWidth="220" MinHeight="100"
-              ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionMode="Single" SelectionChanged="listViewColors_SelectionChanged" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Цвет" MinWidth="150" Binding="{Binding Path=color_text}">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding BackgroundColor}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Количество" Binding="{Binding Path=count}"/>
-                <DataGridTextColumn Header="Серый" Binding="{Binding Path=gray}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label>Home Z:</Label>
+            <TextBox Name="HomeZ" MinWidth="40" Text="{Binding Source={StaticResource Settings}, Path=Default.HomeZ}"></TextBox>
+        </StackPanel>
     </Grid>
 </UserControl>

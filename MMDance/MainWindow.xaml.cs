@@ -50,7 +50,6 @@ namespace MMDance
             WorkingThread.Start();
         }
 
-        public ObservableCollection<PictureColors> m_colors = new ObservableCollection<PictureColors>();
         FormatConvertedBitmap newFormatedBitmapSource = null;
         Size m_image_size = new Size(0, 0);
         public Size GetImageSize()
@@ -62,65 +61,6 @@ namespace MMDance
             }
             return m_image_size;
         }
-        public bool OnFileOpen(string filename)
-        {
-            try
-            {
-                BitmapImage bitmapImage = new BitmapImage(new Uri(filename));
-                
-                newFormatedBitmapSource = new FormatConvertedBitmap();
-                newFormatedBitmapSource.BeginInit();
-                newFormatedBitmapSource.Source = bitmapImage;
-                newFormatedBitmapSource.DestinationFormat = PixelFormats.Rgb24;
-                newFormatedBitmapSource.EndInit();
-
-                PictureUserControl.loaded_image.Source = newFormatedBitmapSource;
-                m_colors.Clear();
-
-               Dictionary<Color, int> ColorMap = new Dictionary<Color,int>();
-
-               int width = newFormatedBitmapSource.PixelWidth;
-               int stride = width * 3;
-               int size = newFormatedBitmapSource.PixelHeight * stride;
-               byte[] pixels = new byte[size];
-               Array.Clear(pixels, 0, size);
-               newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
-                for (int y = 0; y < newFormatedBitmapSource.PixelHeight; y++)
-                {
-                    
-                    for (int x = 0; x < newFormatedBitmapSource.PixelWidth; x++)
-                    {
-                        int index = y * stride + 3 * x;
-                        byte red = pixels[index];
-                        byte green = pixels[index + 1];
-                        byte blue = pixels[index + 2];
-                        
-                        Color cur_col = Color.FromRgb(red, green, blue);
-                        int Count = 0;
-                        ColorMap.TryGetValue(cur_col, out Count);
-                        Count++;
-
-                        ColorMap[cur_col] = Count;
-                    }
-                }
-                foreach(KeyValuePair<Color,int> pair in ColorMap)
-                {
-                    Color color = pair.Key;
-                    
-                    m_colors.Add(new PictureColors(color, pair.Value));
-                }
-            }
-            catch (System.Exception ex)
-            {
-                return false;
-            }
-            
-            ControlUserControl.listViewColors.DataContext = m_colors;
-
-            return true;
-        }
-
-        Color m_SelectedColor = Color.FromRgb(0, 0, 0);
         Color GetPixelColor(byte[] pixels, int x, int y, int stride)
         {
             int index = y * stride + 3 * x;
@@ -130,86 +70,6 @@ namespace MMDance
             return Color.FromRgb(red, green, blue);
         }
 
-        List<KeyValuePair<int, int>> m_selected_points = new List<KeyValuePair<int, int>>();
-
-        public void SelectionChanged(Color color, bool bContour)
-        {
-            m_selected_points.Clear();
-            m_SelectedColor = color;
-            this.Background = new SolidColorBrush(color);
-            int width = newFormatedBitmapSource.PixelWidth;
-            int stride = width * 3;
-            int size = newFormatedBitmapSource.PixelHeight * stride;
-            byte[] pixels = new byte[size];
-            Array.Clear(pixels, 0, size);
-            newFormatedBitmapSource.CopyPixels(pixels, stride, 0);
-
-            for (int y = 0; y < newFormatedBitmapSource.PixelHeight; y++)
-            {
-
-                for (int x = 0; x < newFormatedBitmapSource.PixelWidth; x++)
-                {
-                    int index = y * stride + 3 * x;
-                    Color cur_col = GetPixelColor(pixels, x, y, stride);
-                    if (cur_col == color)
-                    {
-                        if (bContour)
-                        {
-                            if (x > 0 && y > 0 && x < newFormatedBitmapSource.PixelWidth - 1 
-                                && y < newFormatedBitmapSource.PixelHeight - 1)
-                            {
-                                KeyValuePair<int, int>[] P = new KeyValuePair<int, int>[] 
-                            { 
-                                new KeyValuePair<int,int> ( x - 1, y ), 
-                                new KeyValuePair<int,int> ( x + 1, y ), 
-                                new KeyValuePair<int,int> ( x, y - 1 ), 
-                                new KeyValuePair<int,int> ( x, y + 1 )
-                                //,
-                                //new KeyValuePair<int,int> ( x + 1, y + 1 ),
-                                //new KeyValuePair<int,int> ( x + 1, y - 1 ),
-                                //new KeyValuePair<int,int> ( x - 1, y - 1 ),
-                                //new KeyValuePair<int,int> ( x - 1, y + 1 ),
-                            };
-                                for (int i = 0; i < P.Length; i++)
-                                {
-                                    Color nColor = GetPixelColor(pixels, P[i].Key, P[i].Value, stride);
-                                    if (nColor != color)
-                                    {
-                                        m_selected_points.Add(P[i]);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                m_selected_points.Add(new KeyValuePair<int, int>(x, y));
-                            }
-                        }
-                        else
-                        {
-                            m_selected_points.Add(new KeyValuePair<int, int>(x, y));
-                            pixels[index] = 0;
-                            pixels[index + 1] = 255;
-                            pixels[index + 2] = 0;
-                        }                        
-                    }
-                }
-            }
-            m_selected_points = m_selected_points.Distinct().ToList();
-            for (int i = 0; i < m_selected_points.Count; i++)
-            {
-                KeyValuePair<int, int> pair = m_selected_points[i];
-                int index = pair.Value * stride + 3 * pair.Key;
-                pixels[index] = 0;
-                pixels[index + 1] = 255;
-                pixels[index + 2] = 0;
-                pair = new KeyValuePair<int, int>(pair.Key, newFormatedBitmapSource.PixelHeight - pair.Value - 1);
-                m_selected_points[i] = pair; 
-            }
-
-            PictureUserControl.loaded_image.Source = BitmapSource.Create(newFormatedBitmapSource.PixelWidth, newFormatedBitmapSource.PixelHeight,
-                newFormatedBitmapSource.DpiX, newFormatedBitmapSource.DpiY, newFormatedBitmapSource.Format,
-                null, pixels, stride);
-        }
 
         Thread WorkingThread = null;
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -486,35 +346,6 @@ namespace MMDance
             return dist;
         }
 
-        bool IsNeighbour(xyz_coord pt1, xyz_coord pt2)
-        {
-            int xx = Math.Abs(pt1.x - pt2.x);
-            int yy = Math.Abs(pt1.y - pt2.y);
-            if((yy == 0 && xx == 1) || (xx == 0 && yy == 1))
-            {
-                return true;
-            }
-            if (yy == 1 && xx == 1)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool HasNeighbour(ref xyz_coord cur_coords)
-        {
-            xyz_coord temp_pt = new xyz_coord();
-            for (int i = 0; i < m_selected_points.Count; i++)
-            {
-                temp_pt.x = m_selected_points[i].Key;
-                temp_pt.y = m_selected_points[i].Value;
-                if (IsNeighbour(cur_coords, temp_pt))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         private bool DoEngraving()
         {
@@ -564,11 +395,11 @@ namespace MMDance
         public void Start()
         {
             m_counter = 0;
+            m_cur_pos.b = GetStepsFromBmm(Properties.Settings.Default.HomeZ);
             if (newFormatedBitmapSource != null)
             {
                 newFormatedBitmapSource.Freeze();
             }
-            ControlUserControl.OnSelectionChanged();
             
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(10);

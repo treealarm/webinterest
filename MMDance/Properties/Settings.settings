@@ -26,9 +26,6 @@
     <Setting Name="TimerStrike" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="PicFile" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="TimerMultiplierW" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
@@ -46,6 +43,9 @@
     </Setting>
     <Setting Name="GCodeFile" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HomeZ" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
