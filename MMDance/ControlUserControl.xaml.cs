@@ -137,7 +137,7 @@ namespace MMDance
         private void GoToXY_Click(object sender, RoutedEventArgs e)
         {
             MainWindow wnd = MainWindow.GetMainWnd();
-            wnd.GoToXY(Convert.ToInt32(GoToXEdit.Text), Convert.ToInt32(GoToYEdit.Text));
+            wnd.GoToXY(Convert.ToInt32(GoToXEdit.Text), Convert.ToInt32(GoToYEdit.Text), int.MaxValue);
         }
 
         private void GoToBW_Click(object sender, RoutedEventArgs e)

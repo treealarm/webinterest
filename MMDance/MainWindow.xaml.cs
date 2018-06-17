@@ -30,8 +30,7 @@ namespace MMDance
     public partial class MainWindow : Window
     {
         const double MMPerBStep = 0.00505;
-        const double MMPerXYStep = 0.0467*4.0;
-        const double MillLen = 52;
+        const double MMPerXYStep = 0.0467;
         public ControlWrapper m_ControlWrapper = new ControlWrapper();
 
         public MainWindow()
@@ -61,16 +60,7 @@ namespace MMDance
             }
             return m_image_size;
         }
-        Color GetPixelColor(byte[] pixels, int x, int y, int stride)
-        {
-            int index = y * stride + 3 * x;
-            byte red = pixels[index];
-            byte green = pixels[index + 1];
-            byte blue = pixels[index + 2];
-            return Color.FromRgb(red, green, blue);
-        }
-
-
+ 
         Thread WorkingThread = null;
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 
@@ -304,25 +294,25 @@ namespace MMDance
         }
 
         
-        public void GoToXY(int x, int y, int b = -1, int w = -1)
+        public void GoToXY(int x, int y, int b, int w = int.MaxValue)
         {
             MainWindow.do_steps var_do_steps = new MainWindow.do_steps();
 
-            //if (x >= 0)
+            if (x != int.MaxValue)
             {
                 var_do_steps.m_uSteps[X_POS] = x - m_cur_pos.x;
             }
 
-            //if (y >= 0)
+            if (y != int.MaxValue)
             {
                 var_do_steps.m_uSteps[Y_POS] = y - m_cur_pos.y;
             }
 
-            //if (b >= 0)
+            if (b != int.MaxValue)
             {
                 var_do_steps.m_uSteps[B_POS] = m_cur_pos.b - b;
             }
-            //if (w >= 0)
+            if (w != int.MaxValue)
             {
                 var_do_steps.m_uSteps[W_POS] = w - m_cur_pos.w;
             }
@@ -439,8 +429,8 @@ namespace MMDance
                 else
                 {
                     Thread.Sleep(1000);
-                    GoToXY(-1, -1, 0);
-                    GoToXY(0, 0);
+                    //GoToXY(int.MaxValue, int.MaxValue, GetStepsFromBmm(Properties.Settings.Default.HomeZ));
+                    //GoToXY(0, 0, int.MaxValue);
                     ControlUserControl.checkBoxPauseSoft.IsChecked = true;
                     dispatcherTimer.Stop();
                     //ControlUserControl.checkBoxOutpusEnergy.IsChecked = false;
