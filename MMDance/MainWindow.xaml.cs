@@ -355,6 +355,14 @@ namespace MMDance
                 return true;
             }
 
+            if(m_bStartFromZero)
+            {//спозиционируемся на точку с поднятым Z
+                m_bStartFromZero = false;
+                GoToXY(
+                GetStepsFromXYmm(cur_rec.Xpos),
+                GetStepsFromXYmm(cur_rec.Ypos),
+                int.MaxValue);
+            }
             if (cur_rec.MotionType == Motion.LINE)
             {
                 Vector3 vecSub = vec_end - vec_start;
@@ -389,9 +397,12 @@ namespace MMDance
             return true;
         }
 
+        bool m_bStartFromZero = true;
         public void Start()
         {
             m_counter = Properties.Settings.Default.StartComand;
+            m_bStartFromZero = m_counter == 0;
+
             m_cur_pos.b = GetStepsFromBmm(Properties.Settings.Default.HomeZ);
             if (newFormatedBitmapSource != null)
             {
