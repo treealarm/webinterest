@@ -203,9 +203,12 @@
                 <StackPanel Orientation="Horizontal"></StackPanel>
             </StackPanel>
         </Grid>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Grid.ColumnSpan="3">
             <Label>Home Z:</Label>
             <TextBox Name="HomeZ" MinWidth="40" Text="{Binding Source={StaticResource Settings}, Path=Default.HomeZ}"></TextBox>
+            
+            <Label>Start Comand:</Label>
+            <TextBox Name="StartComand" MinWidth="60" Text="{Binding Source={StaticResource Settings}, Path=Default.StartComand}"></TextBox>
         </StackPanel>
     </Grid>
 </UserControl>

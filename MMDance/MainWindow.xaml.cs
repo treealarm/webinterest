@@ -391,7 +391,7 @@ namespace MMDance
 
         public void Start()
         {
-            m_counter = 0;
+            m_counter = Properties.Settings.Default.StartComand;
             m_cur_pos.b = GetStepsFromBmm(Properties.Settings.Default.HomeZ);
             if (newFormatedBitmapSource != null)
             {
