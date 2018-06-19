@@ -355,13 +355,19 @@ namespace MMDance
                 return true;
             }
 
-            if(m_bStartFromZero)
+            if(!m_bStartFromZero)
             {//спозиционируемся на точку с поднятым Z
-                m_bStartFromZero = false;
+                m_bStartFromZero = true;
                 GoToXY(
                 GetStepsFromXYmm(cur_rec.Xpos),
                 GetStepsFromXYmm(cur_rec.Ypos),
                 int.MaxValue);
+
+                GoToXY(
+                GetStepsFromXYmm(cur_rec.Xpos),
+                GetStepsFromXYmm(cur_rec.Ypos),
+                GetStepsFromBmm(cur_rec.Zpos));
+                return true;
             }
             if (cur_rec.MotionType == Motion.LINE)
             {
