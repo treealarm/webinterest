@@ -90,7 +90,7 @@ using System.Text;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using System.Threading;
-
+using System.Windows.Forms;
 
 public class ControlWrapper
 {
@@ -186,7 +186,12 @@ public class ControlWrapper
         
         uint BytesWritten = 0;
         
-        return WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero);
+        bool bRet = WriteFile(WriteHandleToUSBDevice, OUTBuffer, LEN_OF_PACKET, ref BytesWritten, IntPtr.Zero);
+        if(!bRet)
+        {
+            MessageBox.Show("WriteFile failed");
+        }
+        return bRet;
     }
 
     public bool IsOpen()
