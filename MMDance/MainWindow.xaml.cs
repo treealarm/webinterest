@@ -100,7 +100,9 @@ namespace MMDance
 
                             ControlUserControl.textBlockInfo.Dispatcher.BeginInvoke(new Action(delegate()
                             {
-                                ControlUserControl.textBlockInfo.Text = m_ControlWrapper.GetCurText(); //where item is the item to be added and listbox is the control being updated.
+                                ControlUserControl.textBlockInfo.Text = "!" +
+                                m_ControlWrapper.GetCurText() + "!";
+                                //where item is the item to be added and listbox is the control being updated.
                             }));
             
                         }
