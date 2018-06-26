@@ -534,8 +534,8 @@ namespace MMDance
                     //    (newFormatedBitmapSource.PixelHeight - (m_cur_pos.y * MMPerXYStep - mProcessor.min_y
                     //    ) - 1) * yratio);
 
-                    Point pt1 = new Point(MotionBlocks[i].Xold - mProcessor.min_x, MotionBlocks[i].Yold - mProcessor.min_y);
-                    Point pt2 = new Point(MotionBlocks[i].Xpos - mProcessor.min_x, MotionBlocks[i].Ypos - mProcessor.min_y);
+                    Point pt1 = new Point(MotionBlocks[i].Xold - mProcessor.min_x, height - (MotionBlocks[i].Yold - mProcessor.min_y));
+                    Point pt2 = new Point(MotionBlocks[i].Xpos - mProcessor.min_x, height - (MotionBlocks[i].Ypos - mProcessor.min_y));
                     byte Zold = (byte)(255 * MotionBlocks[i].Zold / 10);
                     byte Zpos = (byte)(255 * MotionBlocks[i].Zpos / 10);
 
