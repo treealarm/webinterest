@@ -539,10 +539,22 @@ namespace MMDance
                     byte Zold = (byte)(255 * MotionBlocks[i].Zold / 10);
                     byte Zpos = (byte)(255 * MotionBlocks[i].Zpos / 10);
 
-                    
-                    LinearGradientBrush aGradientBrush =
+                    LinearGradientBrush aGradientBrush;
+                    if (MotionBlocks[i].Zold == MotionBlocks[i].Zpos && MotionBlocks[i].Zpos == mProcessor.max_z)
+                    {
+                        aGradientBrush =
+                        new LinearGradientBrush(Color.FromRgb(0, 0, 255), Color.FromRgb(0, 0, 255),
+                        new Point(0, 0), new Point(1, 1));
+
+                    }
+                    else
+                    {
+                        aGradientBrush =
                         new LinearGradientBrush(Color.FromRgb(Zold, Zold, Zold), Color.FromRgb(Zpos, Zpos, Zpos),
-                    new Point(0, 0), new Point(1, 1));
+                        new Point(0, 0), new Point(1, 1));
+                    }
+                    
+                    
 
                     r.DrawLine(new Pen(aGradientBrush, 1),
                     pt1,

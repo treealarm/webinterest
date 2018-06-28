@@ -434,6 +434,9 @@ namespace GCode
 
             min_y = Math.Min(mGrfxRec.Ypos, min_y);
             max_y = Math.Max(mGrfxRec.Ypos, max_y);
+
+            min_z = Math.Min(mGrfxRec.Zpos, min_z);
+            max_z = Math.Max(mGrfxRec.Zpos, max_z);
         }
 
         private float FormatAxis(string sVal, int precision)
@@ -454,6 +457,9 @@ namespace GCode
 
         public double min_y = Double.MaxValue;
         public double max_y = Double.MinValue;
+
+        public double min_z = Double.MaxValue;
+        public double max_z = Double.MinValue;
 
         public void ProcessFile(string ncFile, List<clsMotionRecord> gfxRecs)
         {
