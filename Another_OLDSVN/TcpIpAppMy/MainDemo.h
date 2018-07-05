@@ -76,7 +76,7 @@ extern BYTE AN0String[ANALOG_INPUTS][ANALOG_LEN];
 #define READER_RELAY   		0x0020
 //#define WS_CLIPCHILDREN    0x0040
 
-#define TEMP_BUFFER_BIG_SIZE 1024
+#define TEMP_BUFFER_BIG_SIZE 512
 
 typedef enum
 {
