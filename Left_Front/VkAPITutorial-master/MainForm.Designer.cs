@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.User_Photo = new System.Windows.Forms.PictureBox();
             this.Label_User_Name = new System.Windows.Forms.Label();
             this.Label_User_Surname = new System.Windows.Forms.Label();
@@ -42,11 +43,12 @@
             this.Button_GetToken = new System.Windows.Forms.Button();
             this.Button_GetInformation = new System.Windows.Forms.Button();
             this.buttonSendMessage = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.buttonUpdateTable = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.User_Photo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -107,7 +109,7 @@
             // 
             this.Label_User_UserID.AutoSize = true;
             this.Label_User_UserID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Label_User_UserID.Location = new System.Drawing.Point(548, 16);
+            this.Label_User_UserID.Location = new System.Drawing.Point(523, 40);
             this.Label_User_UserID.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Label_User_UserID.Name = "Label_User_UserID";
             this.Label_User_UserID.Size = new System.Drawing.Size(78, 25);
@@ -116,7 +118,7 @@
             // 
             // User_ID
             // 
-            this.User_ID.Location = new System.Drawing.Point(641, 16);
+            this.User_ID.Location = new System.Drawing.Point(559, 69);
             this.User_ID.Margin = new System.Windows.Forms.Padding(4);
             this.User_ID.Name = "User_ID";
             this.User_ID.Size = new System.Drawing.Size(132, 22);
@@ -181,7 +183,7 @@
             // Button_GetInformation
             // 
             this.Button_GetInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Button_GetInformation.Location = new System.Drawing.Point(553, 48);
+            this.Button_GetInformation.Location = new System.Drawing.Point(503, 118);
             this.Button_GetInformation.Margin = new System.Windows.Forms.Padding(4);
             this.Button_GetInformation.Name = "Button_GetInformation";
             this.Button_GetInformation.Size = new System.Drawing.Size(188, 44);
@@ -192,7 +194,7 @@
             // 
             // buttonSendMessage
             // 
-            this.buttonSendMessage.Location = new System.Drawing.Point(553, 118);
+            this.buttonSendMessage.Location = new System.Drawing.Point(297, 214);
             this.buttonSendMessage.Name = "buttonSendMessage";
             this.buttonSendMessage.Size = new System.Drawing.Size(220, 44);
             this.buttonSendMessage.TabIndex = 14;
@@ -200,28 +202,11 @@
             this.buttonSendMessage.UseVisualStyleBackColor = true;
             this.buttonSendMessage.Click += new System.EventHandler(this.button1_Click);
             // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(321, 189);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(461, 178);
-            this.richTextBox1.TabIndex = 15;
-            this.richTextBox1.Text = "";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(804, 192);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 17);
-            this.label1.TabIndex = 16;
-            this.label1.Text = "label1";
-            // 
             // buttonUpdateTable
             // 
-            this.buttonUpdateTable.Location = new System.Drawing.Point(17, 284);
+            this.buttonUpdateTable.Location = new System.Drawing.Point(12, 284);
             this.buttonUpdateTable.Name = "buttonUpdateTable";
-            this.buttonUpdateTable.Size = new System.Drawing.Size(144, 23);
+            this.buttonUpdateTable.Size = new System.Drawing.Size(190, 23);
             this.buttonUpdateTable.TabIndex = 17;
             this.buttonUpdateTable.Text = "UpdateTable";
             this.buttonUpdateTable.UseVisualStyleBackColor = true;
@@ -229,9 +214,9 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(0, 368);
+            this.progressBar1.Location = new System.Drawing.Point(12, 313);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(308, 23);
+            this.progressBar1.Size = new System.Drawing.Size(190, 23);
             this.progressBar1.TabIndex = 18;
             // 
             // backgroundWorker1
@@ -241,15 +226,33 @@
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 16;
+            this.listBox1.Location = new System.Drawing.Point(528, 214);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(163, 116);
+            this.listBox1.TabIndex = 19;
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 60000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 391);
+            this.ClientSize = new System.Drawing.Size(709, 543);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonUpdateTable);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.buttonSendMessage);
             this.Controls.Add(this.Button_GetInformation);
             this.Controls.Add(this.Button_GetToken);
@@ -290,10 +293,11 @@
         private System.Windows.Forms.Button Button_GetToken;
         private System.Windows.Forms.Button Button_GetInformation;
         private System.Windows.Forms.Button buttonSendMessage;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonUpdateTable;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.Timer timer1;
     }
 }

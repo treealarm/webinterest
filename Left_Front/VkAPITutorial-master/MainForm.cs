@@ -29,51 +29,56 @@ namespace VkAPITutorial
         {
             File.WriteAllText("UserInf.txt", s + "\n");
             //File.AppendAllText("UserInf.txt", URL[5]);
-            this.Visible = false;
+            //this.Visible = false;
         }
-        public void VkAuth1()
+        public bool VkAuth1(string login, string password)
         {
-            var login = "89671723975";
-            var password = "power321";
+            try
+            {
+                var Vk = new HttpClient();
+                Vk.DefaultRequestHeaders.Add("Connection", "close");
+                //client_id = 3697615
+                //client_secret = AlVXZFMUqyrnABp8ncuU
+                //https://oauth.vk.com/token?grant_type=password&client_id=1914441&client_secret=***&username=***&password=***&v=5.87&2fa_supported=1
+                string url = string.Format("https://oauth.vk.com/token?grant_type=password&client_id=3697615&client_secret=AlVXZFMUqyrnABp8ncuU&" +
+                    "&username={0}&password={1}&&v=5.87&2fa_supported=1",
+                login, password);
 
-            var Vk = new HttpClient();
-            Vk.DefaultRequestHeaders.Add("Connection", "close");
-            //client_id = 3697615
-            //client_secret = AlVXZFMUqyrnABp8ncuU
-            //https://oauth.vk.com/token?grant_type=password&client_id=1914441&client_secret=***&username=***&password=***&v=5.87&2fa_supported=1
-            string url = string.Format("https://oauth.vk.com/token?grant_type=password&client_id=3697615&client_secret=AlVXZFMUqyrnABp8ncuU&" +
-                "&username={0}&password={1}&&v=5.87&2fa_supported=1", 
-            login, password);
 
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.Host = "oauth.vk.com";
+                request.UserAgent = "qwert";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.KeepAlive = false;
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.Host = "oauth.vk.com";
-            request.UserAgent = "qwert";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.KeepAlive = false;
+                using (HttpWebResponse responsevk = (HttpWebResponse)request.GetResponse())
+                using (var stream = responsevk.GetResponseStream())
+                using (var streamReader = new StreamReader(stream, Encoding.UTF8))
+                {
 
-            using (HttpWebResponse responsevk = (HttpWebResponse)request.GetResponse())
-            using (var stream = responsevk.GetResponseStream())
-            using (var streamReader = new StreamReader(stream, Encoding.UTF8))
+                    string sReplay = streamReader.ReadToEnd();
+                    Dictionary<string, string> Dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(sReplay);
+                    string token;
+                    if (Dict.TryGetValue("access_token", out token))
+                    {
+                        GetUserToken(token);
+                        return true;
+                    }
+
+                }
+            }
+            catch(Exception ex)
             {
 
-                string sReplay = streamReader.ReadToEnd();
-                Dictionary<string, string> Dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(sReplay);
-                string token;
-                if (Dict.TryGetValue("access_token", out token))
-                {
-                    GetUserToken(token);
-                }
-
             }
+            return false;
         }
 
         private void Button_GetToken_Click_1(object sender, EventArgs e)
         {
-            VkAuth1();
-            //AuthorizationForm GetToken = new AuthorizationForm();
-            //GetToken.ShowDialog();
+            AuthorizationForm GetToken = new AuthorizationForm();
+            GetToken.ShowDialog();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -132,39 +137,73 @@ namespace VkAPITutorial
             }
         }
 
+        List<LoginData> m_auth_vars = new List<LoginData>();
+
         private void button1_Click(object sender, EventArgs e)
+        {
+
+            //auth_vars["89671723975"] = "power321";
+            m_auth_vars.Add(new LoginData { login = "89261719444", password = "$Power321"}) ;
+            timer1.Enabled = true;
+            timer1.Start();
+        }
+
+        private void SendMessage2Users()
         {
             try
             {
-                StreamReader ControlInf = new StreamReader("UserInf.txt");
-                _Token = ControlInf.ReadLine();
-                ControlInf.Close();
-                _ApiRequest = new VkAPI(_Token);
-                _UserId = User_ID.Text;
-                _Response = _ApiRequest.SendMessage(richTextBox1.Text, _UserId);
-                if (_Response != null)
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
                 {
-                    label1.Text= _Response["response"];                    
+                    conn.Open();
+
+                    string contents = File.ReadAllText(@"G:\WORK_SPACES\GitHub1\Left_Front\VkAPITutorial-master\left_front.txt", Encoding.UTF8);
+                    StreamReader ControlInf = new StreamReader("UserInf.txt");
+                    _Token = ControlInf.ReadLine();
+                    ControlInf.Close();
+                    _ApiRequest = new VkAPI(_Token);
+                    var ds = GetDataSet(conn, "SELECT TOP(1) * from users where can_write_private_message='1' and ISNULL(message_sent, 0) = 0");
+
+                    foreach (DataRow dr in ds.Tables[0].Rows)
+                    {
+                        string user_id = dr["user_id"].ToString();
+                        _Response = _ApiRequest.SendMessage(contents, user_id);
+
+                        int message_sent = 1;
+                        if (_Response != null)
+                        {
+                            string resp = _Response["response"];
+                            if(resp == "error")
+                            {
+                                message_sent = Convert.ToInt32(_Response["error_code"]);
+                            }
+                            listBox1.Items.Add(resp);
+                        }
+                        
+                        using (SqlCommand cmd = new SqlCommand(string.Format("UPDATE users SET message_sent = {0} where user_id='{1}'", message_sent, user_id), conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                        System.Threading.Thread.Sleep(3000);
+                    }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
         }
 
-        public DataSet GetDataSet(string ConnectionString, string SQL)
+        public DataSet GetDataSet(SqlConnection conn, string SQL)
         {
-            SqlConnection conn = new SqlConnection(ConnectionString);
             SqlDataAdapter da = new SqlDataAdapter();
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = SQL;
             da.SelectCommand = cmd;
             DataSet ds = new DataSet();
 
-            conn.Open();
+            //conn.Open();
             da.Fill(ds);
-            conn.Close();
+            //conn.Close();
 
             return ds;
         }
@@ -229,10 +268,11 @@ namespace VkAPITutorial
             }
         }
 
+        string ConnectionString = @"Data Source = ASUS\FULL2014; Initial Catalog = vk_db; Integrated Security = True";
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            string ConnectionString = @"Data Source = ASUS\FULL2014; Initial Catalog = vk_db; Integrated Security = True";
+            
 
 
             //DataSet db = GetDataSet(ConnectionString, "select * from users");
@@ -303,6 +343,36 @@ namespace VkAPITutorial
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             buttonUpdateTable.Enabled = true;
+        }
+
+        LoginData m_cur_LoginData = null;
+        int m_send_counter = 0;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if(m_cur_LoginData == null)
+            {
+                m_send_counter = 0;
+                if (m_auth_vars.Count > 0)
+                {
+                    m_cur_LoginData = m_auth_vars[0];
+                    m_auth_vars.RemoveAt(0);
+                    if (!VkAuth1(m_cur_LoginData.login, m_cur_LoginData.password))
+                    {
+                        m_cur_LoginData = null;
+                    }
+                }
+                else
+                {
+                    timer1.Stop();
+                }
+                return;
+            }
+            if(m_send_counter >= 20)
+            {
+                m_cur_LoginData = null;
+                return;
+            }
+            SendMessage2Users();
         }
     }
 }
