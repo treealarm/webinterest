@@ -8,16 +8,16 @@
     <Grid Height="Auto" Width="Auto" Name="grid1" Loaded="grid1_Loaded">
         <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Name="allElements">
-                
-            <TextBox Name="textBoxPeriod" MaxWidth="210" Width="210" Height="25" Text="{Binding StrPeriod}" MaxLength="31" VerticalContentAlignment="Center" 
+
+                <TextBox Name="textBoxPeriod" MaxWidth="210" Width="210" Height="25" Text="{Binding SearchString}" MaxLength="31" VerticalContentAlignment="Center" 
                      BorderThickness="1"
                      BorderBrush="{DynamicResource BkBrush}"
                      Background="{DynamicResource DarkBorderBrush}"
                      Foreground ="{DynamicResource HeaderBkBrush}" DataContext="{Binding}" 
                      TextChanged="textBoxPeriod_TextChanged" KeyUp="textBoxPeriod_KeyUp" KeyDown="textBoxPeriod_KeyDown" PreviewKeyDown="textBoxPeriod_PreviewKeyDown" 
-                     IsReadOnly="True"/>
-            <Button Width="23" Height="23" Margin="-25,-1,-1,-1" Background="{DynamicResource DarkBorderBrush}" Click="Button_Click">
-                <Image    Source="Resources\Calendar.png" VerticalAlignment="Center"></Image>
+                     />
+            <Button Width="23" Height="23" Margin="-25,-1,-1,-1" Background="{DynamicResource DarkBorderBrush}" Click="Button_Click" Content="...">
+                
             </Button>
             </StackPanel>
         </StackPanel>

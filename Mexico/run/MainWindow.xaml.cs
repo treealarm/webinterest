@@ -30,27 +30,13 @@ namespace StateStat
         private System.Windows.Forms.NotifyIcon notifyIcon = null;
 
         public static MainWindow Me = null;
-        public Popup myPopup = new Popup();
 
         public MainWindow()
         {
             Me = this;
             InitializeComponent();
-            myPopup.StaysOpen = false;
-            myPopup.Placement = PlacementMode.Bottom;
-            myPopup.PlacementTarget = PeriodControl1;
-            myPopup.Closed += PopupClosing;
- 
         }
 
-        private void PopupClosing(object sender, EventArgs e)
-        {
-            UpdateGraphByPeriod();
-        }
-        public void UpdateGraphByPeriod()
-        {
-            UserControlGraphRetro1.CleanUpdateGraphFromDB(PeriodControl1.m_data.m_from, PeriodControl1.m_data.m_to);
-        }
         protected DebugWindow m_DebugForm = null;
 
         public static string GetIdOfSlave()
@@ -106,7 +92,7 @@ namespace StateStat
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 #if !DEBUG
-            e.Cancel = true;
+            //e.Cancel = true;
 #endif
         }
 
@@ -349,7 +335,6 @@ namespace StateStat
                 return;
             }
             TabControl1.SelectedIndex = 2;
-            UpdateGraphByPeriod();
         }
 
         void UpdatePeriodControlVisibility()

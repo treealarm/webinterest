@@ -120,6 +120,9 @@
   <data name="IDS_APP_NAME" xml:space="preserve">
     <value>LPR Monitor</value>
   </data>
+  <data name="IDS_COMMENT" xml:space="preserve">
+    <value>Comentario</value>
+  </data>
   <data name="IDS_GRAPH" xml:space="preserve">
     <value>Video</value>
   </data>
@@ -129,6 +132,9 @@
   <data name="IDS_OBJECT" xml:space="preserve">
     <value>License plate</value>
   </data>
+  <data name="IDS_PLATE_IMAGE" xml:space="preserve">
+    <value>Image</value>
+  </data>
   <data name="IDS_QUANTITY" xml:space="preserve">
     <value>Location</value>
   </data>
@@ -136,7 +142,7 @@
     <value>Time</value>
   </data>
   <data name="IDS_TABLE" xml:space="preserve">
-    <value>Table</value>
+    <value>Protocol</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Main" type="System.Resources.ResXFileRef, System.Windows.Forms">

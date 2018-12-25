@@ -80,9 +80,6 @@
     <Compile Include="PeriodControl.xaml.cs">
       <DependentUpon>PeriodControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PeriodControlPopup.xaml.cs">
-      <DependentUpon>PeriodControlPopup.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserControlGraph.xaml.cs">
       <DependentUpon>UserControlGraph.xaml</DependentUpon>
     </Compile>
@@ -112,10 +109,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PeriodControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PeriodControlPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -181,6 +174,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\out.avi" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\plate1.jpg" />
+    <Resource Include="Resources\plate2.jpg" />
+    <Resource Include="Resources\plate3.jpg" />
+    <Resource Include="Resources\plate4.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

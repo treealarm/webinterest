@@ -48,7 +48,7 @@
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
-                        <GridViewColumn Header="{x:Static const:Resources.IDS_OBJECT}">
+                        <GridViewColumn Header="{x:Static const:Resources.IDS_OBJECT}" Width="100">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -62,10 +62,23 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn Header="{x:Static const:Resources.IDS_STATE}" DisplayMemberBinding="{Binding Path=time_stamp}">
+                        <GridViewColumn Header="{x:Static const:Resources.IDS_PLATE_IMAGE}" Width="150">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Image Source="{Binding Path= l_plate_image}" Margin="9,0,0,0"></Image>
+                                        <!--ListViewItem  Content="{Binding Path= l_plate_image}"   Opacity="1"/-->
+                                    </Grid>
+                                </DataTemplate>
+
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
+
+                        <GridViewColumn Header="{x:Static const:Resources.IDS_STATE}" DisplayMemberBinding="{Binding Path=time_stamp}" Width="150">
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="{x:Static const:Resources.IDS_QUANTITY}"  DisplayMemberBinding="{Binding Path=gps}" Width="150"/>
                         
-                        <GridViewColumn Header="{x:Static const:Resources.IDS_QUANTITY}"  DisplayMemberBinding="{Binding Path=gps}" />
                     </GridView.Columns>
                 </GridView>
             </ListView.View>

@@ -51,10 +51,10 @@
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
-                        <GridViewColumn Header="{x:Static const:Resources.IDS_OBJECT}" DisplayMemberBinding="{Binding Path= l_plate}">
+                        <GridViewColumn Header="{x:Static const:Resources.IDS_OBJECT}" DisplayMemberBinding="{Binding Path= l_plate}" Width="100">
                         </GridViewColumn>
 
-                        <GridViewColumn Header="{x:Static const:Resources.IDS_STATE}">
+                        <GridViewColumn Header="{x:Static const:Resources.IDS_STATE}" Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -68,7 +68,7 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn Header="{x:Static const:Resources.IDS_QUANTITY}"  DisplayMemberBinding="{Binding Path=gps}" />
+                        <GridViewColumn Header="{x:Static const:Resources.IDS_COMMENT}"  DisplayMemberBinding="{Binding Path=gps}"  Width="300"/>
                     </GridView.Columns>
                 </GridView>
             </ListView.View>

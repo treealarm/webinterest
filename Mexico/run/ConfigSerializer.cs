@@ -8,9 +8,10 @@ using System.Windows.Forms;
 
 namespace StateStat
 {
+    
     public class EV_Settings
     {
-        public double[] ColumnWidth = new double[3] {100,100,100};
+        public double[] ColumnWidth = new double[4] { 100, 100, 100, 100 };
     }
 
 
@@ -32,6 +33,15 @@ namespace StateStat
                 using (StreamReader outfile = new StreamReader(FileName, true))
                 {
                     Default = ConfigSerializer.DeserializeObject(outfile.ReadToEnd());
+
+                    List<double> temp = new List<double>();
+                    temp.AddRange(Default.ColumnWidth);
+
+                    while (temp.Count() < 4)
+                    {
+                        temp.Add(100);                        
+                    }
+                    Default.ColumnWidth = temp.ToArray();
                 }
             }
             catch (Exception ex)

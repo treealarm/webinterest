@@ -36,26 +36,12 @@ namespace StateStat
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (MainWindow.Me.myPopup.Child != null)
-                {
-                    MainWindow.Me.myPopup.Child = null;
-                    return;
-                }
-
-                MainWindow.Me.myPopup.Child = new PeriodControlPopup(this);
-                MainWindow.Me.myPopup.IsOpen = true;
-            }
-            catch (Exception ex)
-            {
-                
-            }            
+            MainWindow.Me.UserControlGraphRetro1.SetFilter(m_data.SearchString);
         }
 
         private void textBoxPeriod_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            MainWindow.Me.UserControlGraphRetro1.SetFilter(m_data.SearchString);
         }
 
         private void textBoxPeriod_KeyUp(object sender, KeyEventArgs e)

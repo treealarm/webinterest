@@ -43,19 +43,30 @@ namespace StateStat
 
         }
 
+        public void SetFilter(string sFilter)
+        {
+            if (string.IsNullOrEmpty(sFilter))
+            {
+                RecordListView.ItemsSource = m_DataSource;
+            }
+            else
+            {
+                RecordListView.ItemsSource = m_DataSource.Where(t => t.l_plate.Contains(sFilter) || t.gps.Contains(sFilter));
+            }
+        }
         private void Grid1_Loaded_1(object sender, RoutedEventArgs e)
         {
             RecordListView.ItemsSource = m_DataSource;
 
             for (int i = 0; i < 2000; i++)
             {
-                ObjectStates item = new ObjectStates(UserControlTable.RandomNumber(3) + "-" + UserControlTable.RandomString(3), DateTime.Now, UserControlTable.getLocation());
+                ObjectStates item = new ObjectStates(UserControlTable.RandomNumber(3) + "-" + UserControlTable.RandomString(3), DateTime.Now-TimeSpan.FromMinutes(i), UserControlTable.RandomString(10));
                 m_DataSource.Add(item);
             }
 
             for (int i = 100; i < 200; i++)
             {
-                ObjectStates item = new ObjectStates("AAA" + "-" + i.ToString(), DateTime.Now, UserControlTable.getLocation());
+                ObjectStates item = new ObjectStates("AAA" + "-" + i.ToString(), DateTime.Now, UserControlTable.RandomString(10));
                 m_DataSource.Add(item);
             } 
         }

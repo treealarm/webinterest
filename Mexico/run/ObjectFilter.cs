@@ -67,6 +67,12 @@ namespace StateStat
             set;
         }
 
+        public string l_plate_image
+        {
+            get;
+            set;
+        }
+
         public System.Windows.Media.Color text_color
         {
             get;

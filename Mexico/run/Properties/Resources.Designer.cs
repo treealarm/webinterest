@@ -70,6 +70,15 @@ namespace StateStat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comentario.
+        /// </summary>
+        public static string IDS_COMMENT {
+            get {
+                return ResourceManager.GetString("IDS_COMMENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Video.
         /// </summary>
         public static string IDS_GRAPH {
@@ -97,6 +106,15 @@ namespace StateStat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image.
+        /// </summary>
+        public static string IDS_PLATE_IMAGE {
+            get {
+                return ResourceManager.GetString("IDS_PLATE_IMAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Location.
         /// </summary>
         public static string IDS_QUANTITY {
@@ -115,7 +133,7 @@ namespace StateStat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Table.
+        ///   Looks up a localized string similar to Protocol.
         /// </summary>
         public static string IDS_TABLE {
             get {

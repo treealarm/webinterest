@@ -18,6 +18,7 @@ using System.Drawing;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace StateStat
 {
@@ -116,14 +117,26 @@ namespace StateStat
 
             double foundLongitude = new_x + x0;
             double foundLatitude = y + y0;
-            return foundLongitude.ToString() + ":" + foundLatitude.ToString();
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = ".";
+
+            return foundLongitude.ToString(nfi) + "," + foundLatitude.ToString(nfi);
         }
 
         int m_counter = 0;
         int m_counter_alarm = 0;
+        int m_cur_plate = 1;
         private void FillList()
         {
             ObjectStates item = new ObjectStates(RandomNumber(3) + "-" + RandomString(3), DateTime.Now, getLocation());
+
+            if (m_cur_plate >= 4)
+            {
+                m_cur_plate = 1;
+            }
+            item.l_plate_image = string.Format(@"Resources\plate{0}.jpg", m_cur_plate);
+            m_cur_plate++;
+            
 
             if (m_counter == 10)
             {
@@ -167,6 +180,8 @@ namespace StateStat
                 {
                     ListViewItem val = obj as ListViewItem;
                     ObjectStates data = val.DataContext as ObjectStates;
+                    System.Diagnostics.Process.Start(string.Format("https://www.google.com/maps/@{0},20z", data.gps));
+                    
                 }
                 obj = VisualTreeHelper.GetParent(obj);
             }
