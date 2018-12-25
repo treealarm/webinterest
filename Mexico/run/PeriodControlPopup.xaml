@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="StateStat.PeriodControlPopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             d:DesignHeight="100" d:DesignWidth="270" BorderThickness="1">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{DynamicResource DarkBorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BkBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HeaderBkBrush}"/>
+        </Style>
+        <Style TargetType="{x:Type DatePicker}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{DynamicResource DarkBorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BkBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HeaderBkBrush}"/>
+            <Style.Resources>
+                <Style TargetType="DatePickerTextBox">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource BkBrush}"/>
+                </Style>
+            </Style.Resources>
+            <Style.Triggers>
+                <!-- your triggers here -->
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{DynamicResource DarkBorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BkBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HeaderBkBrush}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{DynamicResource DarkBorderBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Orientation="Vertical">
+            <DatePicker HorizontalAlignment="Stretch" Name="calendar_from" VerticalAlignment="Top"  SelectedDate="{Binding Path=m_from_dt,Mode=TwoWay}" DisplayDate="{Binding m_from_dt}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Name="h_from" MaxLength="2" Text="{Binding Path=from_hh,Mode=TwoWay}" MinWidth="30" HorizontalContentAlignment="Right" PreviewTextInput="PreviewTextInputHour"></TextBox>
+                <Label>:</Label>
+                <TextBox Name="m_from" MaxLength="2" Text="{Binding Path=from_mm,Mode=TwoWay}" MinWidth="30" HorizontalContentAlignment="Left" PreviewTextInput="PreviewTextInputMinutes"></TextBox>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Vertical">
+            <DatePicker HorizontalAlignment="Stretch" Name="calendar_to" VerticalAlignment="Top" 
+                        SelectedDate="{Binding Path=m_to_dt, Mode=TwoWay}" DisplayDateEnd="{x:Static sys:DateTime.Today}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Name="h_to" MaxLength="2" Text="{Binding Path=to_hh,Mode=TwoWay}" MinWidth="30" HorizontalContentAlignment="Right" PreviewTextInput="PreviewTextInputHour"></TextBox>
+                <Label>:</Label>
+                <TextBox Name="m_to" MaxLength="2" Text="{Binding Path=to_mm,Mode=TwoWay}" MinWidth="30" HorizontalContentAlignment="Left" PreviewTextInput="PreviewTextInputMinutes"></TextBox>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

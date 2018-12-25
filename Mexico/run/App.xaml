@@ -1,0 +1,421 @@
+﻿<Application x:Class="StateStat.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:StateStat"
+             StartupUri="MainWindow.xaml">
+    
+    <Application.Resources>
+        <Color x:Key="ControlLightColor">#E5E4F3</Color>
+        <Color x:Key="ControlDarkColor">#46454A</Color>
+        <Color x:Key="ButtonColor">#46454A</Color>
+
+        <Color x:Key="HeaderBkColor">#B8B7C1</Color>
+        <Color x:Key="GlyphColor">White</Color>
+        <Color x:Key="ControlMouseOverColor">Black</Color>
+        <Color x:Key="DisabledForegroundColor">White</Color>
+
+        <SolidColorBrush x:Key="DarkTextBrush" Color="{DynamicResource ControlDarkColor}"/>
+        <SolidColorBrush x:Key="DarkBorderBrush" Color="{DynamicResource ControlDarkColor}"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#E5E4F3"/>
+        <SolidColorBrush x:Key="BkBrush" Color="#8D8C97"/>
+        <SolidColorBrush x:Key="EditBrush" Color="White"/>
+        <SolidColorBrush x:Key="HeaderBkBrush" Color="{DynamicResource HeaderBkColor}"/>
+        
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style TargetType="{x:Type UserControl}">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        
+        <!--List_View-->
+
+        <!--Border colors-->
+        <Color x:Key="BorderLightColor">#FFCCCCCC</Color>
+        <Color x:Key="BorderMediumColor">#FF888888</Color>
+        <Color x:Key="BorderDarkColor">#FF444444</Color>
+
+        <Color x:Key="PressedBorderLightColor">#FF888888</Color>
+        <Color x:Key="PressedBorderDarkColor">#FF444444</Color>
+
+        <Color x:Key="DisabledBorderLightColor">#FFAAAAAA</Color>
+        <Color x:Key="DisabledBorderDarkColor">#FF888888</Color>
+
+        <Color x:Key="DefaultBorderBrushDarkColor">Black</Color>
+
+        <!--Control-specific resources.-->
+        <Color x:Key="HeaderTopColor">#FFC5CBF9</Color>
+        <Color x:Key="DatagridCurrentCellBorderColor">Black</Color>
+        <Color x:Key="SliderTrackDarkColor">#FFC5CBF9</Color>
+
+        <Color x:Key="NavButtonFrameColor">#FF3843C4</Color>
+
+        <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
+            <Setter Property="Width"
+          Value="18" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="{DynamicResource ControlDarkColor}" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border Padding="{TemplateBinding Padding}"
+                Background="Transparent">
+                            <Rectangle HorizontalAlignment="Center"
+                     Width="1"
+                     Fill="{TemplateBinding Background}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <SolidColorBrush Color="{DynamicResource ControlDarkColor}" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--List_View-->
+
+
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="Background" Value="#8D8C97"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource DarkBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,0"/>
+            <Setter Property="Foreground" Value="#E5E4F3"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource DarkBorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BkBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HeaderBkBrush}"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+        </Style>
+
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Background" Value="{DynamicResource DarkBorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BkBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HeaderBkBrush}"/>
+        </Style>
+
+        <Style x:Key="{x:Type GridViewColumnHeader}" TargetType="GridViewColumnHeader">
+
+            <Setter Property="Height"  Value="32"  />
+            <Setter Property="Background" Value="#B8B7C1" /> 
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="16px" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="BorderBrush" Value="#46454A"/>
+            <Setter Property="BorderThickness" Value="0,0,0,0" />
+            
+            <Setter Property="HorizontalContentAlignment"
+          Value="Center" />
+            <Setter Property="VerticalContentAlignment"
+          Value="Center" />
+            <Setter Property="Foreground"
+          Value="{StaticResource DarkTextBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridViewColumnHeader">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver">
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed" />
+                                    <VisualState x:Name="Disabled" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="HeaderBorder"
+                  BorderThickness="0,1,0,1"
+                  Padding="2,0,2,0">
+                                <Border.BorderBrush>
+                                    <SolidColorBrush Color="{DynamicResource ControlLightColor}" />
+                                </Border.BorderBrush>
+                                
+                                <Border.Background>
+                                    <SolidColorBrush Color="{DynamicResource HeaderBkColor}" />
+                                </Border.Background>
+                                
+                                <ContentPresenter x:Name="HeaderContent"
+                              Margin="0,0,0,1"
+                              RecognizesAccessKey="True"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Border>
+                            <Thumb x:Name="PART_HeaderGripper"
+                 HorizontalAlignment="Right"
+                 Margin="0,0,-9,0"
+                 Style="{StaticResource GridViewColumnHeaderGripper}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Role"
+             Value="Floating">
+                    <Setter Property="Opacity"
+              Value="0.7" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="GridViewColumnHeader">
+                                <Canvas Name="PART_FloatingHeaderCanvas">
+                                    <Rectangle Fill="#60000000"
+                         Width="{TemplateBinding ActualWidth}"
+                         Height="{TemplateBinding ActualHeight}" />
+                                </Canvas>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="Role"
+             Value="Padding">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="GridViewColumnHeader">
+                                <Border Name="HeaderBorder"
+                    BorderThickness="0,1,0,1">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="{DynamicResource HeaderBkColor}" />
+                                    </Border.Background>
+                                    <Border.BorderBrush>
+                                        <SolidColorBrush Color="{DynamicResource ControlLightColor}" />
+                                    </Border.BorderBrush>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+
+        <Style TargetType="{x:Type TabControl}">
+            <Setter Property="Background" Value="#FF5D5B64"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource DarkBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,0"/>
+            <Setter Property="Foreground" Value="#E5E4F3"/>
+        </Style>
+
+        <!--  Scroll -->
+        <!--Control colors.-->
+
+        
+        <Style x:Key="ScrollBarLineButton"
+       TargetType="{x:Type RepeatButton}">
+            <Setter Property="SnapsToDevicePixels"
+          Value="True" />
+            <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+            <Setter Property="Focusable"
+          Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border x:Name="Border"
+                Margin="1"
+                BorderThickness="0">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="{DynamicResource BorderDarkColor}"></SolidColorBrush>
+                            </Border.BorderBrush>
+                            <Border.Background>
+                                <SolidColorBrush Color="{DynamicResource ButtonColor}"></SolidColorBrush>
+                            </Border.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver" />
+                                    <VisualState x:Name="Pressed"/>
+                                 </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Path x:Name="Arrow"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Data="{Binding Content, 
+            RelativeSource={RelativeSource TemplatedParent}}" >
+                                <Path.Stroke>
+                                    <SolidColorBrush Color="{DynamicResource GlyphColor}"/>
+                                </Path.Stroke>
+                            </Path>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarPageButton"
+       TargetType="{x:Type RepeatButton}">
+            <Setter Property="SnapsToDevicePixels"
+          Value="True" />
+            <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+            <Setter Property="IsTabStop"
+          Value="false" />
+            <Setter Property="Focusable"
+          Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border Background="Transparent" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarThumb"
+       TargetType="{x:Type Thumb}">
+            <Setter Property="SnapsToDevicePixels"
+          Value="True" />
+            <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+            <Setter Property="IsTabStop"
+          Value="false" />
+            <Setter Property="Focusable"
+          Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border 
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="0" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="VerticalScrollBar"
+                 TargetType="{x:Type ScrollBar}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="18" />
+                    <RowDefinition Height="0.00001*" />
+                    <RowDefinition MaxHeight="18" />
+                </Grid.RowDefinitions>
+                <Border Grid.RowSpan="3"
+            
+            Background="#46454A" Opacity="0.9"/>
+                <RepeatButton Grid.Row="0"
+                  Style="{StaticResource ScrollBarLineButton}"
+                  Height="18"
+                  Command="ScrollBar.LineUpCommand"
+                  Content="M 0 4 L 4 0 L 8 4" />
+                <Track x:Name="PART_Track"
+           Grid.Row="1"
+           IsDirectionReversed="true">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource ScrollBarPageButton}"
+                      Command="ScrollBar.PageUpCommand" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource ScrollBarThumb}"
+               Margin="1,0,1,0">
+                            <Thumb.BorderBrush>
+
+                                <SolidColorBrush Color="{DynamicResource ControlDarkColor}"></SolidColorBrush>
+
+                            </Thumb.BorderBrush>
+                            <Thumb.Background>
+
+                                <SolidColorBrush Opacity="0.3"  Color="{DynamicResource ControlLightColor}"></SolidColorBrush>
+
+                            </Thumb.Background>
+                        </Thumb>
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource ScrollBarPageButton}"
+                      Command="ScrollBar.PageDownCommand" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+                <RepeatButton Grid.Row="3"
+                  Style="{StaticResource ScrollBarLineButton}"
+                  Height="18"
+                  Command="ScrollBar.LineDownCommand"
+                  Content="M 0 0 L 4 4 L 8 0" />
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="HorizontalScrollBar"
+                 TargetType="{x:Type ScrollBar}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="18" />
+                    <ColumnDefinition Width="0.00001*" />
+                    <ColumnDefinition MaxWidth="18" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="3"
+            
+            Background="#46454A" Opacity="0.9"/>
+                <RepeatButton Grid.Column="0"
+                  Style="{StaticResource ScrollBarLineButton}"
+                  Width="18"
+                  Command="ScrollBar.LineLeftCommand"
+                  Content="M 4 0 L 0 4 L 4 8" />
+                <Track x:Name="PART_Track"
+           Grid.Column="1"
+           IsDirectionReversed="False">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource ScrollBarPageButton}"
+                      Command="ScrollBar.PageLeftCommand" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource ScrollBarThumb}"
+               Margin="0,1,0,1">
+
+                            <Thumb.BorderBrush>
+
+                                <SolidColorBrush Color="{DynamicResource ControlDarkColor}"></SolidColorBrush>
+
+                            </Thumb.BorderBrush>
+                            <Thumb.Background>
+
+                                <SolidColorBrush Opacity="0.3" Color="{DynamicResource ControlLightColor}"></SolidColorBrush>
+
+                            </Thumb.Background>
+                        </Thumb>
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource ScrollBarPageButton}"
+                      Command="ScrollBar.PageRightCommand" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+                <RepeatButton Grid.Column="3"
+                  Style="{StaticResource ScrollBarLineButton}"
+                  Width="18"
+                  Command="ScrollBar.LineRightCommand"
+                  Content="M 0 0 L 4 4 L 0 8" />
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="{x:Type ScrollBar}"
+       TargetType="{x:Type ScrollBar}">
+            <Setter Property="SnapsToDevicePixels"
+          Value="True" />
+            <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation"
+             Value="Horizontal">
+                    <Setter Property="Width"
+              Value="Auto" />
+                    <Setter Property="Height"
+              Value="18" />
+                    <Setter Property="Template"
+              Value="{StaticResource HorizontalScrollBar}" />
+                </Trigger>
+                <Trigger Property="Orientation"
+             Value="Vertical">
+                    <Setter Property="Width"
+              Value="18" />
+                    <Setter Property="Height"
+              Value="Auto" />
+                    <Setter Property="Template"
+              Value="{StaticResource VerticalScrollBar}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,140 @@
+﻿<Window x:Class="StateStat.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:my="clr-namespace:StateStat" 
+        xmlns:const="clr-namespace:StateStat.Properties"
+        Title="LPR Monitor" Height="379" Width="753" Initialized="Window_Initialized" Closing="Window_Closing" Closed="Window_Closed" Loaded="Window_Loaded">
+
+    <Grid Background="#FF5D5B64">
+       
+        <Grid.Resources>
+            <!-- Brushes for colours/backgrounds -->
+            <SolidColorBrush x:Key="FontBrushActive" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="FontBrushDeactivated" Color="#B8B7C1"/>
+            
+
+            <LinearGradientBrush x:Key="BgBrush1" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#46454A"/>
+                <GradientStop Offset="1" Color="#46454A"/>
+            </LinearGradientBrush>
+
+            <SolidColorBrush x:Key="AlarmBrush" Color="#FF0000"/>
+            
+            <SolidColorBrush x:Key="BorderBrush1" Color="#46454A"/>
+
+            <SolidColorBrush x:Key="OverBrush"  Color="#0078D7" Opacity=".3"/>
+            <DrawingBrush x:Key="CheckedBrush"   Viewport="0,0,1,1" TileMode="None">
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <GeometryDrawing>
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0,1,0.9" />
+                                </GeometryDrawing.Geometry>
+                                <GeometryDrawing.Brush>
+                                <SolidColorBrush Color="#0078D7" Opacity=".4"/>
+                                </GeometryDrawing.Brush>
+                            </GeometryDrawing>
+                            <GeometryDrawing>
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0.9,1,0.1" />
+                                </GeometryDrawing.Geometry>
+                                <GeometryDrawing.Brush>
+                                <SolidColorBrush Color="#0078D7"/>
+                                </GeometryDrawing.Brush>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                
+
+            </DrawingBrush>
+
+            <!-- Left Button Template -->
+            <ControlTemplate x:Key="ToggleButtonLeft" TargetType="{x:Type ToggleButton}">
+                <Border
+                Name="Border"
+                Background="{StaticResource BgBrush1}"
+                BorderBrush="{StaticResource BorderBrush1}"
+                BorderThickness="1">
+                    <ContentPresenter
+                    HorizontalAlignment="Center"
+                    Margin="{TemplateBinding Padding}"
+                    VerticalAlignment="Center"
+                    Content="{TemplateBinding Content}"
+                    TextBlock.FontWeight="SemiBold"
+                        TextBlock.FontFamily="Segoe UI"
+                        TextBlock.FontSize="16px"
+                    
+                        />
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="ToggleButton.IsMouseOver" Value="true">
+                        <Setter TargetName="Border" Property="Background" Value="{StaticResource OverBrush}"/>
+                    </Trigger>
+                    <Trigger Property="IsChecked" Value="true">
+                        <Setter TargetName="Border" Property="Background" Value="{StaticResource CheckedBrush}"/>
+                    </Trigger>
+
+                    <Trigger Property="IsChecked" Value="False">
+                        <Setter Property="TextBlock.Foreground" Value="{StaticResource ResourceKey=FontBrushDeactivated}"></Setter>
+                    </Trigger>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="TextBlock.Foreground" Value="{StaticResource ResourceKey=FontBrushActive}"></Setter>
+                    </Trigger>
+                    
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Grid.Resources>
+ 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="46" MaxHeight="46" MinHeight="46" />
+            <RowDefinition MinHeight="100" />
+        </Grid.RowDefinitions>
+        <DockPanel Name ="DockPanelButtons1" Background="{StaticResource BorderBrush1}" VerticalAlignment="Top" Grid.Row="0" Height="46">
+            
+                <StackPanel Orientation="Horizontal" Height="46">
+                <Image Width="25" Height="25" Source="Resources\Group 8.png" Margin="9,0,0,0"></Image>
+                <TextBlock Text="{x:Static const:Resources.IDS_APP_NAME}" Name="textBlockName" VerticalAlignment="Center" Foreground="#B8B7C1" Margin="10,0,50,0" FontWeight="SemiBold"></TextBlock>
+                <RadioButton Height="46" Name="toggle_Table" Width="106" Content="{x:Static const:Resources.IDS_TABLE}" GroupName="ToggleGroup" Template="{DynamicResource ToggleButtonLeft}" IsChecked="True" Checked="toggle_Table_Checked">
+                </RadioButton>
+                <RadioButton Height="46"  Name="toggle_Graph"  Width="106" Content="{x:Static const:Resources.IDS_GRAPH}" GroupName="ToggleGroup" Template="{DynamicResource ToggleButtonLeft}" Checked="toggle_Graph_Checked" />
+                <RadioButton Height="46"  Name="toggle_GraphRetro"  Width="116" Content="{x:Static const:Resources.IDS_GRAPH_RETRO}" GroupName="ToggleGroup" Template="{DynamicResource ToggleButtonLeft}" Checked="toggle_GraphRetro_Checked" />
+                <my:PeriodControl x:Name="PeriodControl1" Width="Auto" Margin="10,0,0,0"/>
+            </StackPanel>
+                
+        </DockPanel>
+        <DockPanel Grid.Row="1" Name ="dock1">
+            <TabControl Name="TabControl1" TabStripPlacement="Top" SelectionChanged="TabControl1_SelectionChanged">
+                <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                            </ControlTemplate>
+                            </Setter.Value>
+                    </Setter>
+                </Style>
+                </TabControl.Resources>
+            
+            <TabItem>
+                    <my:UserControlTable x:Name="UserControlTable1" Width="Auto" Margin="30,30,30,30"/>
+            </TabItem>
+            <TabItem>
+                <my:UserControlGraph x:Name="UserControlGraph1" Width="Auto"/>
+            </TabItem>
+                <TabItem>
+                    <my:UserControlGraphRetro x:Name="UserControlGraphRetro1" Width="Auto"/>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+
+        <!--Popup
+    Name="myPopup"
+    StaysOpen="False"
+    Placement="Center"
+    PlacementRectangle="0,0,200,200"
+    PlacementTarget="{Binding ElementName=TabControl1}">
+
+        </Popup-->
+        
+    </Grid>
+</Window>
