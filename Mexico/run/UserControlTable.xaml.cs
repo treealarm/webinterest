@@ -180,8 +180,9 @@ namespace StateStat
                 {
                     ListViewItem val = obj as ListViewItem;
                     ObjectStates data = val.DataContext as ObjectStates;
-                    System.Diagnostics.Process.Start(string.Format("https://www.google.com/maps/@{0},20z", data.gps));
-                    
+                    //System.Diagnostics.Process.Start(string.Format("https://www.google.com/maps/@{0},20z", data.gps));
+                    System.Diagnostics.Process.Start(string.Format("https://www.google.com/maps/search/?api=1&query={0}", data.gps));
+                    break;
                 }
                 obj = VisualTreeHelper.GetParent(obj);
             }
