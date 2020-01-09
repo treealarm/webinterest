@@ -409,7 +409,7 @@ namespace equation
                     AddNewNumber(RightResolveSP, res.ToString(), true);
                 }
             }
-            else if (LeftResolveSP.Children.Count == 0)
+            else if (RightResolveSP.Children.Count == 0)
             {
                 AddNewNumber(RightResolveSP, "0", true);
             }
